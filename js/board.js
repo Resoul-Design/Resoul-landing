@@ -87,7 +87,12 @@
   function load() {
     var m = location.search.match(/[?&]s=([0-9a-f-]{8,})/i);
     if (m) {
-      fetch(SB_URL + "/rest/v1/posts?select=id,pet_name,years,one_line,body,name,image_path,hearts&status=eq.visible&slug=eq." + encodeURIComponent(m[1]) + "&limit=1", { headers: H })
+      // 連結分享：憑 slug 經 RLS-safe RPC 精準取一條（link 故事唔會被公開列舉）
+      fetch(SB_URL + "/rest/v1/rpc/get_post_by_slug", {
+        method: "POST",
+        headers: Object.assign({}, H, { "Content-Type": "application/json" }),
+        body: JSON.stringify({ p_slug: m[1] })
+      })
         .then(function (r) { return r.json(); })
         .then(function (rows) { render(Array.isArray(rows) ? rows : [], true); })
         .catch(function () { render([], true); });
