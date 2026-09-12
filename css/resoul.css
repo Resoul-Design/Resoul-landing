@@ -345,6 +345,7 @@ section{padding:64px 0;}
 .ill-fig img{width:100%;height:auto;display:block;margin:0 auto;opacity:.92;}
 .cta.light.active{background:var(--ink);color:var(--cream);border-color:var(--ink);}
 .cta.sm{padding:11px 20px;font-size:.9rem;}
+.cta[hidden]{display:none !important;}
 .mform .mf-btns{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px;}
 .mform .mf-btns .cta{min-height:44px;padding:10px 22px;font-size:.88rem;letter-spacing:.03em;box-shadow:0 10px 22px -18px rgba(59,47,39,.55);}
 .mform .mf-btns .cta.light{padding-inline:20px;}
@@ -862,19 +863,26 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 .letter-sheet .ls-body{font-family:var(--serif);color:var(--ink);line-height:2.15;font-size:1rem;
   white-space:pre-wrap;margin:26px 4px 14px;letter-spacing:.02em;min-height:120px;}
 .letter-sheet .ls-illust{display:block;width:calc(100% + 88px);max-width:none;margin:26px -44px 0;}
-@media(max-width:520px){.letter-sheet{padding:40px 24px 0;}.letter-sheet .ls-illust{width:calc(100% + 48px);margin:20px -24px 0;}}
+.letter-sheet .ls-hero{display:block;width:calc(100% + 88px);max-width:none;margin:-46px -44px 22px;}
+@media(max-width:520px){.letter-sheet{padding:40px 24px 0;}.letter-sheet .ls-illust{width:calc(100% + 48px);margin:20px -24px 0;}.letter-sheet .ls-hero{width:calc(100% + 48px);margin:-40px -24px 18px;}}
 .letter-sheet.empty .ls-body{color:var(--ink-faint);font-style:italic;text-align:center;}
 .letter-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px;}
 .letter-hint{margin-top:14px;text-align:center;color:var(--ink-faint);font-size:.78rem;line-height:1.7;}
 
-/* 列印：只印信紙 */
+/* 列印：只印信紙一版（用 display 收合，避免多頁空白）*/
 @media print{
-  body{background:#fbf7ef !important;}
-  body *{visibility:hidden !important;}
-  .letter-sheet,.letter-sheet *{visibility:visible !important;}
-  .letter-sheet{position:absolute;left:0;top:0;width:100%;max-width:none;margin:0;
-    border:none;box-shadow:none;border-radius:0;background:#fbf7ef;padding:64px 68px;}
-  .uctrl,.site-header,.fab,.widget,.to-top,.letter-actions,.letter-hint{display:none !important;}
+  @page{margin:14mm;}
+  html,body{background:#fbf7ef !important;}
+  body>*{display:none !important;}                 /* 收起頁面所有嘢（連空位）*/
+  #letterModal{display:block !important;position:static !important;height:auto !important;}
+  #letterModal .lm-backdrop,#letterModal .lm-close,
+  #letterModal .eyebrow,#letterModal h3,
+  #letterModal .letter-form,#letterModal .letter-actions,#letterModal .letter-hint{display:none !important;}
+  #letterModal .lm-card{position:static !important;inset:auto !important;width:auto !important;max-width:none !important;max-height:none !important;box-shadow:none !important;border-radius:0 !important;background:transparent !important;overflow:visible !important;}
+  #letterModal .lm-scroll{overflow:visible !important;max-height:none !important;padding:0 !important;}
+  .letter-sheet{position:static !important;margin:0 !important;width:100% !important;max-width:none !important;
+    border:none !important;box-shadow:none !important;border-radius:0 !important;padding:0 22px 0 !important;overflow:visible !important;}
+  .letter-sheet .ls-hero{width:100% !important;margin:0 0 16px !important;}
 }
 
 /* ============================================================
