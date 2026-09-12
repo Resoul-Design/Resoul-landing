@@ -216,6 +216,34 @@ body.cart-open .fab,body.cart-open .to-top{display:none!important;}
 
   <hr class="divider">
 
+  <section class="products" id="categories">
+    <div class="wrap">
+      <p class="eyebrow reveal">紀念系列</p>
+      <h2 class="reveal">選一種，最像你們的紀念方式。</h2>
+      <div class="services-grid grid4 reveal" style="margin-top:26px;">
+        <a class="scard" href="#shopList" style="text-decoration:none;color:inherit;display:block;"><span class="sc-ic" aria-hidden="true">🏺</span><h3>骨灰盅及家居安放</h3><p>把牠安放在家中一個溫柔的位置。</p></a>
+        <a class="scard" href="#shopList" style="text-decoration:none;color:inherit;display:block;"><span class="sc-ic" aria-hidden="true">💠</span><h3>永念晶石及伴光晶石</h3><p>將思念凝聚成一顆隨身的光。</p></a>
+        <a class="scard" href="#shopList" style="text-decoration:none;color:inherit;display:block;"><span class="sc-ic" aria-hidden="true">🪙</span><h3>永恆銅印紀念系列</h3><p>以銅印留住牠獨一無二的印記。</p></a>
+        <a class="scard" href="#shopList" style="text-decoration:none;color:inherit;display:block;"><span class="sc-ic" aria-hidden="true">🐾</span><h3>掌印、鼻印及毛髮紀念</h3><p>把最熟悉的觸感，好好保存下來。</p></a>
+        <a class="scard" href="#shopList" style="text-decoration:none;color:inherit;display:block;"><span class="sc-ic" aria-hidden="true">📿</span><h3>飾物及日常隨身紀念</h3><p>在忙碌的日子，仍能輕輕碰到牠。</p></a>
+        <a class="scard" href="#shopList" style="text-decoration:none;color:inherit;display:block;"><span class="sc-ic" aria-hidden="true">🎁</span><h3>禮物及悲傷關懷用品</h3><p>給自己或同路人，一份溫柔的陪伴。</p></a>
+      </div>
+      <div class="reveal" style="text-align:center;margin-top:26px;">
+        <a class="cta" href="#shopList">前往 RESOUL 紀念品商店 <span class="arw">→</span></a>
+      </div>
+      <div class="reveal" style="background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:20px 18px;margin-top:26px;text-align:center;">
+        <p class="eyebrow" style="margin-bottom:8px;">善終客戶提示</p>
+        <p class="lead" style="margin:0 0 14px;">已選擇善終旅程？輸入個案編號，即可讓我們為你顯示適合的尺寸、已包含項目及可升級選擇。</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;">
+          <input id="caseNo" placeholder="個案編號（例如 RS-000123）" style="max-width:260px;">
+          <button class="cta light" type="button" id="caseBtn">以個案編號查詢</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
   <div class="shop-wrap">
     <div class="shop-buy-hd">
       <p class="eyebrow">選購紀念品</p>
@@ -304,6 +332,9 @@ body.cart-open .fab,body.cart-open .to-top{display:none!important;}
   </div>
 </div>
 
+<script>
+(function(){var b=document.getElementById('caseBtn'),i=document.getElementById('caseNo');if(!b||!i)return;b.addEventListener('click',function(){var c=i.value.trim();var t=c?('你好，我的善終個案編號是 '+c+'，想查詢適合的紀念品尺寸與已包含項目。'):('你好，我是善終旅程客戶，想查詢適合的紀念品。');window.open('https://wa.me/85264762951?text='+encodeURIComponent(t),'_blank','noopener');});i.addEventListener('keydown',function(e){if(e.key==='Enter')b.click();});})();
+</script>
 <script src="js/resoul.js" defer></script>
 <script src="js/shop.js" defer></script>
 </body>

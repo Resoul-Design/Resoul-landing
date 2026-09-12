@@ -200,6 +200,34 @@ body.cart-open .fab,body.cart-open .to-top{display:none!important;}
 
   <hr class="divider">
 
+  <section class="products" id="categories">
+    <div class="wrap">
+      <p class="eyebrow reveal">Memorial collections</p>
+      <h2 class="reveal">Choose the way that feels most like you two.</h2>
+      <div class="services-grid grid4 reveal" style="margin-top:26px;">
+        <a class="scard" href="#shopList" style="text-decoration:none;color:inherit;display:block;"><span class="sc-ic" aria-hidden="true">🏺</span><h3>Urns &amp; home resting</h3><p>A gentle place for them at home.</p></a>
+        <a class="scard" href="#shopList" style="text-decoration:none;color:inherit;display:block;"><span class="sc-ic" aria-hidden="true">💠</span><h3>Memory &amp; light stones</h3><p>Longing, held in a stone you can carry.</p></a>
+        <a class="scard" href="#shopList" style="text-decoration:none;color:inherit;display:block;"><span class="sc-ic" aria-hidden="true">🪙</span><h3>Eternal bronze prints</h3><p>Their unique mark, kept in bronze.</p></a>
+        <a class="scard" href="#shopList" style="text-decoration:none;color:inherit;display:block;"><span class="sc-ic" aria-hidden="true">🐾</span><h3>Paw, nose &amp; fur keepsakes</h3><p>Keep the most familiar touch close.</p></a>
+        <a class="scard" href="#shopList" style="text-decoration:none;color:inherit;display:block;"><span class="sc-ic" aria-hidden="true">📿</span><h3>Jewellery &amp; everyday keepsakes</h3><p>Reach for them, even on busy days.</p></a>
+        <a class="scard" href="#shopList" style="text-decoration:none;color:inherit;display:block;"><span class="sc-ic" aria-hidden="true">🎁</span><h3>Gifts &amp; grief-care items</h3><p>Gentle comfort, for you or a friend.</p></a>
+      </div>
+      <div class="reveal" style="text-align:center;margin-top:26px;">
+        <a class="cta" href="#shopList">Go to the RESOUL memorial store <span class="arw">→</span></a>
+      </div>
+      <div class="reveal" style="background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:20px 18px;margin-top:26px;text-align:center;">
+        <p class="eyebrow" style="margin-bottom:8px;">For farewell clients</p>
+        <p class="lead" style="margin:0 0 14px;">Already chose a farewell journey? Enter your case number and we'll show you the right sizes, included items and upgrade options.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;">
+          <input id="caseNo" placeholder="Case number (e.g. RS-000123)" style="max-width:260px;">
+          <button class="cta light" type="button" id="caseBtn">Look up by case number</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
   <div class="shop-wrap">
     <div class="shop-buy-hd">
       <p class="eyebrow">Shop keepsakes</p>
@@ -285,6 +313,9 @@ body.cart-open .fab,body.cart-open .to-top{display:none!important;}
   </div>
 </div>
 
+<script>
+(function(){var b=document.getElementById('caseBtn'),i=document.getElementById('caseNo');if(!b||!i)return;b.addEventListener('click',function(){var c=i.value.trim();var t=c?('Hi, my farewell case number is '+c+'. I would like to check suitable keepsake sizes and included items.'):('Hi, I am a farewell-journey client and would like to ask about keepsakes.');window.open('https://wa.me/85264762951?text='+encodeURIComponent(t),'_blank','noopener');});i.addEventListener('keydown',function(e){if(e.key==='Enter')b.click();});})();
+</script>
 <script src="js/resoul.js" defer></script>
 <script src="js/shop.js" defer></script>
 </body>
