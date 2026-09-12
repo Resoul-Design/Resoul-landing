@@ -369,7 +369,7 @@ section{padding:64px 0;}
   .pcard{flex:1 1 calc(50% - 9px);}
 }
 @media(min-width:820px){
-  :root{--maxw:760px;}
+  :root{--maxw:900px;}
   .hero h1{font-size:2.6rem;}
   .pcard{flex:1;}
 }
@@ -636,7 +636,7 @@ section{padding:64px 0;}
 @media(min-width:560px){.services-grid{grid-template-columns:1fr 1fr;}}
 @media(min-width:880px){.services-grid{grid-template-columns:1fr 1fr 1fr;}}
 /* 加闊區塊（首頁情緒入口、流程等） */
-.wide .wrap{max-width:1040px;}
+.wide .wrap{max-width:var(--maxw);}
 @media(min-width:560px){.services-grid.grid4{grid-template-columns:1fr 1fr;}}
 @media(min-width:1000px){.services-grid.grid4{grid-template-columns:repeat(4,1fr);}}
 .scard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px 20px;box-shadow:0 8px 26px -22px rgba(70,52,34,.5);}
@@ -653,7 +653,7 @@ section{padding:64px 0;}
 .wh-arw{display:inline-block;margin-left:5px;color:var(--gold-deep);animation:walkNudge 1.8s ease-in-out infinite;}
 @keyframes walkNudge{0%,100%{transform:translateX(0);}50%{transform:translateX(5px);}}
 /* 加闊呢一段容器，等 7 步可以放同一行 */
-.procedure .wrap{max-width:1120px;}
+.procedure .wrap{max-width:var(--maxw);}
 .proc-walk{margin:26px auto 0;max-width:100%;padding:6px 0 4px;}
 .walk-track{display:flex;flex-wrap:nowrap;justify-content:center;align-items:flex-start;gap:6px;list-style:none;padding:0;margin:0;}
 .wstep{flex:1 1 0;min-width:0;position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;}
