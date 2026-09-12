@@ -125,13 +125,13 @@
         </div>
       </div>
 
-      <a class="cta reveal" href="#order">預約並付款 <span class="arw">→</span></a>
+      <a class="cta reveal" href="#order" id="orderCta">預約並付款 <span class="arw">→</span></a>
     </div>
   </section>
 
-  <hr class="divider">
+  <hr class="divider" id="orderDivider" style="display:none">
 
-  <section class="cremation wide" id="order">
+  <section class="cremation wide" id="order" style="display:none">
     <div class="wrap">
       <p class="eyebrow reveal">網上預約 · 付款</p>
       <h2 class="reveal">填一份簡單問卷，<br>直接完成預約與付款。</h2>
@@ -401,6 +401,9 @@
 // 火化問卷 → Shopify 結帳（答案帶入訂單 line item）+ Supabase 記錄
 (function(){
   var f=document.getElementById('orderForm'); if(!f) return;
+  // 預設隱藏預約表單，㩒「預約並付款」先顯示
+  var oc=document.getElementById('orderCta'), osec=document.getElementById('order'), odiv=document.getElementById('orderDivider');
+  if(oc&&osec){ oc.addEventListener('click',function(e){ e.preventDefault(); osec.style.display=''; if(odiv)odiv.style.display=''; var h=document.querySelector('.site-header'); var off=(h?h.offsetHeight:0)+14; var y=osec.getBoundingClientRect().top+window.pageYOffset-off; window.scrollTo({top:y<0?0:y,behavior:'smooth'}); }); }
   var SF_ENDPOINT="https://qs1nmv-b3.myshopify.com/api/2026-01/graphql.json";
   var SF_TOKEN="90f06d055534783ae5a7ad3f0f1e5004";
   var WEIGHTS=["< 1 kg","1.1–5 kg","5.1–10 kg","10.1–15 kg","15.1–20 kg","20.1–30 kg","30.1–40 kg","40.1–50 kg"];
