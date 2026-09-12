@@ -397,6 +397,18 @@
   </div>
 </div>
 
+<div class="confirm-modal" id="orderConfirm" aria-hidden="true">
+  <div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="orderConfirmTitle">
+    <h3 id="orderConfirmTitle">確認預約資料</h3>
+    <p class="book-note" style="margin-top:0;">請確認以下資料無誤，再前往安全付款頁。</p>
+    <div class="confirm-list" id="orderConfirmList"></div>
+    <div class="confirm-actions">
+      <button type="button" class="cta light" id="orderEditBtn">返回修改</button>
+      <button type="button" class="cta" id="orderConfirmBtn">確認並前往付款 <span class="arw">→</span></button>
+    </div>
+  </div>
+</div>
+
 <script>
 // 火化問卷 → Shopify 結帳（答案帶入訂單 line item）+ Supabase 記錄
 (function(){
@@ -418,19 +430,27 @@
   planEl.addEventListener('change',sel);wEl.addEventListener('change',sel);
   function show(k,t){if(!msg)return;msg.className='book-msg '+k;msg.textContent=t;msg.hidden=false;}
   function supa(o){return fetch('https://tkgxdzvsnmereaygddaz.supabase.co/rest/v1/cremation_bookings',{method:'POST',headers:{'Content-Type':'application/json',apikey:'sb_publishable_bRZVm-air0obDK7QuRYaMw_b-mnVMA6',Authorization:'Bearer sb_publishable_bRZVm-air0obDK7QuRYaMw_b-mnVMA6',Prefer:'return=minimal'},body:JSON.stringify(o)}).then(function(res){if(!res.ok){return res.text().then(function(t){throw new Error('Supabase HTTP '+res.status+': '+t);});}});}
-  f.addEventListener('submit',function(e){
-    e.preventDefault();
-    var s=sel();
-    if(!s){show('err','請先選擇旅程與毛孩體重。');return;}
-    if(!v('ofName')||!v('ofPhone')){show('err','請填主人稱呼及聯絡電話。');return;}
-    var old=btn.innerHTML;btn.disabled=true;btn.innerHTML='處理中…';if(msg)msg.hidden=true;
-    var attrs=[{key:"旅程",value:s.plan},{key:"體重",value:s.weight},{key:"毛孩名字",value:v('ofPet')||'-'},{key:"主人稱呼",value:v('ofName')},{key:"聯絡電話",value:v('ofPhone')},{key:"希望日期",value:v('ofDate')||'-'},{key:"希望時段",value:v('ofTime')||'-'},{key:"接送地址",value:v('ofAddr')||'-'},{key:"備註",value:v('ofNote')||'-'}];
+  function saveBooking(full,legacy){return supa(full).catch(function(err){if(/payment_ref|payment_status|payment_amount|payment_currency/i.test(String(err&&err.message||err))){console.warn('[Resoul] 付款追蹤欄位未建立，改用基本預約欄位重試。',err);return supa(legacy);}throw err;});}
+  function ref(){return 'RS-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8).toUpperCase();}
+  var pending=null,modal=document.getElementById('orderConfirm'),list=document.getElementById('orderConfirmList'),edit=document.getElementById('orderEditBtn'),confirm=document.getElementById('orderConfirmBtn');
+  function close(){if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}}
+  function row(k,v){return '<div class="confirm-row"><span>'+k+'</span><span>'+(v||'—')+'</span></div>';}
+  function openConfirm(data){pending=data;if(list){list.innerHTML=row('旅程',data.s.plan)+row('體重',data.s.weight)+row('金額','HK$'+data.s.price.toLocaleString())+row('毛孩名字',v('ofPet'))+row('主人稱呼',v('ofName'))+row('聯絡電話',v('ofPhone'))+row('希望日期',v('ofDate'))+row('希望時段',v('ofTime'))+row('接送地址',v('ofAddr'))+row('備註',v('ofNote'));}if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');}}
+  if(edit)edit.addEventListener('click',close);
+  if(modal)modal.addEventListener('click',function(e){if(e.target===modal)close();});
+  f.addEventListener('submit',function(e){e.preventDefault();var s=sel();if(!s){show('err','請先選擇旅程與毛孩體重。');return;}if(!v('ofName')||!v('ofPhone')){show('err','請填主人稱呼及聯絡電話。');return;}openConfirm({s:s,paymentRef:ref()});});
+  if(confirm)confirm.addEventListener('click',function(){
+    if(!pending)return;
+    var s=pending.s,paymentRef=pending.paymentRef,old=btn.innerHTML,oldConfirm=confirm.innerHTML;
+    close();btn.disabled=true;confirm.disabled=true;btn.innerHTML='處理中…';confirm.innerHTML='處理中…';if(msg)msg.hidden=true;
+    var attrs=[{key:"payment_ref",value:paymentRef},{key:"旅程",value:s.plan},{key:"體重",value:s.weight},{key:"毛孩名字",value:v('ofPet')||'-'},{key:"主人稱呼",value:v('ofName')},{key:"聯絡電話",value:v('ofPhone')},{key:"希望日期",value:v('ofDate')||'-'},{key:"希望時段",value:v('ofTime')||'-'},{key:"接送地址",value:v('ofAddr')||'-'},{key:"備註",value:v('ofNote')||'-'}];
     var q='mutation cc($lines:[CartLineInput!]!,$attrs:[AttributeInput!]!){cartCreate(input:{lines:$lines,attributes:$attrs}){cart{checkoutUrl}userErrors{message}}}';
-    supa({owner_name:v('ofName'),contact:v('ofPhone'),plan:s.plan,pet_name:v('ofPet')||null,pet_type:null,service_date:v('ofDate')||null,pickup_address:v('ofAddr')||null,notes:'付款問卷｜'+s.plan+'｜'+s.weight+'｜HK$'+s.price+'｜希望時段：'+(v('ofTime')||'—')+'｜毛孩名字：'+(v('ofPet')||'—')+'｜備註：'+(v('ofNote')||'—'),source:'web:cremation-order'})
-    .then(function(){return fetch(SF_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','X-Shopify-Storefront-Access-Token':SF_TOKEN},body:JSON.stringify({query:q,variables:{lines:[{merchandiseId:"gid://shopify/ProductVariant/"+s.id,quantity:1,attributes:attrs}],attrs:[{key:"預約來源",value:"網站火化問卷"}]}})});})
+    var base={owner_name:v('ofName'),contact:v('ofPhone'),plan:s.plan,pet_name:v('ofPet')||null,pet_type:null,service_date:v('ofDate')||null,pickup_address:v('ofAddr')||null,notes:'付款問卷｜Ref:'+paymentRef+'｜'+s.plan+'｜'+s.weight+'｜HK$'+s.price+'｜希望時段：'+(v('ofTime')||'—')+'｜毛孩名字：'+(v('ofPet')||'—')+'｜備註：'+(v('ofNote')||'—'),source:'web:cremation-order'};
+    saveBooking(Object.assign({},base,{payment_ref:paymentRef,payment_status:'pending',payment_amount:s.price,payment_currency:'HKD'}),base)
+    .then(function(){return fetch(SF_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','X-Shopify-Storefront-Access-Token':SF_TOKEN},body:JSON.stringify({query:q,variables:{lines:[{merchandiseId:"gid://shopify/ProductVariant/"+s.id,quantity:1,attributes:attrs}],attrs:[{key:"payment_ref",value:paymentRef},{key:"預約來源",value:"網站火化問卷"}]}})});})
     .then(function(r){return r.json();})
     .then(function(d){var c=d&&d.data&&d.data.cartCreate;var url=c&&c.cart&&c.cart.checkoutUrl;if(url){window.location.href=url;}else{show('err','暫時未能建立付款，請稍後再試或 WhatsApp 我們。');btn.disabled=false;btn.innerHTML=old;}})
-    .catch(function(err){console.error('[Resoul] 火化付款問卷送出失敗：',err);show('err','暫時未能送出預約資料，請稍後再試或 WhatsApp 我們。');btn.disabled=false;btn.innerHTML=old;});
+    .catch(function(err){console.error('[Resoul] 火化付款問卷送出失敗：',err);show('err','暫時未能送出預約資料，請稍後再試或 WhatsApp 我們。');btn.disabled=false;btn.innerHTML=old;confirm.disabled=false;confirm.innerHTML=oldConfirm;});
   });
 })();
 </script>

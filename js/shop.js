@@ -136,6 +136,23 @@
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
   }
+  function suitability(p) {
+    var text = [p.title, p.productType, (p.tags || []).join(" ")].join(" ").toLowerCase();
+    var rules = [
+      { keys: ["pawprint", "clay", "掌印", "腳印"], zh: "適合想保留觸感與形狀的家庭，讓牠曾經停留的痕跡成為可放在家中的紀念。", en: "Best for families who want to keep a tactile trace of their pet, as a quiet piece to place at home." },
+      { keys: ["noseprint", "鼻紋"], zh: "適合想收藏獨一無二紋理的家庭，把細小而親密的印記做成日常可見的紀念。", en: "Best for keeping a one-of-a-kind mark close, turning a small intimate detail into an everyday keepsake." },
+      { keys: ["hair", "fur", "gem", "毛", "寶石"], zh: "適合想把毛髮珍藏成飾物或擺設的家庭，讓想念有一個溫柔、長久的形態。", en: "Best for preserving fur in jewellery or a display piece, giving remembrance a gentle and lasting form." },
+      { keys: ["ash", "ashes", "crystal", "骨灰", "水晶"], zh: "適合希望把骨灰化作透明、安靜紀念的家庭，可放在家中或作日常陪伴。", en: "Best for families who want ashes transformed into a clear, quiet memorial for home or daily companionship." },
+      { keys: ["wood", "carved", "木", "雕刻"], zh: "適合想以相片、名字或圖像留下故事的家庭，作為家中固定而溫暖的紀念角落。", en: "Best for telling their story through a photo, name or illustration, creating a warm memorial corner at home." },
+      { keys: ["diamond", "鑽石"], zh: "適合希望把愛轉化成永恆珍藏的家庭，以更長久、正式的方式延續陪伴。", en: "Best for families seeking an enduring memorial, turning love into a lasting and formal keepsake." }
+    ];
+    for (var i = 0; i < rules.length; i++) {
+      if (rules[i].keys.some(function (k) { return text.indexOf(k.toLowerCase()) >= 0; })) {
+        return L(rules[i].zh, rules[i].en);
+      }
+    }
+    return L("適合想把日常陪伴留在身邊的家庭，作為告別後仍能慢慢承載想念的紀念。", "Best for families who want to keep everyday companionship close, carrying remembrance gently after goodbye.");
+  }
 
   /* ===== GraphQL ===== */
   function gql(query, variables) {
@@ -357,6 +374,7 @@
       '<h1 class="pdp-name">' + esc(pick(p.title)) + "</h1>" +
       '<div class="pdp-price" id="pdpPrice">' + money(v.price.amount, v.price.currencyCode) + "</div>" +
       '<div class="pdp-avail" id="pdpAvail"></div>' +
+      '<div class="trust"><div><b>' + L("適合哪一種告別", "Best for") + "</b>　" + esc(suitability(p)) + "</div></div>" +
       optsHtml +
       '<div class="opt-label">' + L("數量", "Quantity") + "</div>" +
       '<div class="qty"><button type="button" data-q="-1">−</button><span id="pdpQ">1</span><button type="button" data-q="1">+</button></div>' +
