@@ -361,8 +361,9 @@ body.shop-modal-lock{overflow:hidden;}
 body.shop-modal-lock .cart-drawer{z-index:1100;}
 body.shop-modal-lock #shopOverlay{z-index:1099;}
 /* 分享頁 / 紀念故事 */
-.mform{margin-top:24px;text-align:left;}
+.mform{margin-top:24px;text-align:left;display:flex;flex-direction:column;gap:18px;}
 .mform .mf-row{display:flex;gap:14px;flex-wrap:wrap;}
+.mform .board-upload{margin:2px 0;}
 .mform .mf-row .bf-field{flex:1 1 200px;}
 .mshare{margin-top:14px;}
 .mshare-in{display:flex;gap:8px;flex-wrap:wrap;}
