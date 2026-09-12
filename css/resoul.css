@@ -343,6 +343,9 @@ section{padding:64px 0;}
 .topbar span{opacity:.9;}
 .ill-fig{margin:22px auto 4px;max-width:280px;text-align:center;}
 .ill-fig img{width:100%;height:auto;display:block;margin:0 auto;opacity:.92;}
+.cta.light.active{background:var(--ink);color:var(--cream);border-color:var(--ink);}
+.cta.sm{padding:11px 20px;font-size:.9rem;}
+.mform .mf-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
 /* 紀念系列 → 選購紀念品彈窗 */
 #shopBackdrop{position:fixed;inset:0;background:rgba(31,25,20,.55);z-index:900;display:none;}
 #shopBackdrop.open{display:block;}
