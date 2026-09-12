@@ -6,8 +6,8 @@
   "use strict";
   var EN = (document.documentElement.lang || "").slice(0, 2).toLowerCase() === "en";
   function L(zh, en) { return EN ? en : zh; }
-  var SB_URL = "https://diyxcxkgvqvyrstrzttq.supabase.co";
-  var SB_KEY = "sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K";
+  var SB_URL = "https://tkgxdzvsnmereaygddaz.supabase.co";
+  var SB_KEY = "sb_publishable_bRZVm-air0obDK7QuRYaMw_b-mnVMA6";
   var H = { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY };
 
   var list = document.getElementById("boardList");

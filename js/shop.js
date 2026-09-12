@@ -81,8 +81,8 @@
   var CART_KEY = "resoul-cart-id";
 
   /* ===== 訂製：客戶特別要求 + 上載寵物相片（存 Supabase，訂單附連結）===== */
-  var SB_URL = "https://diyxcxkgvqvyrstrzttq.supabase.co";
-  var SB_KEY = "sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K";
+  var SB_URL = "https://tkgxdzvsnmereaygddaz.supabase.co";
+  var SB_KEY = "sb_publishable_bRZVm-air0obDK7QuRYaMw_b-mnVMA6";
   var UPLOAD_BUCKET = "custom-uploads";
   // 只有非「紙製品」（即訂製／紀念／服務類）先顯示訂製欄位
   // 是否顯示「特別要求 + 上載相片」。可用 Shopify 標籤逐件控制：
@@ -366,7 +366,7 @@
       (pickDesc(p.descriptionHtml) ? '<div class="pdp-desc">' + esc(pickDesc(p.descriptionHtml)) + "</div>" : "") +
       '<div class="trust">' +
       "<div><b>🕊️ " + L("專人跟進</b>　由具善終經驗的團隊，全程溫柔處理", "Personal care</b>　handled gently throughout by an experienced farewell team") + "</div>" +
-      "<div><b>🔒 " + L("安全結帳</b>　付款由 Shopify 托管，資料受保護", "Secure checkout</b>　payment handled by Shopify, your data protected") + "</div>" +
+      "<div><b>🔒 " + L("安全結帳</b>　付款透過安全結帳頁處理，資料受保護", "Secure checkout</b>　payment handled through a protected checkout") + "</div>" +
       "</div>" +
       "</div></div>";
 

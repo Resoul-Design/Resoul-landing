@@ -135,7 +135,7 @@
     <div class="wrap">
       <p class="eyebrow reveal">網上預約 · 付款</p>
       <h2 class="reveal">填一份簡單問卷，<br>直接完成預約與付款。</h2>
-      <p class="lead reveal" style="margin-top:12px;">選擇合適的旅程與毛孩體重，填好聯絡與時間，我們會即時帶你到安全的 Shopify 付款頁完成預約。付款後我們會盡快聯絡確認細節。</p>
+      <p class="lead reveal" style="margin-top:12px;">選擇合適的旅程與毛孩體重，填好聯絡與時間，我們會即時帶你到安全付款頁完成預約。付款後我們會盡快聯絡確認細節。</p>
       <form class="book-form reveal" id="orderForm" style="margin-top:24px;">
         <div class="bf-field">
           <label for="ofPlan">選擇旅程 <span class="req">*</span></label>
@@ -177,7 +177,7 @@
         <div class="bf-field"><label for="ofAddr">接送地址</label><input id="ofAddr" placeholder="住址（可留空）"></div>
         <div class="bf-field"><label for="ofNote">備註（可選）</label><textarea id="ofNote" rows="2" placeholder="毛孩狀況、特別安排或想告訴我們的事"></textarea></div>
         <button type="submit" class="cta book-submit" id="ofBtn">前往付款 <span class="arw">→</span></button>
-        <p class="book-note">按「前往付款」會帶你到安全的 Shopify 付款頁；你填的資料會一併記錄在訂單，方便我們跟進。醫療評估及程序（如涉及）由獨立註冊獸醫負責。</p>
+        <p class="book-note">按「前往付款」會帶你到安全付款頁；你填的資料會一併記錄在訂單，方便我們跟進。醫療評估及程序（如涉及）由獨立註冊獸醫負責。</p>
         <div class="book-msg" id="ofMsg" role="status" aria-live="polite" hidden></div>
       </form>
       <div class="book-urgent reveal">🕊️ <b>需要即時支援</b>：如情況緊急，歡迎直接 <a href="https://wa.me/85264762951" target="_blank" rel="noopener">WhatsApp 我們（24 小時待命）</a>。</div>
@@ -417,20 +417,20 @@
   function sel(){var p=PLANS[planEl.value],wi=wEl.value;if(p&&wi!==''){var pr=p.v[+wi][1];priceEl.textContent=p.name+" · "+WEIGHTS[+wi]+" — HK$"+pr.toLocaleString();return{id:p.v[+wi][0],price:pr,plan:p.name,weight:WEIGHTS[+wi]};}priceEl.textContent="請選擇旅程與體重";return null;}
   planEl.addEventListener('change',sel);wEl.addEventListener('change',sel);
   function show(k,t){if(!msg)return;msg.className='book-msg '+k;msg.textContent=t;msg.hidden=false;}
-  function supa(o){try{fetch('https://diyxcxkgvqvyrstrzttq.supabase.co/rest/v1/cremation_bookings',{method:'POST',headers:{'Content-Type':'application/json',apikey:'sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K',Authorization:'Bearer sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K',Prefer:'return=minimal'},body:JSON.stringify(o)}).catch(function(){});}catch(e){}}
+  function supa(o){return fetch('https://tkgxdzvsnmereaygddaz.supabase.co/rest/v1/cremation_bookings',{method:'POST',headers:{'Content-Type':'application/json',apikey:'sb_publishable_bRZVm-air0obDK7QuRYaMw_b-mnVMA6',Authorization:'Bearer sb_publishable_bRZVm-air0obDK7QuRYaMw_b-mnVMA6',Prefer:'return=minimal'},body:JSON.stringify(o)}).then(function(res){if(!res.ok){return res.text().then(function(t){throw new Error('Supabase HTTP '+res.status+': '+t);});}});}
   f.addEventListener('submit',function(e){
     e.preventDefault();
     var s=sel();
     if(!s){show('err','請先選擇旅程與毛孩體重。');return;}
     if(!v('ofName')||!v('ofPhone')){show('err','請填主人稱呼及聯絡電話。');return;}
     var old=btn.innerHTML;btn.disabled=true;btn.innerHTML='處理中…';if(msg)msg.hidden=true;
-    supa({name:v('ofName'),phone:v('ofPhone'),pet_name:v('ofPet'),service_date:v('ofDate')||null,note:'['+s.plan+' / '+s.weight+' / HK$'+s.price+'] 時段:'+(v('ofTime')||'-')+' 地址:'+(v('ofAddr')||'-')+' 備註:'+(v('ofNote')||'-'),source:'web:cremation-order',status:'new'});
     var attrs=[{key:"旅程",value:s.plan},{key:"體重",value:s.weight},{key:"毛孩名字",value:v('ofPet')||'-'},{key:"主人稱呼",value:v('ofName')},{key:"聯絡電話",value:v('ofPhone')},{key:"希望日期",value:v('ofDate')||'-'},{key:"希望時段",value:v('ofTime')||'-'},{key:"接送地址",value:v('ofAddr')||'-'},{key:"備註",value:v('ofNote')||'-'}];
     var q='mutation cc($lines:[CartLineInput!]!,$attrs:[AttributeInput!]!){cartCreate(input:{lines:$lines,attributes:$attrs}){cart{checkoutUrl}userErrors{message}}}';
-    fetch(SF_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','X-Shopify-Storefront-Access-Token':SF_TOKEN},body:JSON.stringify({query:q,variables:{lines:[{merchandiseId:"gid://shopify/ProductVariant/"+s.id,quantity:1,attributes:attrs}],attrs:[{key:"預約來源",value:"網站火化問卷"}]}})})
+    supa({owner_name:v('ofName'),contact:v('ofPhone'),plan:s.plan,pet_name:v('ofPet')||null,pet_type:null,service_date:v('ofDate')||null,pickup_address:v('ofAddr')||null,notes:'付款問卷｜'+s.plan+'｜'+s.weight+'｜HK$'+s.price+'｜希望時段：'+(v('ofTime')||'—')+'｜毛孩名字：'+(v('ofPet')||'—')+'｜備註：'+(v('ofNote')||'—'),source:'web:cremation-order'})
+    .then(function(){return fetch(SF_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','X-Shopify-Storefront-Access-Token':SF_TOKEN},body:JSON.stringify({query:q,variables:{lines:[{merchandiseId:"gid://shopify/ProductVariant/"+s.id,quantity:1,attributes:attrs}],attrs:[{key:"預約來源",value:"網站火化問卷"}]}})});})
     .then(function(r){return r.json();})
     .then(function(d){var c=d&&d.data&&d.data.cartCreate;var url=c&&c.cart&&c.cart.checkoutUrl;if(url){window.location.href=url;}else{show('err','暫時未能建立付款，請稍後再試或 WhatsApp 我們。');btn.disabled=false;btn.innerHTML=old;}})
-    .catch(function(){show('err','網絡不穩定，請稍後再試或 WhatsApp 我們。');btn.disabled=false;btn.innerHTML=old;});
+    .catch(function(err){console.error('[Resoul] 火化付款問卷送出失敗：',err);show('err','暫時未能送出預約資料，請稍後再試或 WhatsApp 我們。');btn.disabled=false;btn.innerHTML=old;});
   });
 })();
 </script>
