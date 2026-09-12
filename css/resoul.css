@@ -256,6 +256,16 @@ section{padding:64px 0;}
 
 /* ---------- Mood accordion ---------- */
 .faq2{margin-top:26px;border-top:1px solid var(--line);}
+.faq-group{margin-top:30px;}
+.faq-group:first-of-type{margin-top:26px;}
+.faq-group-title{
+  font-family:var(--serif);
+  font-size:1.08rem;
+  font-weight:600;
+  color:var(--ink);
+  margin-bottom:10px;
+}
+.faq-group .faq2{margin-top:0;}
 .faq2-item{border-bottom:1px solid var(--line);transition:border-color .2s,margin .25s ease;}
 .faq2-q{
   width:100%;display:flex;align-items:center;gap:16px;text-align:left;cursor:pointer;
