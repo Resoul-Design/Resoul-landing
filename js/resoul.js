@@ -574,11 +574,11 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
     bizCalWrite();
 
     // Supabase 為正式預約記錄，以此判斷成功／失敗
-    fetch('https://tkgxdzvsnmereaygddaz.supabase.co/rest/v1/cremation_bookings', {
+    fetch('https://diyxcxkgvqvyrstrzttq.supabase.co/rest/v1/cremation_bookings', {
       method: 'POST',
       headers: {
-        apikey: 'sb_publishable_bRZVm-air0obDK7QuRYaMw_b-mnVMA6',
-        Authorization: 'Bearer sb_publishable_bRZVm-air0obDK7QuRYaMw_b-mnVMA6',
+        apikey: 'sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K',
+        Authorization: 'Bearer sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K',
         'Content-Type': 'application/json',
         Prefer: 'return=minimal'
       },

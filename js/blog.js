@@ -16,8 +16,8 @@
   var ENDPOINT = "https://" + SHOP.domain + "/api/" + SHOP.version + "/graphql.json";
 
   /* 留言由 Supabase 保存（見 supabase/schema.sql）；publishable key 為公開用途 */
-  var SB_URL = "https://tkgxdzvsnmereaygddaz.supabase.co";
-  var SB_KEY = "sb_publishable_bRZVm-air0obDK7QuRYaMw_b-mnVMA6";
+  var SB_URL = "https://diyxcxkgvqvyrstrzttq.supabase.co";
+  var SB_KEY = "sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K";
   var SBH = { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY };
   function sbCrisis(t) { return /想死|唔想活|自殺|傷害自己|撐唔住|頂唔住|想跟(佢|牠|你)去|活唔落去|結束生命|唔想生存|冇晒意思/.test(t); }
   function loadComments(handle, listEl, countEl) {
