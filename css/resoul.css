@@ -640,6 +640,11 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 .cremation-contact{margin-top:30px;color:var(--ink-soft);font-size:.98rem;}
 .cremation-contact a{color:var(--gold-deep);border-bottom:1px solid var(--gold);}
 .cremation .cta{margin-top:14px;}
+.legal-notice{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:22px 20px;margin-top:22px;text-align:left;}
+.legal-notice .eyebrow{margin-bottom:10px;}
+.legal-notice p:not(.eyebrow){margin:12px 0 0;color:var(--ink-soft);font-size:.92rem;line-height:1.85;}
+.legal-notice p:not(.eyebrow):first-of-type{margin-top:0;}
+.legal-notice p:last-child{color:var(--gold-deep);}
 
 /* ===== Loving promise ===== */
 .promise{background:var(--cream);text-align:center;}
