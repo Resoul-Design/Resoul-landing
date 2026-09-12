@@ -49,7 +49,7 @@ set search_path = public
 as $$
   select *
   from public.posts
-  where slug = p_slug
+  where slug::text = p_slug
     and status = 'visible'
     and visibility <> 'private'
   limit 1;
