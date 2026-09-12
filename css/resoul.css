@@ -864,6 +864,16 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
   white-space:pre-wrap;margin:26px 4px 14px;letter-spacing:.02em;min-height:120px;}
 .letter-sheet .ls-illust{display:block;width:calc(100% + 88px);max-width:none;margin:26px -44px 0;}
 .letter-sheet .ls-hero{display:block;width:calc(100% + 88px);max-width:none;margin:-46px -44px 22px;}
+/* 信紙款式切換 */
+.ls-paper{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;margin:18px 0 -6px;}
+.ls-paper .ls-paper-label{font-size:.82rem;color:var(--ink-faint);}
+.paper-chip{appearance:none;cursor:pointer;font:inherit;font-size:.82rem;line-height:1;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card,#fff);color:var(--ink-soft);transition:background .18s,color .18s,border-color .18s;}
+.paper-chip:hover{border-color:var(--gold);color:var(--ink);}
+.paper-chip.active{background:var(--ink);border-color:var(--ink);color:var(--cream);}
+.letter-sheet .ls-head,.letter-sheet .ls-hero,.letter-sheet .ls-illust{display:none;}
+.letter-sheet[data-paper="room"] .ls-hero{display:block;}
+.letter-sheet[data-paper="basket"] .ls-head,.letter-sheet[data-paper="basket"] .ls-illust{display:block;}
+.letter-sheet[data-paper="plain"] .ls-head{display:block;}
 @media(max-width:520px){.letter-sheet{padding:40px 24px 0;}.letter-sheet .ls-illust{width:calc(100% + 48px);margin:20px -24px 0;}.letter-sheet .ls-hero{width:calc(100% + 48px);margin:-40px -24px 18px;}}
 .letter-sheet.empty .ls-body{color:var(--ink-faint);font-style:italic;text-align:center;}
 .letter-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px;}
@@ -877,7 +887,7 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
   #letterModal{display:block !important;position:static !important;height:auto !important;}
   #letterModal .lm-backdrop,#letterModal .lm-close,
   #letterModal .eyebrow,#letterModal h3,
-  #letterModal .letter-form,#letterModal .letter-actions,#letterModal .letter-hint{display:none !important;}
+  #letterModal .letter-form,#letterModal .letter-actions,#letterModal .letter-hint,#letterModal .ls-paper{display:none !important;}
   #letterModal .lm-card{position:static !important;inset:auto !important;width:auto !important;max-width:none !important;max-height:none !important;box-shadow:none !important;border-radius:0 !important;background:transparent !important;overflow:visible !important;}
   #letterModal .lm-scroll{overflow:visible !important;max-height:none !important;padding:0 !important;}
   .letter-sheet{position:static !important;margin:0 !important;width:100% !important;max-width:none !important;

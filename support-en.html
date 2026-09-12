@@ -287,9 +287,12 @@
         <p class="book-note">The AI version is only a draft — edit it freely; or choose “Write it myself” to place your own words on the letter. Nothing is saved before you submit.</p>
         <div class="book-msg" id="lfMsg" role="status" aria-live="polite" hidden></div>
       </form>
-      <div class="letter-sheet empty" id="letterSheet">
+      <div class="ls-paper" role="group" aria-label="Letter paper"><span class="ls-paper-label">Paper:</span><button type="button" class="paper-chip active" data-paper="room">Sea-view room</button><button type="button" class="paper-chip" data-paper="basket">Flower basket</button><button type="button" class="paper-chip" data-paper="plain">Minimal</button></div>
+      <div class="letter-sheet empty" id="letterSheet" data-paper="room">
         <img class="ls-hero" src="images/about-room.png" alt="RESOUL" onerror="this.style.display='none'">
+        <div class="ls-head"><div class="ls-brand">RESOUL</div><div class="ls-tag">remember the story of our love</div></div>
         <div class="ls-body" id="lsBody">Use AI, or choose “Write it myself”, and your letter will appear here.</div>
+        <img class="ls-illust" src="images/letter-illust.png" alt="" onerror="this.style.display='none'">
       </div>
       <div class="letter-actions" id="letterActions" hidden>
         <button class="cta" type="button" onclick="window.print()">Print this letter 🖨️</button>
@@ -342,6 +345,9 @@
     .then(function(){ btn.disabled=false; btn.innerHTML=old; });
   });
   var re=document.getElementById('lfRegen'); if(re) re.addEventListener('click',function(){ if(f.requestSubmit)f.requestSubmit(); else f.dispatchEvent(new Event('submit',{cancelable:true})); });
+
+  var papers=document.querySelectorAll('.paper-chip'), sheetEl=document.getElementById('letterSheet');
+  papers.forEach(function(c){ c.addEventListener('click',function(){ if(sheetEl) sheetEl.setAttribute('data-paper', c.getAttribute('data-paper')); papers.forEach(function(x){ x.classList.toggle('active', x===c); }); }); });
 
   var modal=document.getElementById('letterModal');
   function openM(){ modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('lm-lock'); }
