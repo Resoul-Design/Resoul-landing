@@ -343,6 +343,27 @@ section{padding:64px 0;}
 .topbar span{opacity:.9;}
 .ill-fig{margin:22px auto 4px;max-width:280px;text-align:center;}
 .ill-fig img{width:100%;height:auto;display:block;margin:0 auto;opacity:.92;}
+/* 分享頁 / 紀念故事 */
+.mform{margin-top:24px;text-align:left;}
+.mform .mf-row{display:flex;gap:14px;flex-wrap:wrap;}
+.mform .mf-row .bf-field{flex:1 1 200px;}
+.mshare{margin-top:14px;}
+.mshare-in{display:flex;gap:8px;flex-wrap:wrap;}
+.mshare-in input{flex:1 1 220px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--white,#fff);color:var(--ink);font-size:.85rem;}
+.mshare-in button{padding:10px 16px;border:1px solid var(--gold);background:transparent;color:var(--ink);border-radius:10px;cursor:pointer;white-space:nowrap;}
+.mstory{background:var(--white,#fff);border:1px solid var(--line);border-radius:16px;padding:22px 20px;margin:0 auto 16px;max-width:560px;box-shadow:0 6px 20px rgba(59,47,39,.05);text-align:left;}
+.mstory .ms-photo{width:100%;max-height:340px;object-fit:cover;border-radius:12px;margin-bottom:14px;}
+.ms-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px;}
+.ms-name{font-family:var(--serif);font-size:1.3rem;color:var(--ink);}
+.ms-years{font-size:.85rem;color:var(--ink-faint,#9a8b78);}
+.ms-one{font-family:var(--serif);font-size:1.05rem;color:var(--gold-deep,#b89a6e);margin:0 0 10px;line-height:1.7;}
+.ms-story{color:var(--ink);line-height:1.85;}
+.ms-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;}
+.ms-by{font-size:.85rem;color:var(--ink-faint,#9a8b78);font-style:italic;}
+.ms-heart{border:1px solid var(--line);background:var(--cream);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer;font-size:.9rem;transition:transform .15s ease,background .2s ease,color .2s ease;}
+.ms-heart:hover:not(:disabled){transform:translateY(-1px);background:var(--gold);color:#2f251e;}
+.ms-heart.on{background:var(--gold);color:#2f251e;}
+.ms-heart:disabled{cursor:default;}
 /* Google 評價 */
 .reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px;}
 .rcard{background:var(--white,#fff);border:1px solid var(--line);border-radius:16px;padding:22px 20px;margin:0;text-align:left;box-shadow:0 6px 20px rgba(59,47,39,.05);display:flex;flex-direction:column;}

@@ -59,17 +59,35 @@
     <div class="wrap">
       <p class="eyebrow reveal">分享頁</p>
       <h2 class="reveal">讓牠的故事，<br>繼續被記得。</h2>
-      <p class="lead reveal" style="margin-top:14px;">留下一句想念、一張相片，也可以靜靜讀別人的故事——在這條路上，你並不孤單。</p>
-      <div class="board-form reveal">
-        <input id="boardName" maxlength="40" placeholder="你的名字或毛孩的名字（可留空）">
-        <textarea id="boardMsg" maxlength="1000" rows="3" placeholder="想說的話…"></textarea>
-        <label class="board-upload" id="boardUploadLabel">＋ 加一張相片（可選）<input type="file" id="boardPhoto" accept="image/*" hidden></label>
-        <img id="boardPreview" alt="預覽" style="display:none;max-width:180px;border-radius:10px;margin-top:8px;">
-        <button id="boardPost" class="soft-btn" type="button">🤍 發佈留言</button>
-        <p class="board-note" id="boardStatus" style="min-height:1em;"></p>
+      <p class="lead reveal" style="margin-top:14px;">主人可選擇以文字、照片或一封短信，記錄毛孩的名字、性格和一起生活的故事。分享可以公開、只限連結瀏覽，或只供自己保存。所有公開內容須經主人同意及審核。</p>
+
+      <div class="mform reveal" id="storyForm">
+        <div class="mf-row">
+          <div class="bf-field"><label for="mPet">毛孩名字</label><input id="mPet" maxlength="40" placeholder="可包括暱稱"></div>
+          <div class="bf-field"><label for="mYears">年份／一起生活了多久</label><input id="mYears" maxlength="40" placeholder="例如 2010–2024"></div>
+        </div>
+        <div class="bf-field"><label for="mOne">最像牠的一句話</label><input id="mOne" maxlength="80" placeholder="例如：永遠在門口等我回家"></div>
+        <div class="bf-field"><label for="mStory">牠的故事</label><textarea id="mStory" maxlength="1000" rows="4" placeholder="想記住的性格、習慣、一段回憶…"></textarea></div>
+        <div class="bf-field"><label for="mName">署名（可留空）</label><input id="mName" maxlength="40" placeholder="留空將顯示為「一位主人」"></div>
+        <label class="board-upload" id="mUploadLabel">＋ 加一張相片（可選）<input type="file" id="mPhoto" accept="image/*" hidden></label>
+        <img id="mPreview" alt="預覽" style="display:none;max-width:180px;border-radius:10px;margin-top:8px;">
+        <div class="bf-field"><label for="mVis">私隱設定</label>
+          <select id="mVis">
+            <option value="public">公開（經審核後顯示於分享頁）</option>
+            <option value="link">只限連結（不公開，只有持連結者可看）</option>
+            <option value="private">私人保存（只作記錄，不會顯示）</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button id="mPost" class="cta" type="button">分享這個故事 <span class="arw">→</span></button>
+          <button id="mLetterBtn" class="cta light" type="button">✍️ 用寫信助手草擬</button>
+        </div>
+        <p class="board-note" id="mStatus" style="min-height:1em;"></p>
+        <div class="mshare" id="mShare" hidden></div>
       </div>
-      <div class="board-list" id="boardList"></div>
-      <p class="board-note reveal">＊ 留言經審核後顯示。為保障你的私隱，請避免填寫真實姓名、電話等個人資料。</p>
+
+      <div class="board-list" id="boardList" style="margin-top:34px;"></div>
+      <p class="board-note reveal">＊ 公開內容經審核後才顯示。互動只提供「留下心意」，沒有公開留言，避免造成二次傷害。為保障私隱，請避免填寫電話等個人資料。</p>
     </div>
   </section>
 

@@ -59,17 +59,35 @@
     <div class="wrap">
       <p class="eyebrow reveal">Remember Their Story</p>
       <h2 class="reveal">Let their story<br>go on being remembered.</h2>
-      <p class="lead reveal" style="margin-top:14px;">Leave a word of remembrance or a photo, or quietly read others' stories — on this path, you are not alone.</p>
-      <div class="board-form reveal">
-        <input id="boardName" maxlength="40" placeholder="Your name or your pet's name (optional)">
-        <textarea id="boardMsg" maxlength="1000" rows="3" placeholder="What you'd like to say…"></textarea>
-        <label class="board-upload" id="boardUploadLabel">＋ Add a photo (optional)<input type="file" id="boardPhoto" accept="image/*" hidden></label>
-        <img id="boardPreview" alt="Preview" style="display:none;max-width:180px;border-radius:10px;margin-top:8px;">
-        <button id="boardPost" class="soft-btn" type="button">🤍 Post message</button>
-        <p class="board-note" id="boardStatus" style="min-height:1em;"></p>
+      <p class="lead reveal" style="margin-top:14px;">Record your pet's name, character and the story of your life together — in words, a photo or a short letter. Share it publicly, by private link, or keep it just for yourself. All public content is shown only with your consent and after review.</p>
+
+      <div class="mform reveal" id="storyForm">
+        <div class="mf-row">
+          <div class="bf-field"><label for="mPet">Pet's name</label><input id="mPet" maxlength="40" placeholder="Nicknames welcome"></div>
+          <div class="bf-field"><label for="mYears">Years together</label><input id="mYears" maxlength="40" placeholder="e.g. 2010–2024"></div>
+        </div>
+        <div class="bf-field"><label for="mOne">The one line most like them</label><input id="mOne" maxlength="80" placeholder="e.g. Always waiting at the door"></div>
+        <div class="bf-field"><label for="mStory">Their story</label><textarea id="mStory" maxlength="1000" rows="4" placeholder="A character, a habit, a memory you want to keep…"></textarea></div>
+        <div class="bf-field"><label for="mName">Sign-off (optional)</label><input id="mName" maxlength="40" placeholder="Leave blank to show as “A pet parent”"></div>
+        <label class="board-upload" id="mUploadLabel">＋ Add a photo (optional)<input type="file" id="mPhoto" accept="image/*" hidden></label>
+        <img id="mPreview" alt="Preview" style="display:none;max-width:180px;border-radius:10px;margin-top:8px;">
+        <div class="bf-field"><label for="mVis">Privacy</label>
+          <select id="mVis">
+            <option value="public">Public (shown here after review)</option>
+            <option value="link">Link only (not listed; only people with the link can view)</option>
+            <option value="private">Private (kept as a record, never shown)</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button id="mPost" class="cta" type="button">Share this story <span class="arw">→</span></button>
+          <button id="mLetterBtn" class="cta light" type="button">✍️ Draft with the writing helper</button>
+        </div>
+        <p class="board-note" id="mStatus" style="min-height:1em;"></p>
+        <div class="mshare" id="mShare" hidden></div>
       </div>
-      <div class="board-list" id="boardList"></div>
-      <p class="board-note reveal">＊ Messages are shown after review. To protect your privacy, please avoid entering real names, phone numbers or other personal information.</p>
+
+      <div class="board-list" id="boardList" style="margin-top:34px;"></div>
+      <p class="board-note reveal">＊ Public content is shown only after review. The only interaction is “leave a heart” — no public comments, to avoid further hurt. Please avoid entering phone numbers or other personal information.</p>
     </div>
   </section>
 
