@@ -233,10 +233,10 @@ body.cart-open .fab,body.cart-open .to-top{display:none!important;}
       </div>
       <div class="reveal" style="background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:20px 18px;margin-top:26px;text-align:center;">
         <p class="eyebrow" style="margin-bottom:8px;">善終客戶提示</p>
-        <p class="lead" style="margin:0 0 14px;">已選擇善終旅程？輸入個案編號，即可讓我們為你顯示適合的尺寸、已包含項目及可升級選擇。</p>
+        <p class="lead" style="margin:0 0 14px;">已選擇善終旅程？輸入發票編號，即可讓我們為你顯示適合的尺寸、已包含項目及可升級選擇。</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;">
-          <input id="caseNo" placeholder="個案編號（例如 RS-000123）" style="max-width:260px;">
-          <button class="cta light" type="button" id="caseBtn">以個案編號查詢</button>
+          <input id="caseNo" placeholder="發票編號（例如 #1024）" style="max-width:260px;">
+          <button class="cta light" type="button" id="caseBtn">以發票編號查詢</button>
         </div>
       </div>
     </div>
@@ -244,8 +244,9 @@ body.cart-open .fab,body.cart-open .to-top{display:none!important;}
 
   <hr class="divider">
 
+  <div id="shopBackdrop"></div>
   <div class="shop-wrap">
-    <button class="detail-back" type="button" id="shopBack" style="display:none;">← 返回紀念系列</button>
+    <button class="detail-back" type="button" id="shopBack" style="display:none;">✕ 關閉</button>
     <div class="shop-buy-hd">
       <p class="eyebrow">選購紀念品</p>
       <h2>把心意，帶回家</h2>
@@ -337,16 +338,17 @@ body.cart-open .fab,body.cart-open .to-top{display:none!important;}
 (function(){
   // 個案編號查詢
   var b=document.getElementById('caseBtn'),i=document.getElementById('caseNo');
-  if(b&&i){ b.addEventListener('click',function(){var c=i.value.trim();var t=c?('你好，我的善終個案編號是 '+c+'，想查詢適合的紀念品尺寸與已包含項目。'):('你好，我是善終旅程客戶，想查詢適合的紀念品。');window.open('https://wa.me/85264762951?text='+encodeURIComponent(t),'_blank','noopener');}); i.addEventListener('keydown',function(e){if(e.key==='Enter')b.click();}); }
-  // 分類入口 → 選購紀念品（獨立 view）
-  var cats=document.getElementById('categories'), wrap=document.querySelector('.shop-wrap'), back=document.getElementById('shopBack');
-  if(!cats||!wrap) return;
+  if(b&&i){ b.addEventListener('click',function(){var c=i.value.trim();var t=c?('你好，我的善終發票編號是 '+c+'，想查詢適合的紀念品尺寸與已包含項目。'):('你好，我是善終旅程客戶，想查詢適合的紀念品。');window.open('https://wa.me/85264762951?text='+encodeURIComponent(t),'_blank','noopener');}); i.addEventListener('keydown',function(e){if(e.key==='Enter')b.click();}); }
+  // 分類入口 → 選購紀念品（彈出視窗）
+  var wrap=document.querySelector('.shop-wrap'), back=document.getElementById('shopBack'), bd=document.getElementById('shopBackdrop');
+  if(!wrap) return;
   wrap.style.display='none';
-  function scrollTo(elm){var h=document.querySelector('.site-header');var off=(h?h.offsetHeight:0)+14;var y=elm.getBoundingClientRect().top+window.pageYOffset-off;window.scrollTo({top:y<0?0:y,behavior:'smooth'});}
-  function toShop(cat){ cats.style.display='none'; wrap.style.display=''; if(back)back.style.display=''; if(window.ResoulShop)window.ResoulShop.setFilter(cat||'all'); scrollTo(wrap); }
-  function toCats(){ wrap.style.display='none'; if(back)back.style.display='none'; cats.style.display=''; scrollTo(cats); }
-  document.querySelectorAll('#categories [data-cat]').forEach(function(a){ a.addEventListener('click',function(e){ e.preventDefault(); toShop(a.getAttribute('data-cat')); }); });
-  if(back) back.addEventListener('click',toCats);
+  function openModal(cat){ if(window.ResoulShop)window.ResoulShop.setFilter(cat||'all'); wrap.classList.add('modal'); wrap.style.display=''; if(bd)bd.classList.add('open'); document.body.classList.add('shop-modal-lock'); if(back)back.style.display=''; wrap.scrollTop=0; }
+  function closeModal(){ wrap.classList.remove('modal'); wrap.style.display='none'; if(bd)bd.classList.remove('open'); document.body.classList.remove('shop-modal-lock'); }
+  document.querySelectorAll('#categories [data-cat]').forEach(function(a){ a.addEventListener('click',function(e){ e.preventDefault(); openModal(a.getAttribute('data-cat')); }); });
+  if(back) back.addEventListener('click',closeModal);
+  if(bd) bd.addEventListener('click',closeModal);
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && wrap.classList.contains('modal')) closeModal(); });
 })();
 </script>
 <script src="js/resoul.js" defer></script>

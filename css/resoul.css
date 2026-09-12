@@ -343,6 +343,14 @@ section{padding:64px 0;}
 .topbar span{opacity:.9;}
 .ill-fig{margin:22px auto 4px;max-width:280px;text-align:center;}
 .ill-fig img{width:100%;height:auto;display:block;margin:0 auto;opacity:.92;}
+/* 紀念系列 → 選購紀念品彈窗 */
+#shopBackdrop{position:fixed;inset:0;background:rgba(31,25,20,.55);z-index:900;display:none;}
+#shopBackdrop.open{display:block;}
+.shop-wrap.modal{position:fixed;z-index:901;top:3vh;left:50%;transform:translateX(-50%);width:min(1000px,94vw);max-height:94vh;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--bg);border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.35);}
+.shop-wrap.modal #shopBack{position:sticky;top:0;background:var(--bg);z-index:2;padding-top:6px;}
+body.shop-modal-lock{overflow:hidden;}
+body.shop-modal-lock .cart-drawer{z-index:1100;}
+body.shop-modal-lock #shopOverlay{z-index:1099;}
 /* 分享頁 / 紀念故事 */
 .mform{margin-top:24px;text-align:left;}
 .mform .mf-row{display:flex;gap:14px;flex-wrap:wrap;}
