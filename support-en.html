@@ -265,6 +265,11 @@
       <p class="eyebrow" style="text-align:center;">A letter to <span id="lmName">them</span></p>
       <h3 style="text-align:center;font-size:1.24rem;margin-bottom:6px;">Not sure how to begin? Start from a memory.</h3>
       <form class="book-form letter-form" id="letterForm">
+        <div class="lf-mode" style="display:flex;gap:8px;justify-content:center;margin-bottom:4px;">
+          <button type="button" class="mf-chip active" id="lfModeAi">✨ Let AI help</button>
+          <button type="button" class="mf-chip" id="lfModeSelf">✍️ Write it myself</button>
+        </div>
+        <div id="lfAi">
         <div class="bf-field"><label for="lfName">Pet's name</label><input id="lfName" placeholder="Nicknames welcome"></div>
         <div class="bf-field"><label for="lfYears">How long you lived together</label><input id="lfYears" placeholder="A rough span is fine"></div>
         <div class="bf-field"><label for="lfTrait">Their most special trait or habit</label><input id="lfTrait" placeholder="e.g. waited for you every day"></div>
@@ -273,8 +278,13 @@
         <div class="bf-field"><label for="lfSorry">Something to say sorry for (optional)</label><input id="lfSorry" placeholder="You may leave this blank"></div>
         <div class="bf-field"><label for="lfTone">Tone</label><select id="lfTone"><option value="gentle">Gentle</option><option value="calm">Calm</option><option value="everyday">Like everyday talk</option></select></div>
         <div class="bf-field"><label for="lfLang">Language</label><select id="lfLang"><option value="en">English</option><option value="zh">繁體中文</option><option value="bi">Bilingual</option></select></div>
+        </div><!-- /lfAi -->
+        <div id="lfSelf" hidden>
+          <div class="bf-field"><label for="lfOwn">What you'd like to say to them</label><textarea id="lfOwn" rows="7" placeholder="Take your time and write your own words…"></textarea></div>
+        </div>
         <button type="submit" class="cta book-submit" id="lfBtn">Help me start this letter <span class="arw">→</span></button>
-        <p class="book-note">It's only a draft — edit, delete or add your own words freely. Nothing is saved before you submit.</p>
+        <button type="button" class="cta book-submit" id="lfSelfBtn" hidden>Put it on the letter <span class="arw">→</span></button>
+        <p class="book-note">The AI version is only a draft — edit it freely; or choose “Write it myself” to place your own words on the letter. Nothing is saved before you submit.</p>
         <div class="book-msg" id="lfMsg" role="status" aria-live="polite" hidden></div>
       </form>
       <div class="letter-sheet empty" id="letterSheet">
@@ -301,6 +311,23 @@
   var nameEl=document.getElementById('lfName'), titleEl=document.getElementById('lmName');
   function syncName(){ if(titleEl) titleEl.textContent=(nameEl&&nameEl.value.trim())||'them'; }
   if(nameEl) nameEl.addEventListener('input',syncName);
+  // Mode: AI help / write it myself
+  var aiWrap=document.getElementById('lfAi'), selfWrap=document.getElementById('lfSelf'), selfBtn=document.getElementById('lfSelfBtn');
+  var mAi=document.getElementById('lfModeAi'), mSelf=document.getElementById('lfModeSelf'), regen=document.getElementById('lfRegen');
+  function setMode(ai){
+    if(aiWrap)aiWrap.hidden=!ai; if(selfWrap)selfWrap.hidden=ai;
+    if(btn)btn.hidden=!ai; if(selfBtn)selfBtn.hidden=ai;
+    if(regen)regen.style.display=ai?'':'none';
+    if(mAi)mAi.classList.toggle('active',ai); if(mSelf)mSelf.classList.toggle('active',!ai);
+    if(msg)msg.hidden=true;
+  }
+  if(mAi)mAi.addEventListener('click',function(){setMode(true);});
+  if(mSelf)mSelf.addEventListener('click',function(){setMode(false);});
+  if(selfBtn)selfBtn.addEventListener('click',function(){
+    var t=v('lfOwn'); if(!t){show('err','Please write a few words first.');return;}
+    sheet.classList.remove('empty'); body.textContent=t; actions.hidden=false;
+    try{sheet.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}
+  });
   function show(k,t){if(!msg)return;msg.className='book-msg '+k;msg.textContent=t;msg.hidden=false;}
   f.addEventListener('submit',function(e){
     e.preventDefault();

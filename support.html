@@ -265,6 +265,11 @@
       <p class="eyebrow" style="text-align:center;">給<span id="lmName">牠</span>一封信</p>
       <h3 style="text-align:center;font-size:1.24rem;margin-bottom:6px;">不知道如何開始，也可以先從一段回憶說起。</h3>
       <form class="book-form letter-form" id="letterForm">
+        <div class="lf-mode" style="display:flex;gap:8px;justify-content:center;margin-bottom:4px;">
+          <button type="button" class="mf-chip active" id="lfModeAi">✨ AI 幫我寫</button>
+          <button type="button" class="mf-chip" id="lfModeSelf">✍️ 我自己寫</button>
+        </div>
+        <div id="lfAi">
         <div class="bf-field"><label for="lfName">毛孩名字</label><input id="lfName" placeholder="可包括暱稱"></div>
         <div class="bf-field"><label for="lfYears">一起生活了多久</label><input id="lfYears" placeholder="大概年期即可"></div>
         <div class="bf-field"><label for="lfTrait">最特別的性格或習慣</label><input id="lfTrait" placeholder="例如每天等你回家"></div>
@@ -273,8 +278,13 @@
         <div class="bf-field"><label for="lfSorry">想道歉或放不下的（可選）</label><input id="lfSorry" placeholder="可選擇不回答"></div>
         <div class="bf-field"><label for="lfTone">語氣</label><select id="lfTone"><option value="溫柔">溫柔</option><option value="平靜">平靜</option><option value="像日常對話">像日常對話</option></select></div>
         <div class="bf-field"><label for="lfLang">語言</label><select id="lfLang"><option value="zh">繁體中文</option><option value="en">English</option><option value="bi">中英雙語</option></select></div>
+        </div><!-- /lfAi -->
+        <div id="lfSelf" hidden>
+          <div class="bf-field"><label for="lfOwn">你想對牠說的話</label><textarea id="lfOwn" rows="7" placeholder="慢慢寫下你想對牠說的話…"></textarea></div>
+        </div>
         <button type="submit" class="cta book-submit" id="lfBtn">幫我開始寫這封信 <span class="arw">→</span></button>
-        <p class="book-note">內容只是初稿，你可以自由修改、刪除或加入自己的語句。提交前不會儲存內容。</p>
+        <button type="button" class="cta book-submit" id="lfSelfBtn" hidden>放上信紙 <span class="arw">→</span></button>
+        <p class="book-note">AI 版本只是初稿，你可以自由修改；或選「我自己寫」直接放上信紙。提交前不會儲存內容。</p>
         <div class="book-msg" id="lfMsg" role="status" aria-live="polite" hidden></div>
       </form>
       <div class="letter-sheet empty" id="letterSheet">
@@ -302,6 +312,23 @@
   var nameEl=document.getElementById('lfName'), titleEl=document.getElementById('lmName');
   function syncName(){ if(titleEl) titleEl.textContent=(nameEl&&nameEl.value.trim())||'牠'; }
   if(nameEl) nameEl.addEventListener('input',syncName);
+  // 模式：AI 幫寫 / 自己寫
+  var aiWrap=document.getElementById('lfAi'), selfWrap=document.getElementById('lfSelf'), selfBtn=document.getElementById('lfSelfBtn');
+  var mAi=document.getElementById('lfModeAi'), mSelf=document.getElementById('lfModeSelf'), regen=document.getElementById('lfRegen');
+  function setMode(ai){
+    if(aiWrap)aiWrap.hidden=!ai; if(selfWrap)selfWrap.hidden=ai;
+    if(btn)btn.hidden=!ai; if(selfBtn)selfBtn.hidden=ai;
+    if(regen)regen.style.display=ai?'':'none';
+    if(mAi)mAi.classList.toggle('active',ai); if(mSelf)mSelf.classList.toggle('active',!ai);
+    if(msg)msg.hidden=true;
+  }
+  if(mAi)mAi.addEventListener('click',function(){setMode(true);});
+  if(mSelf)mSelf.addEventListener('click',function(){setMode(false);});
+  if(selfBtn)selfBtn.addEventListener('click',function(){
+    var t=v('lfOwn'); if(!t){show('err','請先寫下你想對牠說的話。');return;}
+    sheet.classList.remove('empty'); body.textContent=t; actions.hidden=false;
+    try{sheet.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}
+  });
   f.addEventListener('submit',function(e){
     e.preventDefault();
     if(!v('lfName') && !v('lfMemory')){show('err','請至少填毛孩名字或一段回憶。');return;}
