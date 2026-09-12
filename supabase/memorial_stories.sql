@@ -1,7 +1,7 @@
 -- ============================================================
 -- RESOUL 分享頁 / Remember Their Story — 紀念故事擴充
--- 用法：Supabase 專案 (tkgxdzvsnmereaygddaz — 與 resoul-admin 後台同一個) → SQL Editor → 貼上全部 → Run
---       （注意：前端現已統一指向 tkgxdz；請在此 project 執行，不要用舊的 diyxcxkgvqvyrstrzttq）
+-- 用法：Supabase 專案 (diyxcxkgvqvyrstrzttq — 與 resoul-admin 後台同一個) → SQL Editor → 貼上全部 → Run
+--       （注意：前端現已統一指向 diyxcxkgvqvyrstrzttq；請在此 project 執行）
 -- 設計：沿用現有 public.posts 表，用 context='memorial' 區分紀念故事；
 --       匿名提交、預先審核（held→visible）、私隱三選一、留下心意（heart）。
 -- 本檔可重複執行（idempotent）。
