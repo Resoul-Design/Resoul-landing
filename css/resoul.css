@@ -345,7 +345,13 @@ section{padding:64px 0;}
 .ill-fig img{width:100%;height:auto;display:block;margin:0 auto;opacity:.92;}
 .cta.light.active{background:var(--ink);color:var(--cream);border-color:var(--ink);}
 .cta.sm{padding:11px 20px;font-size:.9rem;}
-.mform .mf-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+.mform .mf-btns{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px;}
+.mform .mf-btns .cta{min-height:44px;padding:10px 22px;font-size:.88rem;letter-spacing:.03em;box-shadow:0 10px 22px -18px rgba(59,47,39,.55);}
+.mform .mf-btns .cta.light{padding-inline:20px;}
+@media(max-width:520px){
+  .mform .mf-btns{gap:8px;}
+  .mform .mf-btns .cta{flex:1 1 100%;min-height:42px;padding:9px 16px;font-size:.84rem;}
+}
 /* 紀念系列 → 選購紀念品彈窗 */
 #shopBackdrop{position:fixed;inset:0;background:rgba(31,25,20,.55);z-index:900;display:none;}
 #shopBackdrop.open{display:block;}
