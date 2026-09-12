@@ -767,9 +767,10 @@ section{padding:64px 0;}
 
 /* ---------- 火化方案比較表 ---------- */
 .plans{background:var(--cream);text-align:center;}
-.plans-scroll{margin-top:26px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
-.plans-table{width:100%;border-collapse:collapse;min-width:340px;}
-.plans-table th,.plans-table td{padding:12px 6px;text-align:center;border-bottom:1px solid var(--line);font-size:.84rem;vertical-align:middle;}
+.plans-scroll{margin-top:26px;}
+.plans-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+.plans-table th,.plans-table td{padding:12px 6px;text-align:center;border-bottom:1px solid var(--line);font-size:.84rem;vertical-align:middle;word-break:break-word;overflow-wrap:anywhere;}
+@media(max-width:560px){.plans-table th,.plans-table td{font-size:.76rem;padding:10px 4px;}}
 .plans-table thead th{font-family:var(--serif);font-weight:600;color:var(--ink);font-size:1rem;padding-bottom:14px;}
 .plans-table tbody td:first-child,.plans-table thead th:first-child{text-align:left;color:var(--ink-soft);line-height:1.4;}
 .paw-ic{display:inline-block;width:22px;height:22px;background:var(--paw) center/contain no-repeat;vertical-align:middle;}

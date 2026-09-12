@@ -99,18 +99,10 @@
 
   <hr class="divider">
 
-  <section class="cremation" id="need">
-    <div class="wrap">
-      <p class="eyebrow reveal">查詢時可提供</p>
-      <h2 class="reveal">預先準備，<br>減少來回。</h2>
-      <ul class="lead reveal" style="margin-top:16px;text-align:left;padding-left:1.2em;line-height:2;">
-        <li>主人姓名及聯絡電話</li>
-        <li>毛孩姓名、品種、年齡、性別及體重</li>
-        <li>目前疾病、症狀及正在使用的藥物</li>
-        <li>主診診所及可提供的病歷／化驗資料</li>
-        <li>上門地址、期望日期及時段</li>
-        <li>家中是否有其他寵物、兒童或特別安排</li>
-      </ul>
+  <section class="cremation" id="euthCta">
+    <div class="wrap" style="text-align:center;">
+      <p class="lead reveal" style="margin-bottom:18px;">準備好就可以填一份簡單查詢——毛孩狀況、期望日期時段、聯絡方法即可。我們會協助整理並聯絡提供上門服務的獨立註冊獸醫。</p>
+      <button class="cta reveal" type="button" id="euthCtaBtn">查詢獨立註冊獸醫安排 <span class="arw">→</span></button>
     </div>
   </section>
 
@@ -144,13 +136,11 @@
     </div>
   </section>
 
-  <hr class="divider" id="euthDivider">
-
-  <section class="booking" id="booking">
+  <section class="booking" id="booking" style="display:none">
     <div class="wrap">
       <p class="eyebrow reveal">查詢表格</p>
       <h2 class="reveal">查詢獨立註冊獸醫安排</h2>
-      <p class="lead reveal" style="margin-top:12px;text-align:center;">填好以下資料，我們會協助整理並聯絡提供上門服務的獨立註冊獸醫，並可預先銜接其後的接送安排。醫療評估及程序由獸醫獨立負責。</p>
+      <p class="lead reveal" style="margin-top:12px;text-align:center;">填好以下資料（毛孩狀況、期望日期時段、聯絡方法等），我們會協助整理並聯絡提供上門服務的獨立註冊獸醫，並可預先銜接其後的接送安排。醫療評估及程序由獸醫獨立負責。</p>
 
       <form class="book-form reveal" id="euthForm">
         <div class="bf-field">
@@ -274,6 +264,20 @@
   var SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxNb2AErdbstA_N3khZtyACn_oOModpfmA8_NBvLy6ArODEaPbZiZEAoVBHY8iIdvNv/exec';
   var f = document.getElementById('euthForm');
   if (!f) return;
+  // 把查詢表格移到「建議流程」下，預設隱藏，㩒掣先彈出
+  var euthCta = document.getElementById('euthCta');
+  var bsec = document.getElementById('booking');
+  if (euthCta && bsec) {
+    euthCta.insertAdjacentElement('afterend', bsec);
+    var ecb = document.getElementById('euthCtaBtn');
+    if (ecb) ecb.addEventListener('click', function () {
+      bsec.style.display = '';
+      var header = document.querySelector('.site-header');
+      var off = (header ? header.offsetHeight : 0) + 14;
+      var y = bsec.getBoundingClientRect().top + window.pageYOffset - off;
+      window.scrollTo({ top: y < 0 ? 0 : y, behavior: 'smooth' });
+    });
+  }
   var v = function (id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; };
   var msg = document.getElementById('euMsg');
   var btn = f.querySelector('.book-submit');
