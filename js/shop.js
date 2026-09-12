@@ -429,6 +429,7 @@
   function scrollToShop() {
     var target = document.querySelector(".shop-wrap");
     if (!target) return;
+    target.scrollTop = 0;
     var header = document.querySelector(".site-header");
     var offset = (header ? header.offsetHeight : 0) + 14;
     var y = target.getBoundingClientRect().top + window.pageYOffset - offset;
