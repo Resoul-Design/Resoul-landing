@@ -206,6 +206,21 @@
   /* ===== 狀態 ===== */
   var state = { products: [], cart: null, current: null, qty: 1, sel: {}, filter: "all", req: "", photo: null };
 
+  /* ===== 分類入口（關鍵字對應，客戶產品 productType／標籤／名稱含關鍵字即歸類）===== */
+  var CAT_KEYS = {
+    urn:    ["骨灰", "甕", "盅", "龕", "urn"],
+    stone:  ["晶石", "琉璃", "stone", "crystal"],
+    bronze: ["銅印", "銅", "bronze"],
+    print:  ["掌印", "鼻印", "毛髮", "paw", "nose", "fur", "print"],
+    jewel:  ["飾物", "頸鏈", "手鏈", "吊墜", "jewel", "necklace", "pendant", "bracelet"],
+    gift:   ["禮物", "關懷", "gift", "care", "comfort"]
+  };
+  function matchCat(p, key) {
+    var kws = CAT_KEYS[key]; if (!kws) return false;
+    var hay = ((p.productType || "") + " " + (p.tags || []).join(" ") + " " + (p.title || "")).toLowerCase();
+    return kws.some(function (k) { return hay.indexOf(k.toLowerCase()) >= 0; });
+  }
+
   /* ===== 購物車：確保存在 ===== */
   function ensureCartThen(mid, qty, attrs) {
     var id = null;
@@ -257,7 +272,9 @@
     if (!state.products.length) { empty.style.display = "block"; return; }
     var list = state.filter === "all"
       ? state.products
-      : state.products.filter(function (p) { return (p.productType || "").trim() === state.filter; });
+      : (CAT_KEYS[state.filter]
+          ? state.products.filter(function (p) { return matchCat(p, state.filter); })
+          : state.products.filter(function (p) { return (p.productType || "").trim() === state.filter; }));
     if (!list.length) {
       empty.textContent = L("此類別暫時沒有商品。", "No products in this category yet.");
       empty.style.display = "block";
@@ -536,6 +553,17 @@
     $("#cartClose").addEventListener("click", closeCart);
     $("#shopOverlay").addEventListener("click", closeCart);
     $("#checkoutBtn").addEventListener("click", checkout);
+
+    // 對外 hook：分類入口設定篩選（見 shop.html 分類卡）
+    window.ResoulShop = {
+      setFilter: function (t) {
+        // 若正在看產品詳情，先返回列表
+        if (state.current) closeDetail();
+        state.filter = t || "all";
+        renderFilters();
+        renderGrid();
+      }
+    };
 
     // 載入產品
     gql(PRODUCTS_Q, { n: 250 }).then(function (data) {
