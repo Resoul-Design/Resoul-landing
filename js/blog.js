@@ -111,43 +111,8 @@
       (img ? '<img class="article-cover" src="' + esc(img) + '" alt="' + esc(a.image.altText || a.title) + '">' : "") +
       '<div class="article-body">' + (a.contentHtml || "") + "</div>" +
       '<p class="article-note">' + L("本文僅供一般參考，個別情況請諮詢你的獸醫。", "This article is for general reference only; please consult your vet for individual cases.") + "</p>" +
-      '<section class="comments">' +
-      '<h2 class="comments-h">' + L("留言", "Comments") + '　<span id="cmtCount"></span></h2>' +
-      '<div class="comment-list" id="cmtList"><p class="comments-empty">' + L("載入中…", "Loading…") + "</p></div>" +
-      '<form class="comment-form" id="commentForm">' +
-      '<input id="cmtName" maxlength="40" placeholder="' + L("暱稱（可用化名）", "Nickname (an alias is fine)") + '">' +
-      '<textarea id="cmtBody" rows="4" maxlength="1000" placeholder="' + L("寫下你想說的話…", "Write what you'd like to say…") + '" required></textarea>' +
-      '<button type="submit" class="btn lg">' + L("送出留言", "Post comment") + "</button>" +
-      '<p class="cf-note" id="cmtStatus">' + L("為保障你的私隱，請避免填寫真實姓名、電話等資料。留言會經審核後顯示。", "To protect your privacy, please avoid real names, phone numbers, etc. Comments are shown after review.") + "</p>" +
-      "</form>" +
-      "</section>" +
       "</article>";
     $("#articleBack").addEventListener("click", closeArticle);
-    loadComments(handle, $("#cmtList"), $("#cmtCount"));
-    var form = $("#commentForm");
-    if (form) {
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        var body = ($("#cmtBody").value || "").trim();
-        var nm = ($("#cmtName").value || "").trim();
-        var st = $("#cmtStatus");
-        if (!body) return;
-        if (sbCrisis(body)) { var sbtn = document.getElementById("supportBtn"); if (sbtn) sbtn.click(); }
-        var btn = form.querySelector("button");
-        btn.disabled = true; if (st) st.textContent = L("正在送出…", "Sending…");
-        fetch(SB_URL + "/rest/v1/posts", {
-          method: "POST",
-          headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" },
-          body: JSON.stringify({ context: "blog:" + handle, name: nm || null, body: body })
-        }).then(function (r) {
-          if (!r.ok) throw new Error("insert");
-          $("#cmtBody").value = ""; $("#cmtName").value = "";
-          if (st) { st.textContent = L("多謝你的留言 🤍 經審核後就會顯示。", "Thank you for your comment 🤍 It will appear after review."); st.style.color = "var(--gold-deep)"; }
-        }).catch(function () {
-          if (st) st.textContent = L("送出失敗，請稍後再試。", "Failed to send, please try again later.");
-        }).then(function () { btn.disabled = false; });
-      });
-    }
     $("#blogList").style.display = "none";
     d.style.display = "block";
     scrollToBlog();
