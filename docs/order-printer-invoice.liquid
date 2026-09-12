@@ -8,6 +8,7 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
 
 可自訂項目（見下方 CONFIG）：
   • logo_url        右上角品牌標誌圖片網址
+  • signature_url   底部 Resoul 簽名圖片網址
   • brand_tagline   標誌下方標語
   • footer_message  底部溫馨語句
   • footer_contact  底部聯絡資料
@@ -21,7 +22,7 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
   • Phone       → 客戶電話
   • ITEM CODE   → 貨品 SKU
   • DESCRIPTION → 貨品名稱（+ 款式 / 刻字等自訂內容）
-  • REMARKS     → 訂單備註 order.note
+  • REMARKS     → 訂單備註 order.note + note attributes
   • DEPOSITS    → 訂金：於訂單附加資料加一項名為「Deposit」（或「訂金」），
                   填數字即可（例：2730）。若未填而訂單已付款，當作全數已付。
   • BALANCE     → 應付餘額 = 小計 − 折扣 − 訂金
@@ -29,7 +30,8 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
 {%- endcomment -%}
 
 {%- comment -%} ===== CONFIG（可自行修改）===== {%- endcomment -%}
-{%- assign logo_url      = "https://resoul.hk/images/resoul-wordmark.png" -%}
+{%- assign logo_url      = "https://cdn.shopify.com/s/files/1/0839/2841/6484/files/resoul-wordmark.png?v=1788451690" -%}
+{%- assign signature_url = "https://cdn.shopify.com/s/files/1/0839/2841/6484/files/Sign.png?v=1789201951" -%}
 {%- assign brand_tagline = "Your last greatest love to show" -%}
 {%- assign footer_message = "May the story of your beloved companion continue to bring warmth to your days." -%}
 {%- assign footer_contact = "https://resoul.hk | @resoul_hk | +852 6476 2951 | resoulhk@gmail.com" -%}
@@ -38,8 +40,10 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
 {%- assign owner_of = "" -%}
 {%- assign deposit_attr = "" -%}
 {%- for a in order.note_attributes -%}
-  {%- if a.name == "Owner of" or a.name == "毛孩名" or a.name == "Pet" or a.name == "pet" -%}{%- assign owner_of = a.value -%}{%- endif -%}
-  {%- if a.name == "Deposit" or a.name == "訂金" or a.name == "deposit" -%}{%- assign deposit_attr = a.value -%}{%- endif -%}
+  {%- assign attr_name = a.name | default: a.first -%}
+  {%- assign attr_value = a.value | default: a.last -%}
+  {%- if attr_name == "Owner of" or attr_name == "毛孩名" or attr_name == "Pet" or attr_name == "pet" -%}{%- assign owner_of = attr_value -%}{%- endif -%}
+  {%- if attr_name == "Deposit" or attr_name == "訂金" or attr_name == "deposit" -%}{%- assign deposit_attr = attr_value -%}{%- endif -%}
 {%- endfor -%}
 
 {%- comment -%} ===== 計算金額（單位：仙 / cents）===== {%- endcomment -%}
@@ -64,7 +68,7 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
     font-family: 'Cormorant Garamond', 'Noto Serif TC', 'Times New Roman', serif;
     color: #3a352f;
     background: #fffdf9;
-    font-size: 13.5px;
+    font-size: 14.5px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
@@ -74,7 +78,6 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
   .resoul-invoice .muted { color: #8a8379; }
   .resoul-invoice .up { text-transform: uppercase; letter-spacing: .18em; }
 
-  /* ---- 頁首：INVOICE 標題 + 標誌 ---- */
   .resoul-invoice .head { display: flex; justify-content: space-between; align-items: flex-start; }
   .resoul-invoice .title-box {
     border: 1px solid #cfc9be; border-radius: 18px;
@@ -87,7 +90,6 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
   .resoul-invoice .brand img { height: 74px; width: auto; display: inline-block; }
   .resoul-invoice .brand .tagline { font-style: italic; font-size: 12px; color: #6f6a63; margin-top: 4px; }
 
-  /* ---- 客戶資料 + 發票編號 ---- */
   .resoul-invoice .meta { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 26px; gap: 30px; }
   .resoul-invoice .issued {
     border: 1px solid #cfc9be; border-radius: 16px; padding: 16px 22px;
@@ -100,37 +102,48 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
   .resoul-invoice .inv-no .row { display: flex; gap: 16px; margin: 3px 0; }
   .resoul-invoice .inv-no .k { color: #6f6a63; min-width: 92px; }
 
-  /* ---- 貨品表 ---- */
-  .resoul-invoice table.items { width: 100%; border-collapse: collapse; margin-top: 34px; }
+  .resoul-invoice table.items { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 34px; }
+  .resoul-invoice table.items .col-code { width: 20%; }
+  .resoul-invoice table.items .col-desc { width: 38%; }
+  .resoul-invoice table.items .col-price { width: 15%; }
+  .resoul-invoice table.items .col-qty { width: 9%; }
+  .resoul-invoice table.items .col-sub { width: 18%; }
   .resoul-invoice table.items thead th {
-    font-weight: 500; color: #6f6a63; text-align: left;
-    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    font-weight: 500; color: #77716a; text-align: left;
+    font-size: 13px; letter-spacing: .14em; text-transform: uppercase;
     padding-bottom: 14px; border-bottom: 1px solid #e4ded4;
   }
   .resoul-invoice table.items th.num, .resoul-invoice table.items td.num { text-align: right; }
   .resoul-invoice table.items th.ctr, .resoul-invoice table.items td.ctr { text-align: center; }
-  .resoul-invoice table.items tbody td { padding: 13px 0; vertical-align: top; }
-  .resoul-invoice table.items .code { color: #4a453e; white-space: nowrap; padding-right: 18px; }
-  .resoul-invoice table.items .desc { color: #3a352f; }
+  .resoul-invoice table.items th.col-price, .resoul-invoice table.items td.col-price { padding-right: 26px; }
+  .resoul-invoice table.items tbody td { padding: 15px 0; vertical-align: top; font-size: 15px; font-weight: 500; line-height: 1.55; letter-spacing: .01em; }
+  .resoul-invoice table.items .code { color: #5f5b55; font-size: 13px; letter-spacing: .02em; overflow-wrap: normal; word-break: normal; padding-right: 26px; }
+  .resoul-invoice table.items .desc { color: #4b463f; padding-left: 8px; }
   .resoul-invoice table.items .li-prop { font-size: 11.5px; color: #8a8379; margin-top: 2px; }
   .resoul-invoice table.items .col-price, .resoul-invoice table.items .col-sub { white-space: nowrap; }
+  .resoul-invoice table.items td.num,
+  .resoul-invoice table.items td.ctr,
+  .resoul-invoice .totals .row .v {
+    font-family: 'Cormorant Garamond', 'Noto Serif TC', 'Times New Roman', serif;
+    font-variant-numeric: lining-nums tabular-nums;
+    font-feature-settings: "lnum" 1, "tnum" 1;
+  }
 
-  /* ---- 頁尾：備註 + 合計 ---- */
   .resoul-invoice .foot { display: flex; justify-content: space-between; margin-top: 46px; gap: 40px; }
-  .resoul-invoice .remarks { max-width: 52%; }
+  .resoul-invoice .remarks { flex: 1 1 auto; max-width: 52%; }
   .resoul-invoice .remarks .h { color: #6f6a63; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; margin-bottom: 6px; }
-  .resoul-invoice .remarks .body { color: #4a453e; line-height: 1.6; }
+  .resoul-invoice .remarks .body { color: #4a453e; line-height: 1.6; white-space: pre-wrap; }
+  .resoul-invoice .remarks .empty { color: #b0a79a; }
   .resoul-invoice .totals { min-width: 300px; }
-  .resoul-invoice .totals .row { display: flex; justify-content: space-between; padding: 5px 0; }
+  .resoul-invoice .totals .row { display: flex; justify-content: space-between; gap: 22px; padding: 5px 0; }
   .resoul-invoice .totals .row .k { color: #6f6a63; letter-spacing: .1em; text-transform: uppercase; font-size: 12px; }
-  .resoul-invoice .totals .row .v { color: #3a352f; }
+  .resoul-invoice .totals .row .v { color: #3a352f; white-space: nowrap; }
   .resoul-invoice .totals .balance { border-top: 1px solid #e4ded4; margin-top: 6px; padding-top: 10px; }
   .resoul-invoice .totals .balance .k, .resoul-invoice .totals .balance .v { font-weight: 600; color: #2f2b25; letter-spacing: .08em; }
 
-  /* ---- 簽名 + 感謝 ---- */
   .resoul-invoice .sign { text-align: right; margin-top: 24px; }
-  .resoul-invoice .sign .script { font-family: 'Parisienne', 'Noto Serif TC', cursive; font-size: 46px; color: #6f6a63; line-height: 1; }
-  .resoul-invoice .sign .ty { letter-spacing: .3em; color: #8a8379; font-size: 15px; margin-top: 2px; }
+  .resoul-invoice .sign .signature-img { display: inline-block; width: 190px; max-width: 38%; height: auto; }
+  .resoul-invoice .sign .ty { letter-spacing: .3em; color: #5d6f62; font-size: 15px; margin-top: 10px; }
   .resoul-invoice .closing { text-align: center; margin-top: 20px; color: #6f6a63; }
   .resoul-invoice .closing .msg { font-size: 14px; }
   .resoul-invoice .closing .contact { font-size: 11.5px; letter-spacing: .04em; margin-top: 4px; color: #8a8379; }
@@ -140,7 +153,6 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
   <div class="frame-outer">
     <div class="frame-inner">
 
-      <!-- 頁首 -->
       <div class="head">
         <div class="title-box"><div class="t">INVOICE</div></div>
         <div class="brand">
@@ -149,7 +161,6 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
         </div>
       </div>
 
-      <!-- 客戶資料 + 發票編號 -->
       <div class="meta">
         <div class="issued">
           <div class="row"><span class="k">Issued to:</span><span class="v">{{ order.customer.first_name }} {{ order.customer.last_name }}{% if order.customer.first_name == blank and order.customer.last_name == blank %}{{ order.shipping_address.name | default: order.billing_address.name }}{% endif %}</span></div>
@@ -162,7 +173,6 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
         </div>
       </div>
 
-      <!-- 貨品表 -->
       <table class="items">
         <thead>
           <tr>
@@ -187,33 +197,40 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
                 {%- endunless -%}
               {%- endfor -%}
             </td>
-            <td class="num col-price">{{ line_item.price | money }}</td>
+            <td class="num col-price">HKD {{ line_item.price | money_without_currency }}</td>
             <td class="ctr">{{ line_item.quantity }}</td>
-            <td class="num col-sub">{{ line_item.line_price | money }}</td>
+            <td class="num col-sub">HKD {{ line_item.line_price | money_without_currency }}</td>
           </tr>
           {%- endfor -%}
         </tbody>
       </table>
 
-      <!-- 備註 + 合計 -->
       <div class="foot">
         <div class="remarks">
-          {%- if order.note != blank -%}
           <div class="h">Remarks</div>
-          <div class="body">{{ order.note }}</div>
+          {%- if order.note != blank -%}
+            <div class="body">{{ order.note }}</div>
+          {%- else -%}
+            <div class="body empty">—</div>
           {%- endif -%}
+          {%- for a in order.note_attributes -%}
+            {%- assign attr_name = a.name | default: a.first -%}
+            {%- assign attr_value = a.value | default: a.last -%}
+            {%- unless attr_value == blank or attr_name == "Deposit" or attr_name == "訂金" or attr_name == "deposit" -%}
+              <div class="body">{{ attr_name }}: {{ attr_value }}</div>
+            {%- endunless -%}
+          {%- endfor -%}
         </div>
         <div class="totals">
-          <div class="row"><span class="k">Total</span><span class="v">{{ items_total | money }}</span></div>
-          <div class="row"><span class="k">Discount</span><span class="v">{{ order.total_discounts | money }}</span></div>
-          <div class="row"><span class="k">Deposits</span><span class="v">{{ deposits | money }}</span></div>
-          <div class="row balance"><span class="k">Balance to settle</span><span class="v">{{ balance | money }}</span></div>
+          <div class="row"><span class="k">Total</span><span class="v">HKD {{ items_total | money_without_currency }}</span></div>
+          <div class="row"><span class="k">Discount</span><span class="v">HKD {{ order.total_discounts | money_without_currency }}</span></div>
+          <div class="row"><span class="k">Deposits</span><span class="v">HKD {{ deposits | money_without_currency }}</span></div>
+          <div class="row balance"><span class="k">Balance to settle</span><span class="v">HKD {{ balance | money_without_currency }}</span></div>
         </div>
       </div>
 
-      <!-- 簽名 + 感謝 -->
       <div class="sign">
-        <div class="script">Resoul</div>
+        {%- if signature_url != "" -%}<img class="signature-img" src="{{ signature_url }}" alt="Resoul">{%- else -%}<div class="script">Resoul</div>{%- endif -%}
         <div class="ty">THANK YOU</div>
       </div>
       <div class="closing">
