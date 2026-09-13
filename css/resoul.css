@@ -970,3 +970,11 @@ body.lm-lock{overflow:hidden;}
 .photo-fig{margin:22px auto 8px;max-width:340px;}
 .photo-fig img{width:100%;height:auto;display:block;border-radius:16px;box-shadow:var(--shadow);}
 @media(max-width:520px){.photo-fig{max-width:260px;}}
+
+/* 服務流程：hover 第 N 步 → 高亮第 1～N 步（之後淡化）*/
+@media (hover:hover){
+  .walk-track .wstep{transition:opacity .25s ease;}
+  .walk-track:has(.wstep:hover) .wstep:hover ~ .wstep{opacity:.32;}
+  .walk-track:has(.wstep:hover) .wstep:not(:hover ~ .wstep) .wstone{background:var(--gold);border-color:var(--gold);}
+  .walk-track:has(.wstep:hover) .wstep:not(:hover ~ .wstep) .wnum{color:#fff;}
+}
