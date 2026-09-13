@@ -230,16 +230,18 @@
     bronze: ["銅印", "銅", "bronze"],
     print:  ["掌印", "鼻印", "毛髮", "paw", "nose", "fur", "print"],
     jewel:  ["飾物", "頸鏈", "手鏈", "吊墜", "jewel", "necklace", "pendant", "bracelet"],
-    gift:   ["禮物", "關懷", "gift", "care", "comfort"]
+    gift:   ["禮物", "關懷", "gift", "care", "comfort"],
+    home:   ["家居安放", "擺放", "相框", "座檯", "home resting", "home"]
   };
   // 分類標籤（首選）：產品標籤含以下字串即歸入該分類（例如標籤「家居安放 Home resting」）
   var CAT_TAGS = {
-    urn:    "家居安放",
+    urn:    "骨灰盅",
     stone:  "晶石",
     bronze: "銅印",
     print:  "印記",
     jewel:  "飾物",
-    gift:   "關懷"
+    gift:   "關懷",
+    home:   "家居安放"
   };
   function matchCat(p, key) {
     // 1) 先按標籤名稱（可於 Shopify 逐件控制）

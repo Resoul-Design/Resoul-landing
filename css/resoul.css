@@ -706,6 +706,27 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 .scard p{color:var(--ink-soft);font-size:.9rem;line-height:1.7;}
 .scard i{display:block;margin-top:8px;font-family:var(--slogan);font-style:italic;font-size:.85rem;color:var(--gold-deep);}
 
+/* ===== Category cards with faded product-photo backgrounds ===== */
+.cat-grid{margin-top:26px;display:grid;grid-template-columns:1fr;gap:15px;text-align:left;}
+@media(min-width:560px){.cat-grid{grid-template-columns:1fr 1fr;}}
+@media(min-width:1000px){.cat-grid{grid-template-columns:repeat(4,1fr);}}
+.cat-card{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:var(--radius);
+  min-height:190px;display:flex;flex-direction:column;justify-content:flex-end;
+  padding:20px 18px;background:var(--card);text-decoration:none;color:inherit;
+  box-shadow:0 8px 26px -22px rgba(70,52,34,.5);transition:transform .2s,box-shadow .25s;}
+.cat-card:hover{transform:translateY(-3px);box-shadow:0 18px 40px -24px rgba(70,52,34,.55);}
+.cat-card .cat-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.26;z-index:0;
+  transition:opacity .3s ease,transform .4s ease;}
+.cat-card:hover .cat-bg{opacity:.38;transform:scale(1.04);}
+.cat-card .cat-veil{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,rgba(250,246,239,.45) 0%,rgba(250,246,239,.72) 55%,rgba(250,246,239,.92) 100%);}
+:root[data-theme="dark"] .cat-card .cat-veil{background:linear-gradient(180deg,rgba(30,24,18,.45) 0%,rgba(30,24,18,.75) 55%,rgba(30,24,18,.93) 100%);}
+.cat-card>*{position:relative;z-index:2;}
+.cat-card .sc-ic{display:inline-flex;width:44px;height:44px;border-radius:50%;background:#f1e7d7;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:auto;box-shadow:0 2px 8px -4px rgba(70,52,34,.5);}
+:root[data-theme="dark"] .cat-card .sc-ic{background:#33291f;}
+.cat-card h3{font-size:1.05rem;color:var(--ink);margin:14px 0 6px;}
+.cat-card p{color:var(--ink-soft);font-size:.88rem;line-height:1.6;}
+
 /* ===== Service procedure timeline ===== */
 .procedure{background:var(--cream);text-align:center;}
 /* 服務流程 — 由左至右、不規則高低錯落的散步路徑（自動換行，不需拉動） */
