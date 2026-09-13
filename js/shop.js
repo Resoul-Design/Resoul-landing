@@ -360,6 +360,11 @@
         "</div>"
       : "";
 
+    var descHtml = pickDesc(p.descriptionHtml)
+      ? '<div class="pdp-desc"><div class="opt-label">' + L("產品描述", "Product description") + "</div>" +
+        esc(pickDesc(p.descriptionHtml)) + "</div>"
+      : "";
+
     d.innerHTML =
       '<button class="detail-back" type="button" id="detailBack">← ' + L("返回所有紀念品", "Back to all keepsakes") + "</button>" +
       '<div class="pdp">' +
@@ -375,13 +380,13 @@
       '<div class="pdp-price" id="pdpPrice">' + money(v.price.amount, v.price.currencyCode) + "</div>" +
       '<div class="pdp-avail" id="pdpAvail"></div>' +
       '<div class="trust"><div><b>' + L("適合哪一種告別", "Best for") + "</b>　" + esc(suitability(p)) + "</div></div>" +
+      descHtml +
       optsHtml +
       '<div class="opt-label">' + L("數量", "Quantity") + "</div>" +
       '<div class="qty"><button type="button" data-q="-1">−</button><span id="pdpQ">1</span><button type="button" data-q="1">+</button></div>' +
       custHtml +
       '<div class="pdp-cta"><button class="btn lg" type="button" id="addBtn">' + L("加入購物車", "Add to cart") + "</button>" +
       '<button class="btn lg ghost" type="button" id="buyBtn">' + L("立即結帳", "Buy now") + "</button></div>" +
-      (pickDesc(p.descriptionHtml) ? '<div class="pdp-desc">' + esc(pickDesc(p.descriptionHtml)) + "</div>" : "") +
       '<div class="trust">' +
       "<div><b>🕊️ " + L("專人跟進</b>　由具善終經驗的團隊，全程溫柔處理", "Personal care</b>　handled gently throughout by an experienced farewell team") + "</div>" +
       "<div><b>🔒 " + L("安全結帳</b>　付款透過安全結帳頁處理，資料受保護", "Secure checkout</b>　payment handled through a protected checkout") + "</div>" +
