@@ -223,31 +223,49 @@
   /* ===== 狀態 ===== */
   var state = { products: [], cart: null, current: null, qty: 1, sel: {}, filter: "all", req: "", photo: null };
 
-  /* ===== 分類入口（關鍵字對應，客戶產品 productType／標籤／名稱含關鍵字即歸類）===== */
+  /* ===== 分類入口 ===== */
+  // 分類標籤（權威）：產品標籤含以下任一字串即歸入該分類。
+  // 對應客戶喺 Shopify 實際用嘅標籤名，例如「骨灰龕 URN」「掌印、鼻印及毛髮紀念 Paw, nose & fur keepsakes」。
+  var CAT_TAGS = {
+    urn:    ["骨灰龕", "urn"],
+    stone:  ["晶石"],
+    bronze: ["銅印"],
+    print:  ["掌印", "鼻印", "毛髮"],
+    jewel:  ["飾物"],
+    gift:   ["關懷"],
+    home:   ["家居安放"]
+  };
+  // 關鍵字後備：只用於「完全未打任何分類標籤」嘅產品，令舊資料仍會歸類。
   var CAT_KEYS = {
     urn:    ["骨灰", "甕", "盅", "龕", "urn"],
-    stone:  ["晶石", "琉璃", "stone", "crystal"],
-    bronze: ["銅印", "銅", "bronze"],
-    print:  ["掌印", "鼻印", "毛髮", "paw", "nose", "fur", "print"],
-    jewel:  ["飾物", "頸鏈", "手鏈", "吊墜", "jewel", "necklace", "pendant", "bracelet"],
+    stone:  ["晶石", "stone", "crystal"],
+    bronze: ["銅印", "bronze"],
+    print:  ["掌印", "鼻印", "毛髮", "paw", "nose", "fur"],
+    jewel:  ["飾物", "琉璃", "頸鏈", "手鏈", "吊墜", "jewel", "necklace", "pendant", "bracelet"],
     gift:   ["禮物", "關懷", "gift", "care", "comfort"],
-    home:   ["家居安放", "擺放", "相框", "座檯", "home resting", "home"]
+    home:   ["家居安放", "擺放", "相框", "home resting"]
   };
-  // 分類標籤（首選）：產品標籤含以下字串即歸入該分類（例如標籤「家居安放 Home resting」）
-  var CAT_TAGS = {
-    urn:    "骨灰盅",
-    stone:  "晶石",
-    bronze: "銅印",
-    print:  "印記",
-    jewel:  "飾物",
-    gift:   "關懷",
-    home:   "家居安放"
-  };
+  // 非商店分類標籤（升級加購等）→ 只喺「全部」出現，唔落任何獨立分類。
+  var NON_SHOP_TAGS = ["升級加購", "add-on", "upsell"];
+
+  function tagHit(p, needles) {
+    var tags = p.tags || [];
+    return (needles || []).some(function (n) {
+      var nn = String(n).toLowerCase();
+      return tags.some(function (t) { return String(t).toLowerCase().indexOf(nn) >= 0; });
+    });
+  }
+  function hasAnyCatTag(p) {
+    return Object.keys(CAT_TAGS).some(function (k) { return tagHit(p, CAT_TAGS[k]); });
+  }
   function matchCat(p, key) {
-    // 1) 先按標籤名稱（可於 Shopify 逐件控制）
-    var tag = CAT_TAGS[key];
-    if (tag && (p.tags || []).some(function (t) { return String(t).indexOf(tag) >= 0; })) return true;
-    // 2) 後備：關鍵字（標題／類型），令未打標籤嘅產品仍會歸類
+    // 升級加購等唔落任何分類（只喺「全部」見到）
+    if (tagHit(p, NON_SHOP_TAGS)) return false;
+    // 1) 標籤優先且權威：命中就歸入
+    if (tagHit(p, CAT_TAGS[key])) return true;
+    // 2) 產品一旦有任何分類標籤，就只信標籤，唔再用關鍵字猜（避免例如「琉璃飾物」被塞入晶石）
+    if (hasAnyCatTag(p)) return false;
+    // 3) 完全冇分類標籤，先用關鍵字後備（標題／類型／標籤）
     var kws = CAT_KEYS[key]; if (!kws) return false;
     var hay = ((p.productType || "") + " " + (p.tags || []).join(" ") + " " + (p.title || "")).toLowerCase();
     return kws.some(function (k) { return hay.indexOf(k.toLowerCase()) >= 0; });
