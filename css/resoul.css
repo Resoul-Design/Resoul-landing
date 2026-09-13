@@ -978,3 +978,9 @@ body.lm-lock{overflow:hidden;}
   .walk-track:has(.wstep:hover) .wstep:not(:hover ~ .wstep) .wstone{background:var(--gold);border-color:var(--gold);}
   .walk-track:has(.wstep:hover) .wstep:not(:hover ~ .wstep) .wnum{color:#fff;}
 }
+
+/* 服務流程：hover 時腳印漸進亮起（第 1～N 步腳印清晰，之後淡化）*/
+@media (hover:hover){
+  .walk-track .wstone::after{transition:opacity .25s ease, transform .25s ease;}
+  .walk-track:has(.wstep:hover) .wstep:not(:hover ~ .wstep):not(:hover) .wstone::after{opacity:1;transform:translateY(-50%) rotate(14deg) scale(1.15);}
+}
