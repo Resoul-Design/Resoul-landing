@@ -232,7 +232,20 @@
     jewel:  ["飾物", "頸鏈", "手鏈", "吊墜", "jewel", "necklace", "pendant", "bracelet"],
     gift:   ["禮物", "關懷", "gift", "care", "comfort"]
   };
+  // 分類標籤（首選）：產品標籤含以下字串即歸入該分類（例如標籤「家居安放 Home resting」）
+  var CAT_TAGS = {
+    urn:    "家居安放",
+    stone:  "晶石",
+    bronze: "銅印",
+    print:  "印記",
+    jewel:  "飾物",
+    gift:   "關懷"
+  };
   function matchCat(p, key) {
+    // 1) 先按標籤名稱（可於 Shopify 逐件控制）
+    var tag = CAT_TAGS[key];
+    if (tag && (p.tags || []).some(function (t) { return String(t).indexOf(tag) >= 0; })) return true;
+    // 2) 後備：關鍵字（標題／類型），令未打標籤嘅產品仍會歸類
     var kws = CAT_KEYS[key]; if (!kws) return false;
     var hay = ((p.productType || "") + " " + (p.tags || []).join(" ") + " " + (p.title || "")).toLowerCase();
     return kws.some(function (k) { return hay.indexOf(k.toLowerCase()) >= 0; });
