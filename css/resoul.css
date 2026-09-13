@@ -950,7 +950,7 @@ body.lm-lock{overflow:hidden;}
 
 /* ===== 氛圍相帶（自動橫向捲動 marquee） ===== */
 .photo-marquee{overflow:hidden;position:relative;padding:10px 0}
-.photo-marquee .mq-track{display:flex;gap:14px;width:max-content;animation:mq-scroll 70s linear infinite;will-change:transform}
+.photo-marquee .mq-track{display:flex;gap:14px;width:max-content;animation:mq-scroll 110s linear infinite;will-change:transform}
 .photo-marquee:hover .mq-track{animation-play-state:paused}
 .photo-marquee img{height:clamp(200px,30vh,330px);width:auto;border-radius:14px;object-fit:cover;flex:0 0 auto;box-shadow:var(--shadow)}
 @keyframes mq-scroll{from{transform:translateX(-50%)}to{transform:translateX(0)}}
