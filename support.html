@@ -287,9 +287,17 @@
         <p class="book-note">AI 版本只是初稿，你可以自由修改；或選「我自己寫」直接放上信紙。提交前不會儲存內容。</p>
         <div class="book-msg" id="lfMsg" role="status" aria-live="polite" hidden></div>
       </form>
-      <div class="letter-sheet empty" id="letterSheet">
+      <div class="ls-paper" role="group" aria-label="信紙款式">
+        <span class="ls-paper-label">信紙：</span>
+        <button type="button" class="paper-chip active" data-paper="room">海景房</button>
+        <button type="button" class="paper-chip" data-paper="basket">花籃</button>
+        <button type="button" class="paper-chip" data-paper="plain">簡約</button>
+      </div>
+      <div class="letter-sheet empty" id="letterSheet" data-paper="room">
         <img class="ls-hero" src="images/about-room.png" alt="RESOUL" onerror="this.style.display='none'">
+        <div class="ls-head"><div class="ls-brand">RESOUL</div><div class="ls-tag">remember the story of our love</div></div>
         <div class="ls-body" id="lsBody">填好上面資料用 AI，或選「我自己寫」，這裡就會出現你的信。</div>
+        <img class="ls-illust" src="images/letter-illust.png" alt="" onerror="this.style.display='none'">
       </div>
       <div class="letter-actions" id="letterActions" hidden>
         <button class="cta" type="button" onclick="window.print()">列印這封信 🖨️</button>
@@ -342,6 +350,10 @@
     .then(function(){ btn.disabled=false; btn.innerHTML=old; });
   });
   var re=document.getElementById('lfRegen'); if(re) re.addEventListener('click',function(){ if(f.requestSubmit)f.requestSubmit(); else f.dispatchEvent(new Event('submit',{cancelable:true})); });
+
+  // 信紙款式
+  var papers=document.querySelectorAll('.paper-chip'), sheetEl=document.getElementById('letterSheet');
+  papers.forEach(function(c){ c.addEventListener('click',function(){ if(sheetEl) sheetEl.setAttribute('data-paper', c.getAttribute('data-paper')); papers.forEach(function(x){ x.classList.toggle('active', x===c); }); }); });
 
   // 彈窗開／關
   var modal=document.getElementById('letterModal');
