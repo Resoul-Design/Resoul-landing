@@ -965,3 +965,8 @@ body.lm-lock{overflow:hidden;}
   background:linear-gradient(180deg,rgba(250,246,239,.74),rgba(250,246,239,.84));}
 .hero>.wrap{position:relative;z-index:2;}
 @media (prefers-reduced-motion: reduce){ .hero .hero-bg{display:none;} }
+
+/* 真實相片圖（取代部分插畫，較大 + 圓角陰影） */
+.photo-fig{margin:26px auto 8px;max-width:480px;}
+.photo-fig img{width:100%;height:auto;display:block;border-radius:16px;box-shadow:var(--shadow);}
+@media(max-width:520px){.photo-fig{max-width:100%;}}
