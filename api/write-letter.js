@@ -32,6 +32,8 @@ module.exports = async (req, res) => {
   const sorry = clean(b.sorry, 400);
   const tone = clean(b.tone, 40) || "溫柔";
   const lang = clean(b.lang, 20) || "zh";
+  const adjust = clean(b.adjust, 20);
+  const adjustLine = adjust === "shorten" ? "\n請將這封信寫得更精煉、比一般再短約三分之一，只保留最真摯的重點。" : "";
 
   if (!petName && !memory && !trait) { res.status(400).json({ error: "no_input" }); return; }
 
@@ -51,7 +53,7 @@ module.exports = async (req, res) => {
     "只輸出信件內容本身（可用 2–4 個自然段），不要標題、不要解釋、不要加引號、不要標明第幾道。" +
     "絕對不要輸出任何字數、統計、括號註解或標籤（例如「120 characters」「約 200 字」「(120字)」）。" +
     "結尾以一句溫柔的道別收束，但不要用『敬上』這類公文式結尾。\n\n" +
-    "語氣：" + tone + "。\n" + langLine + "\n\n" +
+    "語氣：" + tone + "。\n" + langLine + adjustLine + "\n\n" +
     "資料（可能不完整，缺的請自然略過，不要杜撰事實）：\n" +
     "毛孩名字：" + (petName || "（未提供）") + "\n" +
     "相處年期：" + (years || "（未提供）") + "\n" +

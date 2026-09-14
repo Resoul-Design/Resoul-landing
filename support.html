@@ -310,9 +310,13 @@
         <div id="lfSelf" hidden>
           <div class="bf-field"><label for="lfOwn">你想對牠說的話</label><textarea id="lfOwn" rows="7" placeholder="慢慢寫下你想對牠說的話…"></textarea></div>
         </div>
+        <label class="lf-save" style="display:flex;align-items:flex-start;gap:8px;font-size:.82rem;color:var(--ink-soft);margin-top:6px;cursor:pointer;">
+          <input type="checkbox" id="lfSave" style="margin-top:3px;flex:0 0 auto;">
+          <span>在此瀏覽器儲存這封信（只存於你的裝置，方便下次繼續；可隨時清除）。</span>
+        </label>
         <button type="submit" class="cta book-submit" id="lfBtn">幫我開始寫這封信 <span class="arw">→</span></button>
         <button type="button" class="cta book-submit" id="lfSelfBtn" hidden>放上信紙 <span class="arw">→</span></button>
-        <p class="book-note">AI 版本只是初稿，你可以自由修改；或選「我自己寫」直接放上信紙。提交前不會儲存內容。</p>
+        <p class="book-note">你填寫的內容只會用於生成這封信，不會儲存在我們的伺服器；若沒有勾選上方選項，離開頁面後內容不會保留。本功能為 AI 協助整理文字，<b>並非心理治療或專業輔導</b>；如情緒持續影響生活，請尋求專業協助。</p>
         <div class="book-msg" id="lfMsg" role="status" aria-live="polite" hidden></div>
       </form>
       <div class="ls-paper" role="group" aria-label="信紙款式">
@@ -328,10 +332,13 @@
         <img class="ls-illust" src="images/letter-illust.png" alt="" onerror="this.style.display='none'">
       </div>
       <div class="letter-actions" id="letterActions" hidden>
-        <button class="cta" type="button" onclick="window.print()">列印這封信 🖨️</button>
-        <button class="cta light" type="button" id="lfRegen">重新生成</button>
+        <button class="cta light" type="button" id="laTone" data-ai>修改語氣</button>
+        <button class="cta light" type="button" id="laShort" data-ai>縮短</button>
+        <button class="cta light" type="button" id="laMemory" data-ai>加入回憶</button>
+        <button class="cta light" type="button" id="laDownload">下載</button>
+        <button class="cta" type="button" id="laPrint">列印 🖨️</button>
       </div>
-      <p class="letter-hint">＊本功能為 AI 協助整理文字，並非心理治療。如情緒持續影響生活，請尋求專業協助。</p>
+      <p class="letter-hint">＊本功能為 AI 協助整理文字，<b>並非心理治療或專業輔導</b>。如情緒持續影響生活，請尋求註冊心理學家、社工或醫生等專業協助。</p>
     </div>
   </div>
 </div>
@@ -342,6 +349,8 @@
   var f=document.getElementById('letterForm'); if(!f) return;
   var body=document.getElementById('lsBody'), sheet=document.getElementById('letterSheet');
   var actions=document.getElementById('letterActions'), btn=document.getElementById('lfBtn'), msg=document.getElementById('lfMsg');
+  var saveEl=document.getElementById('lfSave');
+  var STORE='resoul_letter', lastLetter='';
   function v(id){var e=document.getElementById(id);return e?e.value.trim():'';}
   function show(k,t){if(!msg)return;msg.className='book-msg '+k;msg.textContent=t;msg.hidden=false;}
   var nameEl=document.getElementById('lfName'), titleEl=document.getElementById('lmName');
@@ -349,47 +358,66 @@
   if(nameEl) nameEl.addEventListener('input',syncName);
   // 模式：AI 幫寫 / 自己寫
   var aiWrap=document.getElementById('lfAi'), selfWrap=document.getElementById('lfSelf'), selfBtn=document.getElementById('lfSelfBtn');
-  var mAi=document.getElementById('lfModeAi'), mSelf=document.getElementById('lfModeSelf'), regen=document.getElementById('lfRegen');
+  var mAi=document.getElementById('lfModeAi'), mSelf=document.getElementById('lfModeSelf');
+  function aiOn(){ return aiWrap && !aiWrap.hidden; }
+  function toggleAiActions(){ Array.prototype.forEach.call(document.querySelectorAll('#letterActions [data-ai]'),function(b){ b.style.display=aiOn()?'':'none'; }); }
   function setMode(ai){
     if(aiWrap)aiWrap.hidden=!ai; if(selfWrap)selfWrap.hidden=ai;
     if(btn)btn.hidden=!ai; if(selfBtn)selfBtn.hidden=ai;
-    if(regen)regen.style.display=ai?'':'none';
     if(mAi)mAi.classList.toggle('active',ai); if(mSelf)mSelf.classList.toggle('active',!ai);
-    if(msg)msg.hidden=true;
+    if(msg)msg.hidden=true; toggleAiActions();
   }
   if(mAi)mAi.addEventListener('click',function(){setMode(true);});
   if(mSelf)mSelf.addEventListener('click',function(){setMode(false);});
-  if(selfBtn)selfBtn.addEventListener('click',function(){
-    var t=v('lfOwn'); if(!t){show('err','請先寫下你想對牠說的話。');return;}
-    sheet.classList.remove('empty'); body.textContent=t; actions.hidden=false;
-    try{sheet.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}
-  });
-  f.addEventListener('submit',function(e){
-    e.preventDefault();
+
+  // 私人保存（只存於此瀏覽器，主人自行選擇）
+  function persist(){ try{ if(saveEl&&saveEl.checked&&lastLetter){ localStorage.setItem(STORE,lastLetter); } else { localStorage.removeItem(STORE); } }catch(e){} }
+  if(saveEl) saveEl.addEventListener('change',persist);
+
+  function renderLetter(text,noScroll){
+    lastLetter=String(text||'').trim();
+    sheet.classList.remove('empty'); body.textContent=lastLetter; actions.hidden=false; toggleAiActions(); persist();
+    if(!noScroll){ try{sheet.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){} }
+  }
+
+  function generate(opts){
+    opts=opts||{};
     if(!v('lfName') && !v('lfMemory')){show('err','請至少填毛孩名字或一段回憶。');return;}
     var old=btn.innerHTML; btn.disabled=true; btn.innerHTML='正在書寫…'; if(msg)msg.hidden=true;
-    fetch('/api/write-letter',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({petName:v('lfName'),years:v('lfYears'),trait:v('lfTrait'),memory:v('lfMemory'),thanks:v('lfThanks'),sorry:v('lfSorry'),tone:v('lfTone'),lang:v('lfLang')})
-    }).then(function(r){return r.json().then(function(d){return {ok:r.ok,d:d};});})
+    var payload={petName:v('lfName'),years:v('lfYears'),trait:v('lfTrait'),memory:v('lfMemory'),thanks:v('lfThanks'),sorry:v('lfSorry'),tone:opts.tone||v('lfTone'),lang:v('lfLang')};
+    if(opts.adjust) payload.adjust=opts.adjust;
+    fetch('/api/write-letter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(function(r){return r.json().then(function(d){return {ok:r.ok,d:d};});})
     .then(function(x){
-      if(x.ok && x.d && x.d.letter){ var L=String(x.d.letter).replace(/^\s*[（(]?\s*(約|approx\.?)?\s*\d+\s*(字|個字|characters?|words?)\s*[）)]?\s*/i,'').trim(); sheet.classList.remove('empty'); body.textContent=L; actions.hidden=false; try{sheet.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){} }
+      if(x.ok && x.d && x.d.letter){ var L=String(x.d.letter).replace(/^\s*[（(]?\s*(約|approx\.?)?\s*\d+\s*(字|個字|characters?|words?)\s*[）)]?\s*/i,'').trim(); renderLetter(L); }
       else { show('err','暫時未能生成，請稍後再試，或直接寫下你想對牠說的話。'); }
     }).catch(function(){ show('err','網絡不穩定，請稍後再試。'); })
     .then(function(){ btn.disabled=false; btn.innerHTML=old; });
-  });
-  var re=document.getElementById('lfRegen'); if(re) re.addEventListener('click',function(){ if(f.requestSubmit)f.requestSubmit(); else f.dispatchEvent(new Event('submit',{cancelable:true})); });
+  }
+  f.addEventListener('submit',function(e){ e.preventDefault(); generate(); });
+  if(selfBtn)selfBtn.addEventListener('click',function(){ var t=v('lfOwn'); if(!t){show('err','請先寫下你想對牠說的話。');return;} renderLetter(t); });
+
+  // 輸出後選項：修改語氣／縮短／加入回憶／下載／列印
+  var TONES=['溫柔','平靜','像日常對話'];
+  var laTone=document.getElementById('laTone'), laShort=document.getElementById('laShort'), laMemory=document.getElementById('laMemory'), laDl=document.getElementById('laDownload'), laPrint=document.getElementById('laPrint');
+  if(laTone) laTone.addEventListener('click',function(){ var sel=document.getElementById('lfTone'); var i=TONES.indexOf(sel.value); var next=TONES[(i+1)%TONES.length]; sel.value=next; generate({tone:next}); });
+  if(laShort) laShort.addEventListener('click',function(){ generate({adjust:'shorten'}); });
+  if(laMemory) laMemory.addEventListener('click',function(){ var m=window.prompt('想補充一段回憶或想說的話：'); if(m&&m.trim()){ var mem=document.getElementById('lfMemory'); if(mem) mem.value=(mem.value?mem.value+'；':'')+m.trim(); generate(); } });
+  if(laDl) laDl.addEventListener('click',function(){ var name=(v('lfName')||'給毛孩'); var blob=new Blob([lastLetter||body.textContent||''],{type:'text/plain;charset=utf-8'}); var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='RESOUL_'+name+'的信.txt'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },120); });
+  if(laPrint) laPrint.addEventListener('click',function(){ window.print(); });
 
   // 信紙款式
   var papers=document.querySelectorAll('.paper-chip'), sheetEl=document.getElementById('letterSheet');
   papers.forEach(function(c){ c.addEventListener('click',function(){ if(sheetEl) sheetEl.setAttribute('data-paper', c.getAttribute('data-paper')); papers.forEach(function(x){ x.classList.toggle('active', x===c); }); }); });
 
-  // 彈窗開／關
+  // 彈窗開／關；若此裝置曾儲存，開啟時還原
   var modal=document.getElementById('letterModal');
   function openM(){ modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('lm-lock'); }
   function closeM(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); document.body.classList.remove('lm-lock'); }
   document.querySelectorAll('[data-open-letter]').forEach(function(b){ b.addEventListener('click',function(e){ e.preventDefault(); openM(); }); });
   modal && modal.querySelectorAll('[data-lclose]').forEach(function(b){ b.addEventListener('click',closeM); });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape' && modal.classList.contains('open')) closeM(); });
+  try{ var saved=localStorage.getItem(STORE); if(saved){ if(saveEl)saveEl.checked=true; renderLetter(saved,true); } }catch(e){}
 })();
 </script>
 <script src="js/resoul.js" defer></script>
