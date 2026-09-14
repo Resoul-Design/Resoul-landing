@@ -708,8 +708,8 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 /* Subtle line-art illustration accents blended into cards/sections */
 .scard{position:relative;overflow:hidden;}
 .scard :where(.sc-ic,h3,p,i){position:relative;z-index:1;}
-.scard-ill{position:absolute;right:-8px;bottom:-8px;width:112px;max-width:44%;opacity:.24;z-index:0;pointer-events:none;}
-:root[data-theme="dark"] .scard-ill{opacity:.3;}
+.scard-ill{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;width:132px;max-width:56%;opacity:.42;z-index:0;pointer-events:none;}
+:root[data-theme="dark"] .scard-ill{opacity:.5;}
 .ill-soft{opacity:.16;pointer-events:none;}
 
 /* ===== Category cards with faded product-photo backgrounds ===== */
