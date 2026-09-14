@@ -711,6 +711,9 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 .scard-ill{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;width:132px;max-width:56%;opacity:.42;z-index:0;pointer-events:none;}
 :root[data-theme="dark"] .scard-ill{opacity:.5;}
 .ill-soft{opacity:.16;pointer-events:none;}
+.prep-list{margin:0 0 14px;padding-left:1.15em;color:var(--ink-soft);line-height:1.95;}
+.prep-list li{break-inside:avoid;}
+@media(min-width:560px){.prep-list{columns:2;column-gap:32px;}}
 
 /* ===== Category cards with faded product-photo backgrounds ===== */
 .cat-grid{margin-top:26px;display:grid;grid-template-columns:1fr;gap:15px;text-align:left;}
