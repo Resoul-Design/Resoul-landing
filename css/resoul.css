@@ -901,6 +901,22 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
    信紙 / AI 寫信（情緒支援頁）
    ============================================================ */
 .letter-form{max-width:520px;margin:26px auto 0;}
+.letter-form .lf-save{
+  width:100%;
+  max-width:520px;
+  margin:6px auto 0;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  gap:10px;
+  color:var(--ink-soft);
+  font-size:.82rem;
+  line-height:1.75;
+  text-align:left;
+  cursor:pointer;
+}
+.letter-form .lf-save input{width:auto;flex:0 0 auto;margin:5px 0 0;padding:0;}
+.letter-form .lf-save span{display:block;max-width:430px;min-width:0;white-space:normal;word-break:normal;overflow-wrap:break-word;}
 .letter-sheet{background:#fbf7ef;border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);
   max-width:640px;margin:30px auto 0;padding:46px 44px 0;position:relative;overflow:hidden;}
 .letter-sheet .ls-head{text-align:center;margin-bottom:18px;}
