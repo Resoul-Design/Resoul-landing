@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" stroke="#5f4d3a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- necklace chain -->
+  <path d="M40 40 C 70 92, 88 108, 100 118 C 112 108, 130 92, 160 40" opacity="0.85"/>
+  <!-- bail -->
+  <path d="M96 116 q4 -9 8 0" stroke-width="2"/>
+  <!-- heart pendant -->
+  <path d="M100 132
+           c -9 -12, -27 -6, -27 8
+           c 0 12, 16 22, 27 32
+           c 11 -10, 27 -20, 27 -32
+           c 0 -14, -18 -20, -27 -8 Z"/>
+  <!-- small shine -->
+  <path d="M88 146 q3 -5 8 -4" stroke-width="1.8" opacity="0.7"/>
+  <!-- sparkles -->
+  <g stroke-width="1.8" opacity="0.75">
+    <path d="M150 120 v10 M145 125 h10"/>
+    <path d="M52 128 v7 M48.5 131.5 h7"/>
+  </g>
+</svg>
