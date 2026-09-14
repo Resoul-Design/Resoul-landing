@@ -705,6 +705,12 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 .scard h3{font-size:1.05rem;color:var(--ink);margin-bottom:7px;}
 .scard p{color:var(--ink-soft);font-size:.9rem;line-height:1.7;}
 .scard i{display:block;margin-top:8px;font-family:var(--slogan);font-style:italic;font-size:.85rem;color:var(--gold-deep);}
+/* Subtle line-art illustration accents blended into cards/sections */
+.scard{position:relative;overflow:hidden;}
+.scard :where(.sc-ic,h3,p,i){position:relative;z-index:1;}
+.scard-ill{position:absolute;right:-8px;bottom:-8px;width:112px;max-width:44%;opacity:.24;z-index:0;pointer-events:none;}
+:root[data-theme="dark"] .scard-ill{opacity:.3;}
+.ill-soft{opacity:.16;pointer-events:none;}
 
 /* ===== Category cards with faded product-photo backgrounds ===== */
 .cat-grid{margin-top:26px;display:grid;grid-template-columns:1fr;gap:15px;text-align:left;}
