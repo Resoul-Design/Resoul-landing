@@ -355,9 +355,7 @@
     }).then(function (res) {
       if (res.ok) {
         f.reset();
-        var gl = gcalLink('Resoul euthanasia booking' + (gcName ? ' — ' + gcName : ''), 'Preferred time: ' + (gcTime || '—'), gcDate);
-        var gcalBtn = '<br><a class="gcal-add" href="' + gl + '" target="_blank" rel="noopener">📅 Add to Google Calendar</a>';
-        showMsg('ok', '✅ <b>Enquiry received.</b> We\'ll be in touch soon to help organise and refer an independent registered vet.<br>For immediate support, feel free to call / <a href="https://wa.me/' + WA_NUMBER + '" target="_blank" rel="noopener">WhatsApp us (24 hours)</a>.' + gcalBtn);
+        showMsg('ok', '✅ <b>Enquiry received.</b> We\'ll be in touch soon to help organise and refer an independent registered vet.<br>For immediate support, feel free to call / <a href="https://wa.me/' + WA_NUMBER + '" target="_blank" rel="noopener">WhatsApp us (24 hours)</a>.');
       } else {
         res.text().then(function (t) { console.error('[Resoul] euthanasia backend write failed HTTP ' + res.status + ': ' + t); });
         showMsg('err', 'Sorry, something went wrong. Please try again, or <a href="https://wa.me/' + WA_NUMBER + '" target="_blank" rel="noopener">WhatsApp us</a>.');

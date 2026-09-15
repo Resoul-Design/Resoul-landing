@@ -595,9 +595,7 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
     }).then(function(res){
       if(res.ok){
         form.reset();
-        var gl = gcalLink(RL('Resoul 火化預約', 'Resoul cremation booking') + (gcName ? ' — ' + gcName : ''), RL('方案：', 'Plan: ') + (gcPlan || '—') + ' / ' + RL('時段：', 'Time: ') + (gcTime || '—'), gcDate);
-        var gcalBtn = '<br><a class="gcal-add" href="' + gl + '" target="_blank" rel="noopener">📅 ' + RL('加入 Google 日曆', 'Add to Google Calendar') + '</a>';
-        showMsg('ok', RL('✅ <b>預約已收到</b>，我們會盡快與你聯絡確認接送與火化安排。<br>如屬緊急個案，歡迎即致電／<a href="https://wa.me/' + WA_NUMBER + '" target="_blank" rel="noopener">WhatsApp 我們（24 小時）</a>。', '✅ <b>Booking received.</b> We\'ll contact you shortly to confirm pickup and cremation arrangements.<br>For urgent cases, feel free to call / <a href="https://wa.me/' + WA_NUMBER + '" target="_blank" rel="noopener">WhatsApp us (24 h)</a>.') + gcalBtn);
+        showMsg('ok', RL('✅ <b>預約已收到</b>，我們會盡快與你聯絡確認接送與火化安排。<br>如屬緊急個案，歡迎即致電／<a href="https://wa.me/' + WA_NUMBER + '" target="_blank" rel="noopener">WhatsApp 我們（24 小時）</a>。', '✅ <b>Booking received.</b> We\'ll contact you shortly to confirm pickup and cremation arrangements.<br>For urgent cases, feel free to call / <a href="https://wa.me/' + WA_NUMBER + '" target="_blank" rel="noopener">WhatsApp us (24 h)</a>.'));
       }else{
         res.text().then(function(t){ console.error('[Resoul] 火化預約寫入後台失敗 HTTP ' + res.status + '：' + t); });
         showMsg('err', RL('很抱歉，提交時發生問題，請稍後再試，或直接 <a href="https://wa.me/' + WA_NUMBER + '" target="_blank" rel="noopener">WhatsApp 我們</a>。', 'Sorry, something went wrong. Please try again, or <a href="https://wa.me/' + WA_NUMBER + '" target="_blank" rel="noopener">WhatsApp us</a>.'));
