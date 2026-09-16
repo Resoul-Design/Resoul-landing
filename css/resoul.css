@@ -55,13 +55,11 @@ p{margin:0;}
 .brand{display:flex;flex-direction:column;align-items:center;gap:2px;}
 .brand img{height:34px;width:auto;}
 .brand-slogan{font-family:var(--slogan);font-style:italic;font-weight:500;font-size:.72rem;letter-spacing:.02em;color:var(--ink-soft);white-space:nowrap;}
+/* 唔用 overflow 捲動：會裁走 .nav-menu 下拉，而且 justify-content:flex-end 令溢出部分捲唔到 */
 .nav{
-  display:flex;gap:22px;overflow-x:auto;
-  scrollbar-width:none;-ms-overflow-style:none;
+  display:flex;gap:22px;flex-wrap:wrap;row-gap:7px;
   padding-bottom:2px;justify-content:center;
-  -webkit-overflow-scrolling:touch;
 }
-.nav::-webkit-scrollbar{display:none;}
 .nav a{
   flex:0 0 auto;font-size:.86rem;color:var(--ink-soft);
   letter-spacing:.06em;padding:2px 0;font-weight:500;
@@ -415,9 +413,6 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 
 /* ---------- Larger screens ---------- */
 @media(min-width:560px){
-  .header-inner{flex-direction:row;justify-content:space-between;align-items:center;padding:14px 28px;}
-  .brand{justify-content:flex-start;}
-  .nav{justify-content:flex-end;overflow:visible;}
   .hero h1{font-size:2.35rem;}
   .steps{flex-direction:row;}
   .step{flex:1;}
@@ -426,6 +421,9 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 }
 @media(min-width:820px){
   :root{--maxw:900px;}
+  .header-inner{flex-direction:row;justify-content:space-between;align-items:center;padding:14px 28px;}
+  .brand{justify-content:flex-start;}
+  .nav{justify-content:flex-end;}
   .hero h1{font-size:2.6rem;}
   .pcard{flex:1;}
 }
@@ -811,7 +809,6 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 .farewell-note b{color:var(--ink);font-weight:600;}
 
 /* ---------- 導覽下拉分組 ---------- */
-.nav{overflow-x:auto;overflow-y:visible;}
 .nav-single{flex:0 0 auto;font-size:.86rem;color:var(--ink-soft);letter-spacing:.06em;padding:2px 0;font-weight:500;border-bottom:1.5px solid transparent;transition:color .2s,border-color .2s;}
 .nav-single:hover,.nav-single:focus,.nav-single[aria-current]{color:var(--gold-deep);border-color:var(--gold);}
 .nav-lang{border:1px solid var(--line);border-radius:999px;padding:3px 11px;color:var(--gold-deep);letter-spacing:.08em;}
@@ -826,11 +823,14 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 .nav-group.open .nav-menu{display:flex;}
 .nav-menu a{flex:0 0 auto;font-size:.85rem;color:var(--ink-soft);padding:8px 12px;border-radius:8px;border-bottom:none;white-space:nowrap;letter-spacing:.04em;transition:background .15s,color .15s;}
 .nav-menu a:hover,.nav-menu a:focus,.nav-menu a[aria-current]{background:var(--cream);color:var(--gold-deep);border-color:transparent;}
-.nav .nav-group:nth-of-type(2){display:flex;align-items:center;gap:18px;}
+.nav .nav-group:nth-of-type(2){display:flex;align-items:center;gap:18px;flex:0 1 auto;min-width:0;}
 .nav .nav-group:nth-of-type(2) .nav-top{display:none;}
 .nav .nav-group:nth-of-type(2) .nav-menu{
   position:static;display:flex;flex-direction:row;align-items:center;gap:18px;
+  flex-wrap:wrap;row-gap:7px;
   min-width:0;background:transparent;border:none;box-shadow:none;padding:0;
+  /* flex 項目即使 position:static 都會套用 z-index，唔清走會蓋住第一組嘅下拉 */
+  z-index:auto;
 }
 .nav .nav-group:nth-of-type(2) .nav-menu a{
   padding:2px 0;border-radius:0;border-bottom:1.5px solid transparent;
@@ -845,18 +845,16 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
   .nav-group:hover .nav-menu{display:flex;}
   .nav-group:hover .nav-caret{transform:rotate(180deg);}
 }
-
-@media(max-width:559px){
+/* 品牌 + 導覽並排需要約 840px（英文標籤較長），未夠就維持上下堆疊 */
+@media(max-width:819px){
   .header-inner{padding-top:8px;padding-bottom:7px;gap:6px;}
   .brand img{height:30px;}
   .brand-slogan{font-size:clamp(.62rem,2.8vw,.72rem);max-width:100%;overflow:hidden;text-overflow:ellipsis;}
   .nav{
     width:100%;
     justify-content:center;
-    flex-wrap:wrap;
     gap:clamp(10px,3.2vw,16px);
     padding:2px 4px 5px;
-    overflow:visible;
     row-gap:6px;
   }
   .nav a,.nav-single,.nav-top,.nav .nav-group:nth-of-type(2) .nav-menu a{
@@ -885,6 +883,10 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
     font-size:clamp(.72rem,3.25vw,.84rem);
     letter-spacing:.025em;
   }
+}
+
+/* 窄螢幕：下拉改為內嵌展開，避免浮動面板貼邊被裁 */
+@media(max-width:559px){
   .nav-group.open{
     flex-basis:100%;
     width:100%;
