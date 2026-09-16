@@ -71,10 +71,9 @@
     if (!paras.length) {
       paras = [decodeText(html)].filter(Boolean);
     }
-    var picked = paras.filter(isWanted);
-    if (!picked.length) {
-      picked = paras.flatMap(splitSentences).filter(isWanted);
-    }
+    var sentences = paras.flatMap(splitSentences);
+    var picked = sentences.filter(isWanted);
+    if (!picked.length) picked = paras.filter(isWanted);
     return picked.join(" ");
   }
   // 類別 / 選項名稱：英文頁對照表（找不到就用原文）
