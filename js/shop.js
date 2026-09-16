@@ -40,21 +40,41 @@
   // 描述以段落分中英：<p>中文</p> … <p>English</p>
   function pickDesc(html) {
     if (!html) return "";
-    var paras = [], re = /<(?:p|li)[^>]*>([\s\S]*?)<\/(?:p|li)>/gi, mm;
-    while ((mm = re.exec(html))) {
-      var t = mm[1].replace(/<[^>]+>/g, "")
+    function decodeText(s) {
+      return String(s || "").replace(/<[^>]+>/g, " ")
         .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
         .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\s+/g, " ").trim();
+    }
+    function score(t) {
+      return {
+        cjk: (t.match(CJK_RE) || []).length,
+        lat: (t.match(/[A-Za-z]/g) || []).length
+      };
+    }
+    function isWanted(t) {
+      var s = score(t);
+      return EN ? (s.lat >= 12 && s.lat >= s.cjk) : (s.cjk >= 4 && s.cjk >= s.lat);
+    }
+    function splitSentences(t) {
+      return t
+        .replace(/([。！？!?])\s*/g, "$1|")
+        .replace(/([.])\s+(?=[A-Z])/g, "$1|")
+        .split("|")
+        .map(cleanEdges)
+        .filter(Boolean);
+    }
+    var paras = [], re = /<(?:p|li)[^>]*>([\s\S]*?)<\/(?:p|li)>/gi, mm;
+    while ((mm = re.exec(html))) {
+      var t = decodeText(mm[1]);
       if (t) paras.push(t);
     }
     if (!paras.length) {
-      return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+      paras = [decodeText(html)].filter(Boolean);
     }
-    var picked = paras.filter(function (t) {
-      var cjk = (t.match(CJK_RE) || []).length, lat = (t.match(/[A-Za-z]/g) || []).length;
-      return EN ? lat >= cjk : cjk >= lat;
-    });
-    if (!picked.length) picked = paras;
+    var picked = paras.filter(isWanted);
+    if (!picked.length) {
+      picked = paras.flatMap(splitSentences).filter(isWanted);
+    }
     return picked.join(" ");
   }
   // 類別 / 選項名稱：英文頁對照表（找不到就用原文）
