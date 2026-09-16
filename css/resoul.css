@@ -766,11 +766,33 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 .wcard p{color:var(--ink-soft);font-size:.72rem;margin-top:4px;line-height:1.5;}
 .wcard i{display:block;margin-top:4px;font-family:var(--slogan);font-style:italic;font-size:.68rem;color:var(--ink-faint);line-height:1.35;}
 @media(max-width:600px){
-  .wcard i{display:none;} /* 手機空間有限，隱藏英文副標，保持一行 */
-  .wcard h4{font-size:.74rem;}
-  .wcard p{font-size:.66rem;}
-  .wstone{width:34px;height:34px;}
-  .wnum{font-size:.82rem;}
+  .proc-walk{
+    margin-top:22px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:8px var(--page-pad) 12px;
+    margin-left:calc(var(--page-pad) * -1);
+    margin-right:calc(var(--page-pad) * -1);
+    scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
+  }
+  .walk-track{
+    justify-content:flex-start;
+    gap:14px;
+    padding:0 4px;
+  }
+  .wstep{
+    flex:0 0 146px;
+    min-width:146px;
+    scroll-snap-align:center;
+  }
+  .wstep:nth-child(n){margin-top:0;}
+  .wcard{padding:0 6px;}
+  .wcard i{display:none;}
+  .wcard h4{font-size:.9rem;line-height:1.35;}
+  .wcard p{font-size:.82rem;line-height:1.6;}
+  .wstone{width:42px;height:42px;}
+  .wnum{font-size:.95rem;}
 }
 @media (prefers-reduced-motion:reduce){.wh-arw{animation:none;}}
 :root[data-quiet="on"] .wh-arw{animation:none;}
