@@ -104,16 +104,15 @@
   var SB_URL = "https://diyxcxkgvqvyrstrzttq.supabase.co";
   var SB_KEY = "sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K";
   var UPLOAD_BUCKET = "custom-uploads";
-  // 只有非「紙製品」（即訂製／紀念／服務類）先顯示訂製欄位
   // 是否顯示「特別要求 + 上載相片」。可用 Shopify 標籤逐件控制：
-  //   加標籤「特別要求」／「custom」 → 強制開啟
-  //   加標籤「無特別要求」／「no-custom」 → 強制關閉
-  //   否則預設：非「紙製品」類別即開啟
+  //   加標籤「可自定」／「可訂製」／「特別要求」／「custom」 → 顯示欄位
+  //   沒有以上標籤 → 隱藏欄位
   function isCustomizable(p) {
     var tags = (p.tags || []).map(function (t) { return String(t).trim().toLowerCase(); });
-    if (tags.indexOf("無特別要求") >= 0 || tags.indexOf("no-custom") >= 0) return false;
-    if (tags.indexOf("特別要求") >= 0 || tags.indexOf("custom") >= 0) return true;
-    return (p.productType || "").indexOf("紙製品") < 0;
+    var allow = ["可自定", "可自訂", "可訂製", "可定製", "特別要求", "custom", "customizable", "personalized", "personalised"];
+    return tags.some(function (tag) {
+      return allow.some(function (key) { return tag.indexOf(key) >= 0; });
+    });
   }
   function uploadPhoto(file) {
     var ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
