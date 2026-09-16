@@ -1,6 +1,6 @@
 /* 分享頁 / Remember Their Story — 紀念故事（Supabase）
  * 沿用 public.posts（context='memorial'），欄位見 supabase/memorial_stories.sql
- * 功能：提交（公開／只限連結／私人）、預先審核、留下心意（RPC）、連結分享、AI 草擬
+ * 功能：提交（公開／只限連結）、預先審核、留下心意（RPC）、連結分享、AI 草擬
  */
 (function () {
   "use strict";
@@ -23,33 +23,6 @@
   }
   function pubUrl(path) { return SB_URL + "/storage/v1/object/public/board-images/" + path; }
   function heartedKey(id) { return "resoul-heart-" + id; }
-
-  /* ---------- 私人保存（只存於此瀏覽器裝置） ---------- */
-  var MYKEY = "resoul_my_stories";
-  function myStories() { try { return JSON.parse(localStorage.getItem(MYKEY) || "[]"); } catch (e) { return []; } }
-  function addMyStory(rec) { try { var a = myStories(); a.unshift(rec); localStorage.setItem(MYKEY, JSON.stringify(a.slice(0, 50))); } catch (e) {} }
-  function mineCard(p) {
-    var el = document.createElement("div"); el.className = "mstory mine";
-    var name = p.pet_name ? esc(p.pet_name) : L("牠", "Them");
-    var years = p.years ? '<span class="ms-years">' + esc(p.years) + "</span>" : "";
-    var one = p.one_line ? '<blockquote class="ms-one">「' + esc(p.one_line) + "」</blockquote>" : "";
-    var story = p.body ? '<div class="ms-story">' + esc(p.body).replace(/\n/g, "<br>") + "</div>" : "";
-    el.innerHTML =
-      '<div class="ms-head"><span class="ms-name">' + name + "</span>" + years +
-      ' <span class="ms-private">🔒 ' + L("私人・只在此裝置", "Private · this device") + "</span></div>" + one + story;
-    return el;
-  }
-  function renderMine() {
-    if (!list) return;
-    var existing = list.querySelector(".my-stories"); if (existing) existing.remove();
-    var mine = myStories(); if (!mine.length) return;
-    var wrap = document.createElement("div"); wrap.className = "my-stories";
-    wrap.innerHTML = '<div class="board-note" style="text-align:center;margin:0 0 14px;"><b>' +
-      L("你在此裝置保存的故事", "Your stories saved on this device") + "</b><br><span style=\"font-size:.82rem;\">" +
-      L("只存在此瀏覽器、不會公開；清除瀏覽器資料後會消失。", "Stored only in this browser, never public; cleared if you clear browser data.") + "</span></div>";
-    mine.forEach(function (p) { wrap.appendChild(mineCard(p)); });
-    list.insertBefore(wrap, list.firstChild);
-  }
 
   /* ---------- 渲染紀念卡 ---------- */
   function card(p) {
@@ -127,8 +100,8 @@
     }
     fetch(SB_URL + "/rest/v1/posts?select=id,pet_name,years,one_line,body,name,image_path,hearts&context=eq.memorial&status=eq.visible&visibility=eq.public&order=created_at.desc&limit=100", { headers: H })
       .then(function (r) { return r.json(); })
-      .then(function (rows) { render(Array.isArray(rows) ? rows : [], false); renderMine(); })
-      .catch(function () { renderMine(); });
+      .then(function (rows) { render(Array.isArray(rows) ? rows : [], false); })
+      .catch(function () { render([], false); });
   }
 
   /* ---------- 相片：壓縮 + 預覽 ---------- */
@@ -177,7 +150,6 @@
   if (postBtn) {
     postBtn.addEventListener("click", function () {
       var pet = val("mPet"), story = val("mStory"), one = val("mOne");
-      var years = val("mYears"), who = val("mName");
       if (!pet && !story && !photoBlob) { setStatus(L("至少填毛孩名字、一段故事或加一張相片。", "Add at least a name, a story or a photo.")); return; }
       if (crisis(story)) { var sb = document.getElementById("supportBtn"); if (sb) sb.click(); }
       var vis = val("mVis") || "public";
@@ -210,13 +182,7 @@
         photoBlob = null;
         var pv = document.getElementById("mPreview"); if (pv) { pv.style.display = "none"; pv.src = ""; }
         var share = document.getElementById("mShare");
-        if (vis === "private") {
-          var bodyText = story || (one || (pet ? (L("紀念 ", "In memory of ") + pet) : L("（分享了一張相片）", "(shared a photo)")));
-          addMyStory({ pet_name: pet || null, years: years || null, one_line: one || null, body: bodyText, name: who || null, ts: Date.now() });
-          renderMine();
-          setStatus(L("已保存在此裝置 🤍 下次回到分享頁即可重看，不會公開顯示。", "Saved on this device 🤍 revisit this page to read it again; never shown publicly."), true);
-          if (share) share.hidden = true;
-        } else if (vis === "link" && slug) {
+        if (vis === "link" && slug) {
           var url = location.origin + location.pathname + "?s=" + slug;
           setStatus(L("已建立只限連結的紀念頁 🤍 審核後即可用連結分享。", "Your link-only page is created 🤍 it will work via the link after review."), true);
           if (share) {
