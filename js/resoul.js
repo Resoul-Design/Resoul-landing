@@ -457,6 +457,10 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
   groups.forEach(function(g){
     var top = g.querySelector('.nav-top'); if(!top) return;
     top.addEventListener('click', function(e){
+      // 只有下拉模式（選單 position:absolute）先需要開關；
+      // 平舖分區模式（手機，或永遠平舖嘅「服務」組）直接略過，唔會有彈跳
+      var menu = g.querySelector('.nav-menu');
+      if(menu && getComputedStyle(menu).position !== 'absolute') return;
       e.preventDefault(); e.stopPropagation();
       var open = g.classList.contains('open');
       closeAll();

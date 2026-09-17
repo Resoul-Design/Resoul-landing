@@ -855,7 +855,7 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
     justify-content:center;
     gap:clamp(10px,3.2vw,16px);
     padding:2px 4px 5px;
-    row-gap:6px;
+    row-gap:12px;
   }
   .nav a,.nav-single,.nav-top,.nav .nav-group:nth-of-type(2) .nav-menu a{
     font-size:clamp(.72rem,3.25vw,.84rem);
@@ -867,36 +867,60 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
     text-align:center;
     letter-spacing:.04em;
   }
+
+  /* 手機：兩組導覽都改為「平舖 + 分區」——永遠顯示、冇下拉、撳極都唔會推開版面 */
+  .nav-group,
   .nav .nav-group:nth-of-type(2){
-    order:5;
+    order:0;
     flex-basis:100%;
     width:100%;
-    justify-content:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:5px;
   }
+  /* 兩組標題都顯示做分區標題（非互動，收起下拉箭嘴） */
+  .nav-top,
+  .nav .nav-group:nth-of-type(2) .nav-top{
+    display:inline-flex;
+    pointer-events:none;
+    cursor:default;
+    color:var(--gold-deep);
+    font-weight:600;
+    border-bottom:none;
+  }
+  .nav-caret{display:none;}
+  /* 兩組連結都平舖成一行（可換行），唔靠 .open 展開 */
+  .nav-menu,
+  .nav-group.open .nav-menu,
   .nav .nav-group:nth-of-type(2) .nav-menu{
+    position:static;
+    display:flex;
+    flex-direction:row;
     flex-wrap:wrap;
     justify-content:center;
+    align-items:center;
     gap:clamp(10px,3.2vw,16px);
     row-gap:5px;
+    width:100%;
+    min-width:0;
+    margin:0;
+    padding:0;
+    background:transparent;
+    border:none;
+    box-shadow:none;
   }
+  .nav-menu a,
   .nav .nav-group:nth-of-type(2) .nav-menu a{
+    padding:2px 0;
+    border-radius:0;
+    border-bottom:1.5px solid transparent;
+    white-space:nowrap;
     font-size:clamp(.72rem,3.25vw,.84rem);
     letter-spacing:.025em;
   }
-}
-
-/* 窄螢幕：下拉改為內嵌展開，避免浮動面板貼邊被裁 */
-@media(max-width:559px){
-  .nav-group.open{
-    flex-basis:100%;
-    width:100%;
-    justify-content:center;
-  }
-  .nav-group.open .nav-menu{
-    position:static;
-    width:min(100%,320px);
-    margin:6px auto 2px;
-    align-items:stretch;
+  .nav-menu a:hover,.nav-menu a:focus,.nav-menu a[aria-current]{
+    background:transparent;color:var(--gold-deep);border-color:var(--gold);
   }
 }
 
