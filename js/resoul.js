@@ -296,11 +296,14 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
   });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeWidget(); } });
 
-  // Reveal on scroll
+  // Reveal on scroll：首屏內容即時顯示（唔淡入，避免過場閃動）；只有捲入視窗嘅先做動畫
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
   },{threshold:.12});
-  document.querySelectorAll('.reveal').forEach(function(n){ io.observe(n); });
+  document.querySelectorAll('.reveal').forEach(function(n){
+    if(n.getBoundingClientRect().top < window.innerHeight*0.92){ n.classList.add('in'); }
+    else { n.classList.add('pre'); io.observe(n); }
+  });
 })();
 
 
@@ -352,10 +355,24 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
   supportModal.querySelectorAll('[data-sclose]').forEach(function(x){ x.addEventListener('click', closeSupport); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeSupport(); });
 
-  /* ---- Back to top ---- */
+  /* ---- Back to top + 手機捲動收起導覽 ---- */
   var toTop=document.getElementById('toTop');
-  function onScroll(){ if(window.scrollY>640) toTop.classList.add('show'); else toTop.classList.remove('show'); }
+  var header=document.querySelector('.site-header');
+  var navMq=window.matchMedia('(max-width:819px)');
+  var lastY=window.scrollY||0;
+  function onScroll(){
+    var y=window.scrollY||0;
+    if(toTop){ if(y>640) toTop.classList.add('show'); else toTop.classList.remove('show'); }
+    if(header){
+      if(navMq.matches){
+        if(y>lastY+4 && y>150){ header.classList.add('nav-hidden'); }   // 向下捲：收起導覽
+        else if(y<lastY-4){ header.classList.remove('nav-hidden'); }    // 向上捲：即時顯示
+      } else { header.classList.remove('nav-hidden'); }
+    }
+    lastY=y;
+  }
   window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+  if(navMq.addEventListener) navMq.addEventListener('change', function(){ if(!navMq.matches && header) header.classList.remove('nav-hidden'); });
   toTop.addEventListener('click', function(){
     window.scrollTo({top:0, behavior: root.getAttribute('data-quiet')==='on'?'auto':'smooth'});
   });

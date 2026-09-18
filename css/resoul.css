@@ -46,7 +46,11 @@ p{margin:0;}
   background:rgba(250,246,239,.92);
   backdrop-filter:saturate(120%) blur(10px);
   border-bottom:1px solid var(--line);
+  transition:transform .32s ease;
 }
+/* 手機捲動內容時收起導覽（向下捲收起、向上捲顯示，由 JS 切換） */
+.site-header.nav-hidden{transform:translateY(-100%);}
+:root[data-quiet="on"] .site-header{transition:none;}
 .header-inner{
   max-width:var(--maxw);margin:0 auto;
   display:flex;flex-direction:column;gap:7px;
@@ -408,7 +412,9 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
   .reviews-grid .rcard{scroll-snap-align:center;}
 }
 
-.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+/* 預設可見，避免載入／過場閃動；只有加咗 .pre（下方內容）先淡入 */
+.reveal{transition:opacity .7s ease,transform .7s ease;}
+.reveal.pre{opacity:0;transform:translateY(22px);}
 .reveal.in{opacity:1;transform:none;}
 
 /* ---------- Larger screens ---------- */
