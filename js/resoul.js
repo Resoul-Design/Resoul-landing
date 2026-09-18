@@ -504,8 +504,6 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
   var form = document.getElementById('bookForm');
   if(!form) return;
   var WA_NUMBER = '85264762951'; // Resoul WhatsApp（如需更改，改呢度）
-  // Google Sheet 收集：貼上 Apps Script Web App 網址即會同步寫入 Sheet（留空則只發 WhatsApp）
-  var SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxNb2AErdbstA_N3khZtyACn_oOModpfmA8_NBvLy6ArODEaPbZiZEAoVBHY8iIdvNv/exec';
 
   // 按「網上預約」先展開表單，再平滑捲落
   var bcta = document.getElementById('bookingCta');
@@ -535,22 +533,6 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
     msg.innerHTML = html;
     msg.hidden = false;
     try{ msg.scrollIntoView({ behavior:'smooth', block:'center' }); }catch(e){}
-  }
-  // Google Sheet：best-effort（no-cors 無法讀回應，不作成功判斷依據）
-  function sheetWrite(){
-    if(!SHEET_ENDPOINT) return;
-    try{
-      fetch(SHEET_ENDPOINT, {
-        method: 'POST', mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          name: val('bkName'), phone: val('bkPhone'), plan: val('bkPlan'),
-          pet: val('bkPet'), weight: val('bkWeight'), place: val('bkPlace'),
-          situation: val('bkSituation'), date: val('bkDate'), time: val('bkTime'), note: val('bkNote'),
-          source: 'cremation-booking'
-        })
-      }).catch(function(err){ console.error('[Resoul] 火化預約寫入 Google Sheet 失敗：', err); });
-    }catch(err){ console.error('[Resoul] 火化預約寫入 Google Sheet 失敗：', err); }
   }
   // 商戶 Google Calendar（Vercel function，best-effort，唔阻塞預約）
   function bizCalWrite(){
@@ -590,8 +572,7 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
     // 預先擷取值（form.reset 後仍可用於客戶日曆連結）
     var gcName = val('bkName'), gcPlan = val('bkPlan'), gcTime = val('bkTime'), gcDate = val('bkDate');
 
-    // Google Sheet + 商戶日曆同步（best-effort）
-    sheetWrite();
+    // 商戶日曆同步（best-effort）
     bizCalWrite();
 
     // Supabase 為正式預約記錄，以此判斷成功／失敗

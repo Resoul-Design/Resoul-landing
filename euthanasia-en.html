@@ -256,10 +256,9 @@
 </div>
 
 <script>
-// Euthanasia booking → writes to Supabase (record of truth) + Google Sheet (best-effort). No WhatsApp send.
+// Euthanasia booking → writes to Supabase (record of truth). No WhatsApp send.
 (function () {
   var WA_NUMBER = '85264762951';
-  var SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxNb2AErdbstA_N3khZtyACn_oOModpfmA8_NBvLy6ArODEaPbZiZEAoVBHY8iIdvNv/exec';
   var f = document.getElementById('euthForm');
   if (!f) return;
   // Move the enquiry form under "How it works", hidden until the button is pressed
@@ -285,20 +284,6 @@
     msg.innerHTML = html;
     msg.hidden = false;
     try { msg.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
-  }
-  function sheetWrite() {
-    if (!SHEET_ENDPOINT) return;
-    try {
-      fetch(SHEET_ENDPOINT, {
-        method: 'POST', mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          name: v('euName'), phone: v('euPhone'), pet: v('euPet'),
-          place: v('euPlace'), date: v('euDate'), time: v('euTime'),
-          addr: v('euAddr'), cond: v('euCond'), source: 'euthanasia-booking'
-        })
-      }).catch(function (err) { console.error('[Resoul] euthanasia Google Sheet write failed:', err); });
-    } catch (err) { console.error('[Resoul] euthanasia Google Sheet write failed:', err); }
   }
   // Business Google Calendar (Vercel function, best-effort)
   function bizCalWrite() {
@@ -332,7 +317,6 @@
     if (msg) { msg.hidden = true; }
 
     var gcName = v('euName'), gcDate = v('euDate'), gcTime = v('euTime');
-    sheetWrite();
     bizCalWrite();
 
     fetch('https://diyxcxkgvqvyrstrzttq.supabase.co/rest/v1/cremation_bookings', {
