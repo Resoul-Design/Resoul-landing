@@ -347,22 +347,17 @@
     bizCalWrite();
 
     // Supabase 為正式預約記錄，以此判斷成功／失敗
-    fetch('https://diyxcxkgvqvyrstrzttq.supabase.co/rest/v1/cremation_bookings', {
+    fetch('/api/booking', {
       method: 'POST',
-      headers: {
-        apikey: 'sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K',
-        Authorization: 'Bearer sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K',
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        owner_name: v('euName'),
-        contact: v('euPhone'),
-        pet_type: v('euPet'),
-        service_date: v('euDate') || null,
-        pickup_address: v('euAddr') || null,
-        notes: '安樂死｜地點：' + v('euPlace') + '｜希望日期：' + (v('euDate') || '—') + '｜希望時段：' + (v('euTime') || '—') + '｜狀況：' + (v('euCond') || '—'),
-        source: 'web:euthanasia'
+        type: 'euthanasia',
+        name: v('euName'),
+        phone: v('euPhone'),
+        pet: v('euPet'),
+        date: v('euDate') || null,
+        place: v('euAddr') || null,
+        notes: '安樂死｜地點：' + v('euPlace') + '｜希望日期：' + (v('euDate') || '—') + '｜希望時段：' + (v('euTime') || '—') + '｜狀況：' + (v('euCond') || '—')
       })
     }).then(function (res) {
       if (res.ok) {

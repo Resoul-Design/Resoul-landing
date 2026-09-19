@@ -511,8 +511,8 @@
   function show(k,t){if(!msg)return;msg.className='book-msg '+k;msg.textContent=t;msg.hidden=false;}
   function saveDraft(o){try{localStorage.setItem('resoul:lastCremationBooking',JSON.stringify(Object.assign({saved_at:new Date().toISOString()},o)));}catch(e){}}
   function clearDraft(){try{localStorage.removeItem('resoul:lastCremationBooking');}catch(e){}}
-  function supa(o){return fetch('https://diyxcxkgvqvyrstrzttq.supabase.co/rest/v1/cremation_bookings',{method:'POST',headers:{'Content-Type':'application/json',apikey:'sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K',Authorization:'Bearer sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K',Prefer:'return=minimal'},body:JSON.stringify(o)}).then(function(res){if(!res.ok){return res.text().then(function(t){throw new Error('Supabase HTTP '+res.status+': '+t);});}});}
-  function saveBooking(full,legacy){return supa(full).catch(function(err){if(/payment_ref|payment_status|payment_amount|payment_currency/i.test(String(err&&err.message||err))){console.warn('[Resoul] Payment tracking columns missing; retrying with basic booking fields.',err);return supa(legacy);}throw err;});}
+  function supa(o){return fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)}).then(function(res){if(!res.ok){return res.text().then(function(t){throw new Error('API HTTP '+res.status+': '+t);});}});}
+  function saveBooking(full,legacy){return supa(full);} // server-side /api/order writes with service_role and handles column fallback
   function ref(){return 'RS-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8).toUpperCase();}
   var pending=null,modal=document.getElementById('orderConfirm'),list=document.getElementById('orderConfirmList'),edit=document.getElementById('orderEditBtn'),confirm=document.getElementById('orderConfirmBtn');
   function close(){if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}}

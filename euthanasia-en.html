@@ -341,22 +341,17 @@
     var gcName = v('euName'), gcDate = v('euDate'), gcTime = v('euTime');
     bizCalWrite();
 
-    fetch('https://diyxcxkgvqvyrstrzttq.supabase.co/rest/v1/cremation_bookings', {
+    fetch('/api/booking', {
       method: 'POST',
-      headers: {
-        apikey: 'sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K',
-        Authorization: 'Bearer sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K',
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        owner_name: v('euName'),
-        contact: v('euPhone'),
-        pet_type: v('euPet'),
-        service_date: v('euDate') || null,
-        pickup_address: v('euAddr') || null,
-        notes: 'Euthanasia｜location: ' + v('euPlace') + '｜date: ' + (v('euDate') || '—') + '｜time: ' + (v('euTime') || '—') + '｜condition: ' + (v('euCond') || '—'),
-        source: 'web:euthanasia'
+        type: 'euthanasia',
+        name: v('euName'),
+        phone: v('euPhone'),
+        pet: v('euPet'),
+        date: v('euDate') || null,
+        place: v('euAddr') || null,
+        notes: 'Euthanasia｜location: ' + v('euPlace') + '｜date: ' + (v('euDate') || '—') + '｜time: ' + (v('euTime') || '—') + '｜condition: ' + (v('euCond') || '—')
       })
     }).then(function (res) {
       if (res.ok) {
