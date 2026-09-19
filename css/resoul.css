@@ -953,7 +953,7 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 .flinks a{color:var(--ink-faint);}
 .flinks a:hover{color:var(--gold-deep);}
 .footer-legal{max-width:940px;margin:22px auto 0;padding:16px 18px 0;border-top:1px solid rgba(182,166,144,.22);}
-.footer-legal p{font-size:.72rem;line-height:1.75;color:rgba(182,166,144,.82);margin:0;text-align:left;}
+.footer-legal p{font-size:.74rem;line-height:1.75;color:#c8b9a0;margin:0;text-align:left;}
 .footer-legal strong{color:#d8c8ad;}
 
 /* ---------- 火化服務：網上預約表單 ---------- */
