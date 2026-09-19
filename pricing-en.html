@@ -181,7 +181,7 @@
     <div class="wrap" style="text-align:center;">
       <div class="reveal" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
         <a class="cta" href="https://wa.me/85264762951" target="_blank" rel="noopener">Talk to us first <span class="arw">→</span></a>
-        <a class="cta light" href="cremation-en.html">View the farewell journey</a>
+        <a class="cta light" id="planCta" href="cremation-en.html">View the farewell journey</a>
       </div>
     </div>
   </section>
@@ -249,11 +249,19 @@
 <script>
 (function(){
   var map={vet:['vet','hrV'],journey:['journey','hrJ'],grief:['grief','hrG']};
+  var cta=document.getElementById('planCta');
+  var ctaMap={
+    vet:{href:'euthanasia-en.html',label:'About home farewell (vet referral)'},
+    journey:{href:'cremation-en.html',label:'View the farewell journey'},
+    grief:{href:'support-en.html',label:'Find emotional support'}
+  };
+  var ctaDefault={href:'cremation-en.html',label:'View the farewell journey'};
+  function setCta(c){ if(cta){ cta.setAttribute('href',c.href); cta.textContent=c.label; } }
   var tabs=[].slice.call(document.querySelectorAll('[data-ptab]'));
   if(!tabs.length) return;
   function show(id,on){var e=document.getElementById(id); if(e) e.style.display=on?'':'none';}
-  function showAll(){Object.keys(map).forEach(function(k){show(map[k][0],true);show(map[k][1],true);});tabs.forEach(function(t){t.classList.remove('active');});}
-  function filter(key){Object.keys(map).forEach(function(k){var on=(k===key);show(map[k][0],on);show(map[k][1],on);});tabs.forEach(function(t){t.classList.toggle('active',t.getAttribute('data-ptab')===key);});}
+  function showAll(){Object.keys(map).forEach(function(k){show(map[k][0],true);show(map[k][1],true);});tabs.forEach(function(t){t.classList.remove('active');});setCta(ctaDefault);}
+  function filter(key){Object.keys(map).forEach(function(k){var on=(k===key);show(map[k][0],on);show(map[k][1],on);});tabs.forEach(function(t){t.classList.toggle('active',t.getAttribute('data-ptab')===key);});setCta(ctaMap[key]||ctaDefault);}
   var active=null;
   tabs.forEach(function(t){t.addEventListener('click',function(e){e.preventDefault();var key=t.getAttribute('data-ptab');
     if(active===key){active=null;showAll();return;}
