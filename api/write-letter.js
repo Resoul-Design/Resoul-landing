@@ -7,15 +7,12 @@
  */
 
 const MODEL = "gemini-3.6-flash";
+const { guardPublicPost } = require("./_security");
 
 function clean(s, n) { return String(s == null ? "" : s).slice(0, n || 400).trim(); }
 
 module.exports = async (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  if (req.method === "OPTIONS") { res.status(204).end(); return; }
-  if (req.method !== "POST") { res.status(405).json({ error: "method_not_allowed" }); return; }
+  if (!(await guardPublicPost(req, res, { endpoint: "write-letter", limit: 8, windowSeconds: 3600, maxBytes: 16384 }))) return;
 
   const key = process.env.GEMINI_API_KEY;
   if (!key) { res.status(500).json({ error: "server_not_configured" }); return; }

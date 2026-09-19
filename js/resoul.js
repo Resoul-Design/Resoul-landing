@@ -534,19 +534,6 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
     msg.hidden = false;
     try{ msg.scrollIntoView({ behavior:'smooth', block:'center' }); }catch(e){}
   }
-  // 商戶 Google Calendar（Vercel function，best-effort，唔阻塞預約）
-  function bizCalWrite(){
-    try{
-      fetch('/api/booking-calendar', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'cremation', name: val('bkName'), phone: val('bkPhone'),
-          plan: val('bkPlan'), pet: val('bkPet'), place: val('bkPlace'),
-          date: val('bkDate'), time: val('bkTime'), note: val('bkNote')
-        })
-      }).catch(function(){});
-    }catch(e){}
-  }
   // 客戶「加入 Google 日曆」預填連結（全日事件 end 為翌日）
   function gcalLink(title, details, ymd){
     var u = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
@@ -572,27 +559,19 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
     // 預先擷取值（form.reset 後仍可用於客戶日曆連結）
     var gcName = val('bkName'), gcPlan = val('bkPlan'), gcTime = val('bkTime'), gcDate = val('bkDate');
 
-    // 商戶日曆同步（best-effort）
-    bizCalWrite();
-
-    // Supabase 為正式預約記錄，以此判斷成功／失敗
-    fetch('https://diyxcxkgvqvyrstrzttq.supabase.co/rest/v1/cremation_bookings', {
+    // 由同源 API 驗證、限流並寫入 Supabase；成功後由伺服器同步商戶日曆。
+    fetch('/api/booking', {
       method: 'POST',
-      headers: {
-        apikey: 'sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K',
-        Authorization: 'Bearer sb_publishable_pQm9mD7UikuzkhRhMQr3Mw_JxA-1R8K',
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        owner_name: val('bkName'),
-        contact: val('bkPhone'),
+        type: location.pathname.indexOf('euthanasia') >= 0 ? 'euthanasia' : 'cremation',
+        name: val('bkName'),
+        phone: val('bkPhone'),
         plan: val('bkPlan'),
-        pet_type: val('bkPet'),
-        service_date: val('bkDate') || null,
-        pickup_address: val('bkPlace') || null,
+        pet: val('bkPet'),
+        date: val('bkDate') || null,
+        place: val('bkPlace') || null,
         notes: '希望日期：' + (val('bkDate')||'—') + '｜希望時段：' + (val('bkTime')||'—') + '｜體重：' + (val('bkWeight')||'—') + '｜情況：' + val('bkSituation') + '｜備註：' + (val('bkNote')||'—'),
-        source: 'web:cremation'
       })
     }).then(function(res){
       if(res.ok){

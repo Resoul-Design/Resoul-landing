@@ -11,6 +11,7 @@ const fs = require("fs");
 const path = require("path");
 
 const MODEL = "gemini-3.6-flash"; // 目前可用嘅 flash 模型（2.0/2.5 已停用或有 thinking 截斷問題）
+const { guardPublicPost } = require("./_security");
 
 // 後備提示：萬一讀取唔到 HANDBOOK.md，就用呢個。
 // 正常會優先用 HANDBOOK.md 內 <!-- PROMPT:START --> ~ <!-- PROMPT:END --> 之間嘅內容。
@@ -85,12 +86,7 @@ function rateLimited(ip) {
 }
 
 module.exports = async (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  if (req.method === "OPTIONS") { res.status(204).end(); return; }
-  if (req.method !== "POST") { res.status(405).json({ error: "method_not_allowed" }); return; }
+  if (!(await guardPublicPost(req, res, { endpoint: "grief-chat", limit: 25, windowSeconds: 3600, maxBytes: 65536 }))) return;
 
   if (rateLimited(clientIp(req))) { res.status(429).json({ error: "rate_limited" }); return; }
 

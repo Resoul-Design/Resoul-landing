@@ -1,6 +1,11 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "comment_shop_hidden": "商店暫時隱藏：以下兩條 redirect 令 /shop 與 /shop-en 暫時去唔到（307 暫時性）。要重新開放商店，刪走整個 redirects 區塊即可。",
+  "redirects": [
+    { "source": "/shop", "destination": "/", "permanent": false },
+    { "source": "/shop-en", "destination": "/index-en", "permanent": false }
+  ],
   "functions": {
     "api/grief-chat.js": {
       "includeFiles": "HANDBOOK.md"

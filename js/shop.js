@@ -114,20 +114,21 @@
     });
   }
   function uploadPhoto(file) {
-    var ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
-    var path = "orders/" + Date.now() + "-" + Math.random().toString(36).slice(2, 8) + "." + ext;
-    return fetch(SB_URL + "/storage/v1/object/" + UPLOAD_BUCKET + "/" + path, {
-      method: "POST",
-      headers: {
-        apikey: SB_KEY,
-        Authorization: "Bearer " + SB_KEY,
-        "Content-Type": file.type || "application/octet-stream"
-      },
-      body: file
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve(reader.result); };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    }).then(function (image) {
+      return fetch("/api/custom-upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: image })
+      });
     }).then(function (r) {
       if (!r.ok) throw new Error("upload failed " + r.status);
-      return SB_URL + "/storage/v1/object/public/" + UPLOAD_BUCKET + "/" + path;
-    });
+      return r.json();
+    }).then(function (result) { return result.url; });
   }
 
   /* ===== 小工具 ===== */

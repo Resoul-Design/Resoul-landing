@@ -126,14 +126,14 @@
       img.src = URL.createObjectURL(f);
     });
   }
-  function uploadPhoto() {
+  function photoDataUrl() {
     if (!photoBlob) return Promise.resolve(null);
-    var name = "memorial/" + Date.now() + "-" + Math.random().toString(36).slice(2) + ".jpg";
-    return fetch(SB_URL + "/storage/v1/object/board-images/" + name, {
-      method: "POST",
-      headers: Object.assign({}, H, { "Content-Type": "image/jpeg", "x-upsert": "false" }),
-      body: photoBlob
-    }).then(function (r) { if (!r.ok) throw new Error("upload"); return name; });
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve(reader.result); };
+      reader.onerror = reject;
+      reader.readAsDataURL(photoBlob);
+    });
   }
 
   /* ---------- 狀態列 ---------- */
@@ -153,37 +153,28 @@
       if (!pet && !story && !photoBlob) { setStatus(L("至少填毛孩名字、一段故事或加一張相片。", "Add at least a name, a story or a photo.")); return; }
       if (crisis(story)) { var sb = document.getElementById("supportBtn"); if (sb) sb.click(); }
       var vis = val("mVis") || "public";
-      var slug = null;
-      if (vis === "link" && window.crypto && crypto.randomUUID) slug = crypto.randomUUID();
-
       postBtn.disabled = true;
       setStatus(L("正在送出…", "Sending…"));
-      uploadPhoto().then(function (path) {
-        var rec = {
-          context: "memorial",
-          pet_name: pet || null,
-          years: val("mYears") || null,
-          one_line: one || null,
-          body: story || (one || (pet ? (L("紀念 ", "In memory of ") + pet) : L("（分享了一張相片）", "(shared a photo)"))),
-          name: val("mName") || null,
-          image_path: path,
-          visibility: vis
-        };
-        if (slug) rec.slug = slug;
-        return fetch(SB_URL + "/rest/v1/posts", {
+      photoDataUrl().then(function (image) {
+        return fetch("/api/memorial", {
           method: "POST",
-          headers: Object.assign({}, H, { "Content-Type": "application/json", "Prefer": "return=minimal" }),
-          body: JSON.stringify(rec)
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            pet: pet, years: val("mYears"), oneLine: one, story: story,
+            name: val("mName"), visibility: vis, image: image
+          })
         });
       }).then(function (r) {
         if (!r.ok) throw new Error("insert");
+        return r.json();
+      }).then(function (result) {
         // 清空表單
         ["mPet", "mYears", "mOne", "mStory", "mName"].forEach(function (id) { var e = document.getElementById(id); if (e) e.value = ""; });
         photoBlob = null;
         var pv = document.getElementById("mPreview"); if (pv) { pv.style.display = "none"; pv.src = ""; }
         var share = document.getElementById("mShare");
-        if (vis === "link" && slug) {
-          var url = location.origin + location.pathname + "?s=" + slug;
+        if (vis === "link" && result.slug) {
+          var url = location.origin + location.pathname + "?s=" + result.slug;
           setStatus(L("已建立只限連結的紀念頁 🤍 審核後即可用連結分享。", "Your link-only page is created 🤍 it will work via the link after review."), true);
           if (share) {
             share.hidden = false;

@@ -30,15 +30,14 @@ module.exports = async (req, res) => {
 
   const raw = await readRaw(req);
 
-  // 1) 驗證 HMAC（若已設密鑰）
+  // 1) 強制驗證 HMAC；缺少 secret 時拒絕處理，避免錯誤配置變成繞過驗證。
   const secret = process.env.SHOPIFY_WEBHOOK_SECRET;
-  if (secret) {
-    const hmac = req.headers["x-shopify-hmac-sha256"] || "";
-    const digest = crypto.createHmac("sha256", secret).update(raw, "utf8").digest("base64");
-    let ok = false;
-    try { ok = crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(hmac)); } catch (e) { ok = false; }
-    if (!ok) { res.status(401).json({ error: "invalid_hmac" }); return; }
-  }
+  if (!secret) { res.status(503).json({ error: "webhook_not_configured" }); return; }
+  const hmac = req.headers["x-shopify-hmac-sha256"] || "";
+  const digest = crypto.createHmac("sha256", secret).update(raw, "utf8").digest("base64");
+  let ok = false;
+  try { ok = crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(hmac)); } catch (e) { ok = false; }
+  if (!ok) { res.status(401).json({ error: "invalid_hmac" }); return; }
 
   // 2) 解析訂單
   let order;
