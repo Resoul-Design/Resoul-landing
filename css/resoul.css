@@ -751,8 +751,8 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 .walk-hint{margin:14px auto 0;max-width:560px;color:var(--ink-soft);font-size:.9rem;}
 .wh-arw{display:inline-block;margin-left:5px;color:var(--gold-deep);animation:walkNudge 1.8s ease-in-out infinite;}
 @keyframes walkNudge{0%,100%{transform:translateX(0);}50%{transform:translateX(5px);}}
-/* 加闊呢一段容器，等 7 步可以放同一行 */
-.procedure .wrap{max-width:var(--maxw);}
+/* 加闊呢一段容器，等 7 步喺闊螢幕可以舒服咁放同一行 */
+.procedure .wrap{max-width:1120px;}
 .proc-walk{margin:26px auto 0;max-width:100%;padding:6px 0 4px;}
 .walk-track{display:flex;flex-wrap:nowrap;justify-content:center;align-items:flex-start;gap:6px;list-style:none;padding:0;margin:0;}
 .wstep{flex:1 1 0;min-width:0;position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;}
@@ -770,7 +770,7 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 .wcard h4{font-size:.82rem;color:var(--ink);line-height:1.4;}
 .wcard p{color:var(--ink-soft);font-size:.72rem;margin-top:4px;line-height:1.5;}
 .wcard i{display:block;margin-top:4px;font-family:var(--slogan);font-style:italic;font-size:.68rem;color:var(--ink-faint);line-height:1.35;}
-@media(max-width:600px){
+@media(max-width:1024px){
   .proc-walk{
     margin-top:22px;
     overflow-x:auto;
