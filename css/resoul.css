@@ -17,7 +17,6 @@
   --page-pad:clamp(14px,4vw,24px);
   --serif:'Noto Serif TC',"Songti TC","Source Han Serif TC",serif;
   --sans:'Noto Sans TC',-apple-system,BlinkMacSystemFont,"PingFang TC","Microsoft JhengHei",sans-serif;
-  --script:'Parisienne','Noto Serif TC',cursive;
   --slogan:'Cormorant Garamond','Noto Serif TC',serif;
   --paw:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23b89a6e'%3E%3Cellipse cx='26' cy='34' rx='8.5' ry='12'/%3E%3Cellipse cx='45' cy='24' rx='8.5' ry='13'/%3E%3Cellipse cx='63' cy='26' rx='8.5' ry='12.5'/%3E%3Cellipse cx='79' cy='39' rx='8' ry='11'/%3E%3Cpath d='M52 48C36 48 27 60 30 72 33 84 45 88 52 88 59 88 71 84 74 72 77 60 68 48 52 48Z'/%3E%3C/svg%3E");
 }

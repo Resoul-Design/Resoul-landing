@@ -610,3 +610,18 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
     });
   });
 })();
+
+/* Hero 影片：只喺闊螢幕且容許動畫時載入（效能） */
+(function(){
+  try{
+    var v=document.querySelector('.hero-bg[data-hero-video]'); if(!v) return;
+    var wide=window.matchMedia('(min-width:900px)').matches;
+    var motion=window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+    if(wide && motion){
+      var s=document.createElement('source');
+      s.src=v.getAttribute('data-hero-video'); s.type='video/mp4';
+      v.appendChild(s); v.load();
+      var p=v.play(); if(p && p.catch) p.catch(function(){});
+    }
+  }catch(e){}
+})();
