@@ -1064,7 +1064,50 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 .letter-sheet[data-paper="room"] .ls-hero{display:block;}
 .letter-sheet[data-paper="basket"] .ls-head,.letter-sheet[data-paper="basket"] .ls-illust{display:block;}
 .letter-sheet[data-paper="plain"] .ls-head{display:block;}
+.letter-sheet[data-paper="grateful"],
+.letter-sheet[data-paper="together"],
+.letter-sheet[data-paper="grow"],
+.letter-sheet[data-paper="home"],
+.letter-sheet[data-paper="adventure"]{
+  aspect-ratio:382/686;
+  background-color:#f7f1e6;
+  background-position:top center;
+  background-repeat:no-repeat;
+  background-size:100% auto;
+  padding:25% 8% 8%;
+}
+.letter-sheet[data-paper="grateful"]{background-image:url('../images/05_GRATEFUL.jpg');}
+.letter-sheet[data-paper="together"]{background-image:url('../images/04_TOGETHER.jpg');}
+.letter-sheet[data-paper="grow"]{background-image:url('../images/03_GROW.jpg');}
+.letter-sheet[data-paper="home"]{background-image:url('../images/02_HOME.jpg');}
+.letter-sheet[data-paper="adventure"]{background-image:url('../images/01_ADVENTURE.jpg');}
+.letter-sheet[data-paper="grateful"] .ls-body,
+.letter-sheet[data-paper="together"] .ls-body,
+.letter-sheet[data-paper="grow"] .ls-body,
+.letter-sheet[data-paper="home"] .ls-body,
+.letter-sheet[data-paper="adventure"] .ls-body{
+  position:relative;
+  margin:0;
+  padding:24px 26px;
+  border:1px solid rgba(174,151,113,.38);
+  border-radius:6px;
+  background:rgba(255,252,246,.9);
+  box-shadow:0 12px 32px rgba(77,62,45,.1);
+  backdrop-filter:blur(2px);
+}
 @media(max-width:520px){.letter-sheet{padding:40px 24px 0;}.letter-sheet .ls-illust{width:calc(100% + 48px);margin:20px -24px 0;}.letter-sheet .ls-hero{width:calc(100% + 48px);margin:-40px -24px 18px;}}
+@media(max-width:520px){
+  .letter-sheet[data-paper="grateful"],
+  .letter-sheet[data-paper="together"],
+  .letter-sheet[data-paper="grow"],
+  .letter-sheet[data-paper="home"],
+  .letter-sheet[data-paper="adventure"]{padding:25% 7% 7%;}
+  .letter-sheet[data-paper="grateful"] .ls-body,
+  .letter-sheet[data-paper="together"] .ls-body,
+  .letter-sheet[data-paper="grow"] .ls-body,
+  .letter-sheet[data-paper="home"] .ls-body,
+  .letter-sheet[data-paper="adventure"] .ls-body{padding:18px 16px;line-height:1.9;}
+}
 .letter-sheet.empty .ls-body{color:var(--ink-faint);font-style:italic;text-align:center;}
 .letter-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px;}
 .letter-hint{margin-top:14px;text-align:center;color:var(--ink-faint);font-size:.78rem;line-height:1.7;}
