@@ -1166,6 +1166,11 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
     padding:7mm !important;
     font-size:10.5pt !important;
     line-height:1.7 !important;
+    border:none !important;
+    border-radius:0 !important;
+    background:transparent !important;
+    box-shadow:none !important;
+    backdrop-filter:none !important;
   }
 }
 
