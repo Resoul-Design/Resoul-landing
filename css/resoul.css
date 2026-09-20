@@ -1127,7 +1127,7 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 
 /* 列印：只印信紙一版（用 display 收合，避免多頁空白）*/
 @media print{
-  @page{margin:14mm;}
+  @page{size:A4 portrait;margin:10mm;}
   html,body{background:#fbf7ef !important;}
   body>*{display:none !important;}                 /* 收起頁面所有嘢（連空位）*/
   #letterModal{display:block !important;position:static !important;height:auto !important;}
@@ -1139,6 +1139,34 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
   .letter-sheet{position:static !important;margin:0 !important;width:100% !important;max-width:none !important;
     border:none !important;box-shadow:none !important;border-radius:0 !important;padding:0 22px 0 !important;overflow:visible !important;}
   .letter-sheet .ls-hero{width:100% !important;margin:0 0 16px !important;}
+  .letter-sheet[data-paper="grateful"],
+  .letter-sheet[data-paper="together"],
+  .letter-sheet[data-paper="grow"],
+  .letter-sheet[data-paper="home"],
+  .letter-sheet[data-paper="adventure"]{
+    box-sizing:border-box !important;
+    width:154mm !important;
+    height:276mm !important;
+    min-height:276mm !important;
+    max-width:154mm !important;
+    margin:0 auto !important;
+    padding:58mm 11mm 11mm !important;
+    overflow:hidden !important;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+    background-size:154mm 276mm !important;
+    print-color-adjust:exact !important;
+    -webkit-print-color-adjust:exact !important;
+  }
+  .letter-sheet[data-paper="grateful"] .ls-body,
+  .letter-sheet[data-paper="together"] .ls-body,
+  .letter-sheet[data-paper="grow"] .ls-body,
+  .letter-sheet[data-paper="home"] .ls-body,
+  .letter-sheet[data-paper="adventure"] .ls-body{
+    padding:7mm !important;
+    font-size:10.5pt !important;
+    line-height:1.7 !important;
+  }
 }
 
 /* ============================================================
