@@ -62,7 +62,7 @@ module.exports = async (req, res) => {
   const url = "https://generativelanguage.googleapis.com/v1beta/models/" + MODEL + ":generateContent?key=" + key;
   const payload = {
     contents: [{ role: "user", parts: [{ text: prompt }] }],
-    generationConfig: { temperature: 0.8, topP: 0.95, maxOutputTokens: 1024, candidateCount: 1 },
+    generationConfig: { temperature: 0.8, topP: 0.95, maxOutputTokens: 4096, candidateCount: 1 },
     safetySettings: [
       { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_ONLY_HIGH" },
       { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_ONLY_HIGH" },
