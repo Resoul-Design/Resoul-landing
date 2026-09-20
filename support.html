@@ -312,6 +312,17 @@
     <div class="lm-scroll">
       <p class="eyebrow" style="text-align:center;">給<span id="lmName">牠</span>一封信</p>
       <h3 style="text-align:center;font-size:1.24rem;margin-bottom:6px;">不知道如何開始，也可以先從一段回憶說起。</h3>
+      <div class="ls-paper" role="group" aria-label="信紙款式">
+        <span class="ls-paper-label">信紙：</span>
+        <button type="button" class="paper-chip active" data-paper="room">海景房</button>
+        <button type="button" class="paper-chip" data-paper="basket">花籃</button>
+        <button type="button" class="paper-chip" data-paper="plain">簡約</button>
+        <button type="button" class="paper-chip" data-paper="grateful">感恩</button>
+        <button type="button" class="paper-chip" data-paper="together">相伴</button>
+        <button type="button" class="paper-chip" data-paper="grow">成長</button>
+        <button type="button" class="paper-chip" data-paper="home">家的溫暖</button>
+        <button type="button" class="paper-chip" data-paper="adventure">同行冒險</button>
+      </div>
       <form class="book-form letter-form" id="letterForm">
         <div class="lf-mode" style="display:flex;gap:8px;justify-content:center;margin-bottom:4px;">
           <button type="button" class="mf-chip active" id="lfModeAi">✨ AI 幫我寫</button>
@@ -339,17 +350,6 @@
         <p class="book-note">你填寫的內容只會用於生成這封信，不會儲存在我們的伺服器；若沒有勾選上方選項，離開頁面後內容不會保留。本功能為 AI 協助整理文字，<b>並非心理治療或專業輔導</b>；如情緒持續影響生活，請尋求專業協助。</p>
         <div class="book-msg" id="lfMsg" role="status" aria-live="polite" hidden></div>
       </form>
-      <div class="ls-paper" role="group" aria-label="信紙款式">
-        <span class="ls-paper-label">信紙：</span>
-        <button type="button" class="paper-chip active" data-paper="room">海景房</button>
-        <button type="button" class="paper-chip" data-paper="basket">花籃</button>
-        <button type="button" class="paper-chip" data-paper="plain">簡約</button>
-        <button type="button" class="paper-chip" data-paper="grateful">感恩</button>
-        <button type="button" class="paper-chip" data-paper="together">相伴</button>
-        <button type="button" class="paper-chip" data-paper="grow">成長</button>
-        <button type="button" class="paper-chip" data-paper="home">家的溫暖</button>
-        <button type="button" class="paper-chip" data-paper="adventure">同行冒險</button>
-      </div>
       <div class="letter-sheet empty" id="letterSheet" data-paper="room">
         <img class="ls-hero" src="images/about-room.png" alt="RESOUL" onerror="this.style.display='none'">
         <div class="ls-head"><div class="ls-brand">RESOUL</div><div class="ls-tag">remember the story of our love</div></div>
