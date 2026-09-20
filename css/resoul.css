@@ -1090,7 +1090,7 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
   position:absolute;
   inset:0;
   z-index:0;
-  background:rgba(255,252,246,.48);
+  background:rgba(255,252,246,.62);
   pointer-events:none;
 }
 .letter-sheet[data-paper="grateful"] .ls-body,
@@ -1101,12 +1101,12 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
   position:relative;
   margin:0;
   padding:24px 26px;
-  border:1px solid rgba(174,151,113,.38);
-  border-radius:6px;
+  border:0;
+  border-radius:0;
   z-index:1;
-  background:rgba(255,252,246,.94);
-  box-shadow:0 12px 32px rgba(77,62,45,.1);
-  backdrop-filter:blur(2px);
+  background:transparent;
+  box-shadow:none;
+  backdrop-filter:none;
 }
 @media(max-width:520px){.letter-sheet{padding:40px 24px 0;}.letter-sheet .ls-illust{width:calc(100% + 48px);margin:20px -24px 0;}.letter-sheet .ls-hero{width:calc(100% + 48px);margin:-40px -24px 18px;}}
 @media(max-width:520px){
