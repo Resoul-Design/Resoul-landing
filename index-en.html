@@ -64,7 +64,7 @@
         <button class="nav-top" type="button" aria-expanded="false" aria-haspopup="true">Services<span class="nav-caret" aria-hidden="true">▾</span></button>
         <div class="nav-menu">
           <a href="/cremation-en">Farewell journey</a>
-          <a href="/euthanasia-en">Home farewell</a>
+          <a href="/euthanasia-en">At-Home Farewell</a>
           <!-- 商店暫隱 <a href="/shop-en">Memorial store</a> -->
           <a href="/pricing-en">Pricing</a>
         </div>
@@ -121,17 +121,17 @@
       <p class="eyebrow reveal" style="text-align:center;">Find the next step</p>
       <h2 class="reveal" style="text-align:center;">What do you need most right now?</h2>
       <div class="services-grid reveal" style="margin-top:26px;"><!-- 商店暫隱：原為 grid4，恢復時改回 "services-grid grid4 reveal" -->
-        <a class="scard" href="/euthanasia-en" style="text-decoration:none;color:inherit;display:block;">
-          <span class="sc-ic" aria-hidden="true">🕰️</span>
-          <h3>I'm worried time may be short</h3>
-          <p>Your pet's quality of life is declining, but you're unsure of the next step? We can help organise the information, prepare the questions to ask the vet, and connect you with an independent registered vet who makes home visits.</p>
-          <i>About home farewell →</i>
-        </a>
         <a class="scard" href="/cremation-en" style="text-decoration:none;color:inherit;display:block;">
           <span class="sc-ic" aria-hidden="true">🤍</span>
           <h3>My pet has just passed</h3>
           <p>Whether your pet passed at home or at a clinic, we can help arrange private pick-up, a farewell ceremony, individual cremation, ashes and memorial arrangements.</p>
           <i>Arrange the farewell journey →</i>
+        </a>
+        <a class="scard" href="/euthanasia-en" style="text-decoration:none;color:inherit;display:block;">
+          <span class="sc-ic" aria-hidden="true">🕰️</span>
+          <h3>I'm worried time may be short</h3>
+          <p>Your pet's quality of life is declining, but you're unsure of the next step? We can help organise the information, prepare the questions to ask the vet, and connect you with an independent registered vet who makes home visits.</p>
+          <i>About home farewell →</i>
         </a>
         <a class="scard" href="/support-en" style="text-decoration:none;color:inherit;display:block;">
           <span class="sc-ic" aria-hidden="true">🌙</span>
@@ -158,32 +158,7 @@
       <p class="eyebrow reveal">Google Reviews</p>
       <h2 class="reveal">The stories they left behind.</h2>
       <p class="lead reveal" style="margin-top:14px;">Every review comes from a one-of-a-kind bond. Thank you to the families who let us remember their pets' names and stories.</p>
-      <div class="reviews-grid reveal">
-        <figure class="rcard">
-          <div class="rc-top">
-            <div class="rc-photo" aria-hidden="true">🐾</div>
-            <div class="rc-meta"><div class="rc-name">Bobo's family</div><div class="rc-stars" aria-label="5 star review">★★★★★</div></div>
-          </div>
-          <blockquote class="rc-quote">"The driver arrived on time and handled everything so gently — they even sent a photo to let us know. Every step was clear, and they kept following up afterwards."</blockquote>
-          <figcaption class="rc-src"><span class="rc-g">G</span> Google review</figcaption>
-        </figure>
-        <figure class="rcard">
-          <div class="rc-top">
-            <div class="rc-photo" aria-hidden="true">🐾</div>
-            <div class="rc-meta"><div class="rc-name">Momo's family</div><div class="rc-stars" aria-label="5 star review">★★★★★</div></div>
-          </div>
-          <blockquote class="rc-quote">"The sea-view farewell room was so peaceful, with no rush at all. I could take my time to say the last words to Momo — that time meant everything to me."</blockquote>
-          <figcaption class="rc-src"><span class="rc-g">G</span> Google review</figcaption>
-        </figure>
-        <figure class="rcard">
-          <div class="rc-top">
-            <div class="rc-photo" aria-hidden="true">🐾</div>
-            <div class="rc-meta"><div class="rc-name">Snowball's family</div><div class="rc-stars" aria-label="5 star review">★★★★★</div></div>
-          </div>
-          <blockquote class="rc-quote">"The ashes and paw print were handled with such care. We even received a caring message afterwards — they truly understood how we felt. Thank you, RESOUL."</blockquote>
-          <figcaption class="rc-src"><span class="rc-g">G</span> Google review</figcaption>
-        </figure>
-      </div>
+      <div class="reviews-grid reveal" data-google-reviews data-limit="3"></div>
       <div class="reviews-cta reveal">
         <a class="cta light" href="/board-en">Read more family stories</a>
         <a class="cta" href="https://maps.app.goo.gl/pivPtcEfwhwJCefw9?g_st=ic" target="_blank" rel="noopener">See all reviews on Google <span class="arw">→</span></a>
@@ -265,6 +240,8 @@
   </div>
 </div>
 
+<script src="js/reviews-data.js" defer></script>
+<script src="js/reviews.js" defer></script>
 <script src="js/resoul.js" defer></script>
 </body>
 </html>

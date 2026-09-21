@@ -63,7 +63,7 @@
         <button class="nav-top" type="button" aria-expanded="false" aria-haspopup="true">服務<span class="nav-caret" aria-hidden="true">▾</span></button>
         <div class="nav-menu">
           <a href="/cremation">善終旅程</a>
-          <a href="/euthanasia">安辭在家</a>
+          <a href="/euthanasia">安樂在家</a>
           <!-- 商店暫隱 <a href="/shop">紀念品商店</a> -->
           <a href="/pricing">服務收費</a>
         </div>
@@ -82,6 +82,22 @@
       <p class="eyebrow reveal">分享頁</p>
       <h2 class="reveal">讓牠的故事，<br>繼續被記得。</h2>
       <p class="lead reveal" style="margin-top:14px;">主人可選擇以文字、照片或一封短信，記錄毛孩的名字、性格和一起生活的故事。分享可以公開、只限連結瀏覽，或只供自己保存。所有公開內容須經主人同意及審核。</p>
+
+      <!-- Google Reviews：與「主人故事分享」分開，來源清楚標明；每則可含相片 -->
+      <div class="reviews-block reveal" style="margin-top:28px;">
+        <p class="share-src-tag"><span class="rc-g">G</span> Google Reviews</p>
+        <h3 style="margin:2px 0 14px;">來自 Google 的真實評價</h3>
+        <div class="reviews-grid" data-google-reviews></div>
+        <div class="reviews-cta" style="margin-top:20px;">
+          <a class="cta" href="https://maps.app.goo.gl/pivPtcEfwhwJCefw9?g_st=ic" target="_blank" rel="noopener">在 Google 查看全部評價 <span class="arw">→</span></a>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <p class="eyebrow reveal" style="margin-top:10px;">主人故事分享</p>
+      <h3 class="reveal" style="margin:2px 0 6px;">由主人親手記下的故事</h3>
+      <p class="board-note reveal" style="margin-bottom:8px;">這一區與上方的 Google 評價分開；以下是主人在此親自分享、經審核後公開的毛孩故事。</p>
 
       <div class="mform reveal" id="storyForm">
         <div class="mf-row">
@@ -172,6 +188,8 @@
   </div>
 </div>
 
+<script src="js/reviews-data.js" defer></script>
+<script src="js/reviews.js" defer></script>
 <script src="js/resoul.js" defer></script>
 <script src="js/board.js" defer></script>
 </body>

@@ -63,7 +63,7 @@
         <button class="nav-top" type="button" aria-expanded="false" aria-haspopup="true">服務<span class="nav-caret" aria-hidden="true">▾</span></button>
         <div class="nav-menu">
           <a href="/cremation">善終旅程</a>
-          <a href="/euthanasia">安辭在家</a>
+          <a href="/euthanasia">安樂在家</a>
           <!-- 商店暫隱 <a href="/shop">紀念品商店</a> -->
           <a href="/pricing">服務收費</a>
         </div>
@@ -356,6 +356,11 @@
         <div class="ls-body" id="lsBody">填好上面資料用 AI，或選「我自己寫」，這裡就會出現你的信。</div>
         <img class="ls-illust" src="images/letter-illust.png" alt="" onerror="this.style.display='none'">
       </div>
+      <div class="ls-pager" id="lsPager" aria-label="信紙頁數">
+        <button type="button" id="lsPrev" aria-label="上一頁">‹ 上一頁</button>
+        <span id="lsPageInfo">1 / 1</span>
+        <button type="button" id="lsNext" aria-label="下一頁">下一頁 ›</button>
+      </div>
       <div class="letter-actions" id="letterActions" hidden>
         <button class="cta light" type="button" id="laTone" data-ai>修改語氣</button>
         <button class="cta light" type="button" id="laShort" data-ai>縮短</button>
@@ -399,11 +404,49 @@
   function persist(){ try{ if(saveEl&&saveEl.checked&&lastLetter){ localStorage.setItem(STORE,lastLetter); } else { localStorage.removeItem(STORE); } }catch(e){} }
   if(saveEl) saveEl.addEventListener('change',persist);
 
+  // ---- 信紙分頁（每頁約一版 A4；字體較細；避免超出信紙）----
+  var lsPager=document.getElementById('lsPager'), lsPrev=document.getElementById('lsPrev'), lsNext=document.getElementById('lsNext'), lsInfo=document.getElementById('lsPageInfo');
+  var pages=[''], curPage=0;
+  function usableHeight(){ var w=body.clientWidth||480; return Math.max(360, Math.round(w*(297/210)*0.82)); }
+  function splitPages(text){
+    text=String(text||'').trim(); if(!text) return [''];
+    var probe=document.createElement('div'); var cs=window.getComputedStyle(body);
+    probe.style.cssText='position:absolute;left:-9999px;top:0;visibility:hidden;white-space:pre-wrap;';
+    probe.style.width=(body.clientWidth||480)+'px';
+    probe.style.fontFamily=cs.fontFamily; probe.style.fontSize=cs.fontSize;
+    probe.style.lineHeight=cs.lineHeight; probe.style.letterSpacing=cs.letterSpacing;
+    document.body.appendChild(probe);
+    var maxH=usableHeight();
+    // 先按段落，再把過長段落按句子切細（避免無斷點）
+    var units=[]; text.split(/\n{2,}/).forEach(function(b,i){
+      if(i>0) units.push('\n\n');
+      if(b.length<=80){ units.push(b); }
+      else { (b.match(/[^。！？!?]*[。！？!?]?/g)||[b]).forEach(function(p){ if(p) units.push(p); }); }
+    });
+    function fits(t){ probe.textContent=t; return probe.scrollHeight<=maxH; }
+    var out=[], cur='';
+    units.forEach(function(u){ var trial=cur+u; if(cur===''||fits(trial)){ cur=trial; } else { out.push(cur.replace(/\n+$/,'')); cur=u.replace(/^\n+/,''); } });
+    if(out.length===0 || cur.trim()!=='') out.push(cur.replace(/\n+$/,''));
+    document.body.removeChild(probe);
+    return out.length?out:[''];
+  }
+  function showPage(i){ if(!pages.length)return; curPage=Math.max(0,Math.min(i,pages.length-1)); body.textContent=pages[curPage];
+    var multi=pages.length>1; if(lsPager)lsPager.classList.toggle('on',multi);
+    if(lsInfo)lsInfo.textContent=(curPage+1)+' / '+pages.length;
+    if(lsPrev)lsPrev.disabled=curPage<=0; if(lsNext)lsNext.disabled=curPage>=pages.length-1;
+  }
+  if(lsPrev)lsPrev.addEventListener('click',function(){ showPage(curPage-1); });
+  if(lsNext)lsNext.addEventListener('click',function(){ showPage(curPage+1); });
+
   function renderLetter(text,noScroll){
     lastLetter=String(text||'').trim();
-    sheet.classList.remove('empty'); body.textContent=lastLetter; actions.hidden=false; toggleAiActions(); persist();
+    sheet.classList.remove('empty'); actions.hidden=false; toggleAiActions(); persist();
+    pages=splitPages(lastLetter); showPage(0);
     if(!noScroll){ try{sheet.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){} }
   }
+  // 列印：先展開全文（分頁只影響畫面，列印用 A4 自然分頁），列印後還原分頁檢視
+  window.addEventListener('beforeprint',function(){ if(lastLetter){ body.textContent=lastLetter; if(lsPager)lsPager.classList.remove('on'); } });
+  window.addEventListener('afterprint',function(){ if(pages.length){ showPage(curPage); } });
 
   function generate(opts){
     opts=opts||{};

@@ -63,7 +63,7 @@
         <button class="nav-top" type="button" aria-expanded="false" aria-haspopup="true">Services<span class="nav-caret" aria-hidden="true">▾</span></button>
         <div class="nav-menu">
           <a href="/cremation-en">Farewell journey</a>
-          <a href="/euthanasia-en">Home farewell</a>
+          <a href="/euthanasia-en">At-Home Farewell</a>
           <!-- 商店暫隱 <a href="/shop-en">Memorial store</a> -->
           <a href="/pricing-en">Pricing</a>
         </div>
@@ -356,6 +356,11 @@
         <div class="ls-body" id="lsBody">Use AI, or choose “Write it myself”, and your letter will appear here.</div>
         <img class="ls-illust" src="images/letter-illust.png" alt="" onerror="this.style.display='none'">
       </div>
+      <div class="ls-pager" id="lsPager" aria-label="Letter pages">
+        <button type="button" id="lsPrev" aria-label="Previous page">‹ Prev</button>
+        <span id="lsPageInfo">1 / 1</span>
+        <button type="button" id="lsNext" aria-label="Next page">Next ›</button>
+      </div>
       <div class="letter-actions" id="letterActions" hidden>
         <button class="cta light" type="button" id="laTone" data-ai>Adjust tone</button>
         <button class="cta light" type="button" id="laShort" data-ai>Shorten</button>
@@ -399,11 +404,47 @@
   function persist(){ try{ if(saveEl&&saveEl.checked&&lastLetter){ localStorage.setItem(STORE,lastLetter); } else { localStorage.removeItem(STORE); } }catch(e){} }
   if(saveEl) saveEl.addEventListener('change',persist);
 
+  // ---- Letter pagination (about one A4 per page; smaller font; keeps text within the sheet) ----
+  var lsPager=document.getElementById('lsPager'), lsPrev=document.getElementById('lsPrev'), lsNext=document.getElementById('lsNext'), lsInfo=document.getElementById('lsPageInfo');
+  var pages=[''], curPage=0;
+  function usableHeight(){ var w=body.clientWidth||480; return Math.max(360, Math.round(w*(297/210)*0.82)); }
+  function splitPages(text){
+    text=String(text||'').trim(); if(!text) return [''];
+    var probe=document.createElement('div'); var cs=window.getComputedStyle(body);
+    probe.style.cssText='position:absolute;left:-9999px;top:0;visibility:hidden;white-space:pre-wrap;';
+    probe.style.width=(body.clientWidth||480)+'px';
+    probe.style.fontFamily=cs.fontFamily; probe.style.fontSize=cs.fontSize;
+    probe.style.lineHeight=cs.lineHeight; probe.style.letterSpacing=cs.letterSpacing;
+    document.body.appendChild(probe);
+    var maxH=usableHeight();
+    var units=[]; text.split(/\n{2,}/).forEach(function(b,i){
+      if(i>0) units.push('\n\n');
+      if(b.length<=80){ units.push(b); }
+      else { (b.match(/[^.!?。！？]*[.!?。！？]?\s*/g)||[b]).forEach(function(p){ if(p) units.push(p); }); }
+    });
+    function fits(t){ probe.textContent=t; return probe.scrollHeight<=maxH; }
+    var out=[], cur='';
+    units.forEach(function(u){ var trial=cur+u; if(cur===''||fits(trial)){ cur=trial; } else { out.push(cur.replace(/\n+$/,'')); cur=u.replace(/^\n+/,''); } });
+    if(out.length===0 || cur.trim()!=='') out.push(cur.replace(/\n+$/,''));
+    document.body.removeChild(probe);
+    return out.length?out:[''];
+  }
+  function showPage(i){ if(!pages.length)return; curPage=Math.max(0,Math.min(i,pages.length-1)); body.textContent=pages[curPage];
+    var multi=pages.length>1; if(lsPager)lsPager.classList.toggle('on',multi);
+    if(lsInfo)lsInfo.textContent=(curPage+1)+' / '+pages.length;
+    if(lsPrev)lsPrev.disabled=curPage<=0; if(lsNext)lsNext.disabled=curPage>=pages.length-1;
+  }
+  if(lsPrev)lsPrev.addEventListener('click',function(){ showPage(curPage-1); });
+  if(lsNext)lsNext.addEventListener('click',function(){ showPage(curPage+1); });
+
   function renderLetter(text,noScroll){
     lastLetter=String(text||'').trim();
-    sheet.classList.remove('empty'); body.textContent=lastLetter; actions.hidden=false; toggleAiActions(); persist();
+    sheet.classList.remove('empty'); actions.hidden=false; toggleAiActions(); persist();
+    pages=splitPages(lastLetter); showPage(0);
     if(!noScroll){ try{sheet.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){} }
   }
+  window.addEventListener('beforeprint',function(){ if(lastLetter){ body.textContent=lastLetter; if(lsPager)lsPager.classList.remove('on'); } });
+  window.addEventListener('afterprint',function(){ if(pages.length){ showPage(curPage); } });
 
   function generate(opts){
     opts=opts||{};

@@ -64,7 +64,6 @@ module.exports = async (req, res) => {
   if (!SB_URL || !SR) { res.status(200).json({ skipped: true, note: "supabase_env_missing" }); return; }
 
   try {
-    const url = SB_URL + "/rest/v1/cremation_bookings?payment_ref=eq." + encodeURIComponent(ref);
     const patch = {
       payment_status: "paid",
       payment_amount: order.total_price != null ? Number(order.total_price) : undefined,
@@ -73,22 +72,30 @@ module.exports = async (req, res) => {
       shopify_order_name: order.name || (order.order_number ? "#" + order.order_number : undefined),
       paid_at: new Date().toISOString(),
     };
-    const r = await fetch(url, {
-      method: "PATCH",
-      headers: {
-        apikey: SR,
-        Authorization: "Bearer " + SR,
-        "Content-Type": "application/json",
-        Prefer: "return=minimal",
-      },
-      body: JSON.stringify(patch),
-    });
-    if (!r.ok) {
-      const t = await r.text();
-      console.error("[Resoul] webhook supabase patch failed " + r.status + ": " + t);
-      res.status(200).json({ ok: false, detail: "supabase_error" });
-      return;
+    // 同一 payment_ref 只會屬於其中一張表：火化付款問卷（cremation_bookings）
+    // 或安排預約接送訂金（deposit_bookings）。兩張都試 PATCH，best-effort。
+    const tables = ["cremation_bookings", "deposit_bookings"];
+    let anyErr = "";
+    for (const tbl of tables) {
+      const url = SB_URL + "/rest/v1/" + tbl + "?payment_ref=eq." + encodeURIComponent(ref);
+      const r = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          apikey: SR,
+          Authorization: "Bearer " + SR,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify(patch),
+      });
+      if (!r.ok) {
+        const t = await r.text();
+        // deposit_bookings 尚未建立時會 404/400，可忽略，不阻礙 cremation 更新。
+        console.error("[Resoul] webhook patch " + tbl + " failed " + r.status + ": " + t);
+        anyErr = "supabase_error";
+      }
     }
+    if (anyErr) { res.status(200).json({ ok: true, payment_ref: ref, note: anyErr }); return; }
     res.status(200).json({ ok: true, payment_ref: ref });
   } catch (err) {
     console.error("[Resoul] shopify-webhook error:", err && err.message);

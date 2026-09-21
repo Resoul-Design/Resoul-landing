@@ -63,7 +63,7 @@
         <button class="nav-top" type="button" aria-expanded="false" aria-haspopup="true">Services<span class="nav-caret" aria-hidden="true">▾</span></button>
         <div class="nav-menu">
           <a href="/cremation-en">Farewell journey</a>
-          <a href="/euthanasia-en">Home farewell</a>
+          <a href="/euthanasia-en">At-Home Farewell</a>
           <!-- 商店暫隱 <a href="/shop-en">Memorial store</a> -->
           <a href="/pricing-en">Pricing</a>
         </div>
@@ -76,6 +76,15 @@
 
 <main id="top">
     <h1 class="sr-only">Pet Cremation & Farewell Journey in Hong Kong | RESOUL</h1>
+
+    <nav class="jump-nav reveal" aria-label="Farewell journey quick navigation">
+      <a href="#procedure">Process</a>
+      <a href="#plans">Pricing</a>
+      <a href="#notes">Cremation notes</a>
+      <a href="#faqs">FAQ</a>
+      <a href="#order" id="orderJump">Arrange pick-up booking</a>
+      <a class="jump-wa" href="https://wa.me/85264762951" target="_blank" rel="noopener">WhatsApp us</a>
+    </nav>
 
     <section class="procedure" id="procedure">
     <div class="wrap">
@@ -152,7 +161,7 @@
         </div>
       </div>
 
-      <a class="cta reveal" href="#order" id="orderCta">Book and pay <span class="arw">→</span></a>
+      <a class="cta reveal" href="#order" id="orderCta">Arrange pick-up booking <span class="arw">→</span></a>
     </div>
   </section>
 
@@ -192,34 +201,37 @@
 
   <section class="cremation wide" id="order" style="display:none">
     <div class="wrap">
-      <p class="eyebrow reveal">Online booking · Payment</p>
-      <h2 class="reveal">Fill in a simple form,<br>then complete booking and payment.</h2>
-      <p class="lead reveal" style="margin-top:12px;">Choose the journey and your pet's weight, fill in contact details and preferred time, and we'll take you to a secure payment page to complete the booking. After payment, we'll contact you shortly to confirm the details.</p>
+      <p class="eyebrow reveal">Arrange pick-up booking</p>
+      <h2 class="reveal">Fill in a simple form<br>to arrange the pick-up booking.</h2>
+      <p class="lead reveal" style="margin-top:12px;">Leave your contact and your pet's details and pay a <b>HK$1,800 pick-up booking deposit</b>. We'll take you to a secure payment page right away; after payment we'll contact you shortly to confirm the pick-up time and the end-of-life arrangements. The deposit is credited toward the final service fee.</p>
       <form class="book-form reveal" id="orderForm" style="margin-top:24px;">
-        <div class="bf-field">
-          <label for="ofPlan">Choose journey <span class="req">*</span></label>
-          <select id="ofPlan" required>
-            <option value="">Please choose...</option>
-            <option value="breeze">Breeze Journey (simple)</option>
-            <option value="cloud">Cloud Journey (full ceremony)</option>
-            <option value="star">Star Journey (deeply personalised)</option>
-          </select>
+        <!-- "Choose journey / weight" step: reusable for a second client booking site; hidden for now (JS: JOURNEY_SELECT=false). Do not delete. -->
+        <div id="journeySelect" hidden>
+          <div class="bf-field">
+            <label for="ofPlan">Choose journey</label>
+            <select id="ofPlan">
+              <option value="">Please choose...</option>
+              <option value="breeze">Breeze Journey (simple)</option>
+              <option value="cloud">Cloud Journey (full ceremony)</option>
+              <option value="star">Star Journey (deeply personalised)</option>
+            </select>
+          </div>
+          <div class="bf-field">
+            <label for="ofWeight">Pet weight</label>
+            <select id="ofWeight">
+              <option value="">Please choose...</option>
+              <option value="0">&lt; 1 kg</option>
+              <option value="1">1.1-5 kg</option>
+              <option value="2">5.1-10 kg</option>
+              <option value="3">10.1-15 kg</option>
+              <option value="4">15.1-20 kg</option>
+              <option value="5">20.1-30 kg</option>
+              <option value="6">30.1-40 kg</option>
+              <option value="7">40.1-50 kg</option>
+            </select>
+          </div>
         </div>
-        <div class="bf-field">
-          <label for="ofWeight">Pet weight <span class="req">*</span></label>
-          <select id="ofWeight" required>
-            <option value="">Please choose...</option>
-            <option value="0">&lt; 1 kg</option>
-            <option value="1">1.1-5 kg</option>
-            <option value="2">5.1-10 kg</option>
-            <option value="3">10.1-15 kg</option>
-            <option value="4">15.1-20 kg</option>
-            <option value="5">20.1-30 kg</option>
-            <option value="6">30.1-40 kg</option>
-            <option value="7">40.1-50 kg</option>
-          </select>
-        </div>
-        <div id="ofPrice" aria-live="polite" style="text-align:center;font-family:var(--serif);font-size:1.3rem;color:var(--ink);margin:6px 0 4px;">Please choose a journey and weight</div>
+        <div id="ofPrice" aria-live="polite" style="text-align:center;font-family:var(--serif);font-size:1.3rem;color:var(--ink);margin:6px 0 4px;">Pick-up booking deposit HK$1,800</div>
         <div class="bf-field"><label for="ofPet">Pet's name</label><input id="ofPet" placeholder="Nickname welcome"></div>
         <div class="bf-field"><label for="ofName">Your name <span class="req">*</span></label><input id="ofName" required placeholder="How may we address you"></div>
         <div class="bf-field"><label for="ofPhone">Phone / WhatsApp <span class="req">*</span></label><input id="ofPhone" type="tel" required placeholder="e.g. 9xxx xxxx"></div>
@@ -494,8 +506,16 @@
 // Cremation form -> secure checkout, with answers saved as line item attributes and Supabase backup.
 (function(){
   var f=document.getElementById('orderForm'); if(!f) return;
-  var oc=document.getElementById('orderCta'), osec=document.getElementById('order'), odiv=document.getElementById('orderDivider');
-  if(oc&&osec){ oc.addEventListener('click',function(e){ e.preventDefault(); osec.style.display=''; if(odiv)odiv.style.display=''; var h=document.querySelector('.site-header'); var off=(h?h.offsetHeight:0)+14; var y=osec.getBoundingClientRect().top+window.pageYOffset-off; window.scrollTo({top:y<0?0:y,behavior:'smooth'}); }); }
+  // Feature flag: the current "Arrange pick-up booking" flow only collects a HK$1,800 deposit,
+  // so the "choose journey" step is not needed. A second client booking site can set JOURNEY_SELECT=true
+  // to restore journey/weight selection (the #journeySelect block will also show).
+  var JOURNEY_SELECT=false;
+  var DEPOSIT={id:"49929174221028",price:1800,label:"Pick-up booking deposit"}; // Shopify variant: pick-up booking deposit
+  var jsel=document.getElementById('journeySelect'); if(jsel) jsel.hidden=!JOURNEY_SELECT;
+  var oc=document.getElementById('orderCta'), oj=document.getElementById('orderJump'), osec=document.getElementById('order'), odiv=document.getElementById('orderDivider');
+  function revealOrder(e){ if(e)e.preventDefault(); if(!osec)return; osec.style.display=''; if(odiv)odiv.style.display=''; var h=document.querySelector('.site-header'); var off=(h?h.offsetHeight:0)+14; var y=osec.getBoundingClientRect().top+window.pageYOffset-off; window.scrollTo({top:y<0?0:y,behavior:'smooth'}); }
+  if(oc)oc.addEventListener('click',revealOrder);
+  if(oj)oj.addEventListener('click',revealOrder);
   var SF_ENDPOINT="https://qs1nmv-b3.myshopify.com/api/2026-01/graphql.json";
   var SF_TOKEN="90f06d055534783ae5a7ad3f0f1e5004";
   var WEIGHTS=["< 1 kg","1.1-5 kg","5.1-10 kg","10.1-15 kg","15.1-20 kg","20.1-30 kg","30.1-40 kg","40.1-50 kg"];
@@ -506,31 +526,37 @@
   };
   var planEl=document.getElementById('ofPlan'),wEl=document.getElementById('ofWeight'),priceEl=document.getElementById('ofPrice'),btn=document.getElementById('ofBtn'),msg=document.getElementById('ofMsg');
   function v(id){var e=document.getElementById(id);return e?e.value.trim():'';}
-  function sel(){var p=PLANS[planEl.value],wi=wEl.value;if(p&&wi!==''){var pr=p.v[+wi][1];priceEl.textContent=p.name+" · "+WEIGHTS[+wi]+" - HK$"+pr.toLocaleString();return{id:p.v[+wi][0],price:pr,plan:p.name,weight:WEIGHTS[+wi]};}priceEl.textContent="Please choose a journey and weight";return null;}
-  planEl.addEventListener('change',sel);wEl.addEventListener('change',sel);
+  // Journey/weight selection (kept for future reuse)
+  function sel(){if(!planEl||!wEl)return null;var p=PLANS[planEl.value],wi=wEl.value;if(p&&wi!==''){var pr=p.v[+wi][1];if(priceEl)priceEl.textContent=p.name+" · "+WEIGHTS[+wi]+" - HK$"+pr.toLocaleString();return{id:p.v[+wi][0],price:pr,plan:p.name,weight:WEIGHTS[+wi]};}if(priceEl)priceEl.textContent="Please choose a journey and weight";return null;}
+  if(JOURNEY_SELECT&&planEl&&wEl){planEl.addEventListener('change',sel);wEl.addEventListener('change',sel);}
+  function currentSel(){ if(JOURNEY_SELECT) return sel(); return {id:DEPOSIT.id,price:DEPOSIT.price,plan:DEPOSIT.label,weight:'-',deposit:true}; }
   function show(k,t){if(!msg)return;msg.className='book-msg '+k;msg.textContent=t;msg.hidden=false;}
   function saveDraft(o){try{localStorage.setItem('resoul:lastCremationBooking',JSON.stringify(Object.assign({saved_at:new Date().toISOString()},o)));}catch(e){}}
   function clearDraft(){try{localStorage.removeItem('resoul:lastCremationBooking');}catch(e){}}
-  function supa(o){return fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)}).then(function(res){if(!res.ok){return res.text().then(function(t){throw new Error('API HTTP '+res.status+': '+t);});}});}
-  function saveBooking(full,legacy){return supa(full);} // server-side /api/order writes with service_role and handles column fallback
+  function store(o,dep){var ep=dep?'/api/deposit':'/api/order';return fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)}).then(function(res){if(!res.ok){return res.text().then(function(t){throw new Error('API HTTP '+res.status+': '+t);});}});}
   function ref(){return 'RS-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8).toUpperCase();}
   var pending=null,modal=document.getElementById('orderConfirm'),list=document.getElementById('orderConfirmList'),edit=document.getElementById('orderEditBtn'),confirm=document.getElementById('orderConfirmBtn');
   function close(){if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}}
   function row(k,v){return '<div class="confirm-row"><span>'+k+'</span><span>'+(v||'-')+'</span></div>';}
-  function openConfirm(data){pending=data;if(list){list.innerHTML=row('Journey',data.s.plan)+row('Weight',data.s.weight)+row('Amount','HK$'+data.s.price.toLocaleString())+row('Pet name',v('ofPet'))+row('Your name',v('ofName'))+row('Phone / WhatsApp',v('ofPhone'))+row('Preferred date',v('ofDate'))+row('Preferred time',v('ofTime'))+row('Pickup address',v('ofAddr'))+row('Notes',v('ofNote'));}if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');}}
+  function openConfirm(data){pending=data;if(list){var s=data.s;var head=s.deposit?(row('Item','Pick-up booking deposit')+row('Deposit','HK$'+s.price.toLocaleString())):(row('Journey',s.plan)+row('Weight',s.weight)+row('Amount','HK$'+s.price.toLocaleString()));list.innerHTML=head+row('Pet name',v('ofPet'))+row('Your name',v('ofName'))+row('Phone / WhatsApp',v('ofPhone'))+row('Preferred date',v('ofDate'))+row('Preferred time',v('ofTime'))+row('Pickup address',v('ofAddr'))+row('Notes',v('ofNote'));}if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');}}
   if(edit)edit.addEventListener('click',close);
   if(modal)modal.addEventListener('click',function(e){if(e.target===modal)close();});
-  f.addEventListener('submit',function(e){e.preventDefault();var s=sel();if(!s){show('err','Please choose a journey and pet weight first.');return;}if(!v('ofName')||!v('ofPhone')){show('err','Please enter your name and phone / WhatsApp.');return;}openConfirm({s:s,paymentRef:ref()});});
+  f.addEventListener('submit',function(e){e.preventDefault();var s=currentSel();if(!s){show('err','Please choose a journey and pet weight first.');return;}if(!v('ofName')||!v('ofPhone')){show('err','Please enter your name and phone / WhatsApp.');return;}openConfirm({s:s,paymentRef:ref()});});
   if(confirm)confirm.addEventListener('click',function(){
     if(!pending)return;
-    var s=pending.s,paymentRef=pending.paymentRef,old=btn.innerHTML,oldConfirm=confirm.innerHTML;
+    var s=pending.s,dep=!!s.deposit,paymentRef=pending.paymentRef,old=btn.innerHTML,oldConfirm=confirm.innerHTML;
     close();btn.disabled=true;confirm.disabled=true;btn.innerHTML='Processing...';confirm.innerHTML='Processing...';if(msg)msg.hidden=true;
-    var attrs=[{key:"payment_ref",value:paymentRef},{key:"Journey",value:s.plan},{key:"Weight",value:s.weight},{key:"Pet name",value:v('ofPet')||'-'},{key:"Customer name",value:v('ofName')},{key:"Phone",value:v('ofPhone')},{key:"Preferred date",value:v('ofDate')||'-'},{key:"Preferred time",value:v('ofTime')||'-'},{key:"Pickup address",value:v('ofAddr')||'-'},{key:"Notes",value:v('ofNote')||'-'}];
+    var attrs=[{key:"payment_ref",value:paymentRef}];
+    if(dep){attrs.push({key:"Item",value:"Pick-up booking deposit"},{key:"Deposit",value:"HK$"+s.price});}
+    else{attrs.push({key:"Journey",value:s.plan},{key:"Weight",value:s.weight});}
+    attrs.push({key:"Pet name",value:v('ofPet')||'-'},{key:"Customer name",value:v('ofName')},{key:"Phone",value:v('ofPhone')},{key:"Preferred date",value:v('ofDate')||'-'},{key:"Preferred time",value:v('ofTime')||'-'},{key:"Pickup address",value:v('ofAddr')||'-'},{key:"Notes",value:v('ofNote')||'-'});
     var q='mutation cc($lines:[CartLineInput!]!,$attrs:[AttributeInput!]!){cartCreate(input:{lines:$lines,attributes:$attrs}){cart{checkoutUrl}userErrors{message}}}';
-    var base={owner_name:v('ofName'),contact:v('ofPhone'),plan:s.plan,pet_name:v('ofPet')||null,pet_type:null,service_date:v('ofDate')||null,pickup_address:v('ofAddr')||null,notes:'Payment form | Ref:'+paymentRef+' | '+s.plan+' | '+s.weight+' | HK$'+s.price+' | Preferred time: '+(v('ofTime')||'-')+' | Pet name: '+(v('ofPet')||'-')+' | Notes: '+(v('ofNote')||'-'),source:'web:cremation-order-en'};
-    saveDraft(Object.assign({},base,{payment_ref:paymentRef,payment_status:'pending',payment_amount:s.price,payment_currency:'HKD'}));
-    saveBooking(Object.assign({},base,{payment_ref:paymentRef,payment_status:'pending',payment_amount:s.price,payment_currency:'HKD'}),base)
-    .then(function(){return fetch(SF_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','X-Shopify-Storefront-Access-Token':SF_TOKEN},body:JSON.stringify({query:q,variables:{lines:[{merchandiseId:"gid://shopify/ProductVariant/"+s.id,quantity:1,attributes:attrs}],attrs:[{key:"payment_ref",value:paymentRef},{key:"Booking source",value:"Website cremation form EN"}]}})});})
+    var noteHead=dep?'Pick-up booking deposit':'Payment form';
+    var base={owner_name:v('ofName'),contact:v('ofPhone'),plan:s.plan,pet_name:v('ofPet')||null,pet_type:null,service_date:v('ofDate')||null,service_time:v('ofTime')||null,pickup_address:v('ofAddr')||null,notes:noteHead+' | Ref:'+paymentRef+' | '+s.plan+(dep?'':' | '+s.weight)+' | HK$'+s.price+' | Preferred time: '+(v('ofTime')||'-')+' | Pet name: '+(v('ofPet')||'-')+' | Notes: '+(v('ofNote')||'-'),source:dep?'web:cremation-deposit-en':'web:cremation-order-en'};
+    var payload=Object.assign({},base,{payment_ref:paymentRef,payment_status:'pending',payment_amount:s.price,payment_currency:'HKD'});
+    saveDraft(payload);
+    store(payload,dep)
+    .then(function(){return fetch(SF_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','X-Shopify-Storefront-Access-Token':SF_TOKEN},body:JSON.stringify({query:q,variables:{lines:[{merchandiseId:"gid://shopify/ProductVariant/"+s.id,quantity:1,attributes:attrs}],attrs:[{key:"payment_ref",value:paymentRef},{key:"Booking source",value:dep?"Website pick-up booking EN":"Website cremation form EN"}]}})});})
     .then(function(r){return r.json();})
     .then(function(d){var c=d&&d.data&&d.data.cartCreate;var url=c&&c.cart&&c.cart.checkoutUrl;if(url){clearDraft();show('ok','Details received. Redirecting to payment...');window.location.href=url;}else{show('err','Your booking details have been saved on this device, but payment checkout could not be created. Please try again later or WhatsApp us with Ref: '+paymentRef);btn.disabled=false;btn.innerHTML=old;confirm.disabled=false;confirm.innerHTML=oldConfirm;}})
     .catch(function(err){console.error('[Resoul] Cremation payment form failed:',err);show('err','We could not complete the submission. Your details have been saved on this device. Please try again later or WhatsApp us with Ref: '+paymentRef);btn.disabled=false;btn.innerHTML=old;confirm.disabled=false;confirm.innerHTML=oldConfirm;});

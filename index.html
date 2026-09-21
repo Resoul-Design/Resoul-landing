@@ -64,7 +64,7 @@
         <button class="nav-top" type="button" aria-expanded="false" aria-haspopup="true">服務<span class="nav-caret" aria-hidden="true">▾</span></button>
         <div class="nav-menu">
           <a href="/cremation">善終旅程</a>
-          <a href="/euthanasia">安辭在家</a>
+          <a href="/euthanasia">安樂在家</a>
           <!-- 商店暫隱 <a href="/shop">紀念品商店</a> -->
           <a href="/pricing">服務收費</a>
         </div>
@@ -121,17 +121,17 @@
       <p class="eyebrow reveal" style="text-align:center;">快速找到下一步</p>
       <h2 class="reveal" style="text-align:center;">你現在最需要的是甚麼？</h2>
       <div class="services-grid reveal" style="margin-top:26px;"><!-- 商店暫隱：原為 grid4，恢復時改回 "services-grid grid4 reveal" -->
-        <a class="scard" href="/euthanasia" style="text-decoration:none;color:inherit;display:block;">
-          <span class="sc-ic" aria-hidden="true">🕰️</span>
-          <h3>我擔心時間可能不多了</h3>
-          <p>毛孩的生活質素正在下降，但你仍未確定下一步？我們可協助整理資料、準備向獸醫提出的問題，以及聯絡提供上門服務的獨立註冊獸醫。</p>
-          <i>了解安辭在家 →</i>
-        </a>
         <a class="scard" href="/cremation" style="text-decoration:none;color:inherit;display:block;">
           <span class="sc-ic" aria-hidden="true">🤍</span>
           <h3>我的毛孩剛剛離開</h3>
           <p>無論毛孩在家中或診所離世，我們可協助安排私人接送、告別儀式、個別火化、骨灰及紀念安排。</p>
           <i>安排善終旅程 →</i>
+        </a>
+        <a class="scard" href="/euthanasia" style="text-decoration:none;color:inherit;display:block;">
+          <span class="sc-ic" aria-hidden="true">🕰️</span>
+          <h3>我擔心時間可能不多了</h3>
+          <p>毛孩的生活質素正在下降，但你仍未確定下一步？我們可協助整理資料、準備向獸醫提出的問題，以及聯絡提供上門服務的獨立註冊獸醫。</p>
+          <i>了解安樂在家 →</i>
         </a>
         <a class="scard" href="/support" style="text-decoration:none;color:inherit;display:block;">
           <span class="sc-ic" aria-hidden="true">🌙</span>
@@ -158,32 +158,7 @@
       <p class="eyebrow reveal">Google Reviews</p>
       <h2 class="reveal">他們留下的故事</h2>
       <p class="lead reveal" style="margin-top:14px;">每一則分享，都來自一段獨一無二的關係。謝謝主人願意讓我們記住毛孩的名字和故事。</p>
-      <div class="reviews-grid reveal">
-        <figure class="rcard">
-          <div class="rc-top">
-            <div class="rc-photo" aria-hidden="true">🐾</div>
-            <div class="rc-meta"><div class="rc-name">小白的主人</div><div class="rc-stars" aria-label="5 星評價">★★★★★</div></div>
-          </div>
-          <blockquote class="rc-quote">「司機準時到，接送非常溫柔，途中仲影相通知我哋。每一步都講得好清楚，離開之後仍然有人跟進，好安心。」</blockquote>
-          <figcaption class="rc-src"><span class="rc-g">G</span> Google 評價</figcaption>
-        </figure>
-        <figure class="rcard">
-          <div class="rc-top">
-            <div class="rc-photo" aria-hidden="true">🐾</div>
-            <div class="rc-meta"><div class="rc-name">Momo 的主人</div><div class="rc-stars" aria-label="5 星評價">★★★★★</div></div>
-          </div>
-          <blockquote class="rc-quote">「海景告別室很安靜，沒有人催促我們。我可以慢慢陪 Momo 說完最後的話，這段時間對我好重要。」</blockquote>
-          <figcaption class="rc-src"><span class="rc-g">G</span> Google 評價</figcaption>
-        </figure>
-        <figure class="rcard">
-          <div class="rc-top">
-            <div class="rc-photo" aria-hidden="true">🐾</div>
-            <div class="rc-meta"><div class="rc-name">雪球的主人</div><div class="rc-stars" aria-label="5 星評價">★★★★★</div></div>
-          </div>
-          <blockquote class="rc-quote">「骨灰同掌印都處理得好細心。離別之後仲收到關懷訊息，明白我們的心情，真心多謝 RESOUL。」</blockquote>
-          <figcaption class="rc-src"><span class="rc-g">G</span> Google 評價</figcaption>
-        </figure>
-      </div>
+      <div class="reviews-grid reveal" data-google-reviews data-limit="3"></div>
       <div class="reviews-cta reveal">
         <a class="cta light" href="/board">閱讀更多主人分享</a>
         <a class="cta" href="https://maps.app.goo.gl/pivPtcEfwhwJCefw9?g_st=ic" target="_blank" rel="noopener">在 Google 查看全部評價 <span class="arw">→</span></a>
@@ -265,6 +240,8 @@
   </div>
 </div>
 
+<script src="js/reviews-data.js" defer></script>
+<script src="js/reviews.js" defer></script>
 <script src="js/resoul.js" defer></script>
 </body>
 </html>
