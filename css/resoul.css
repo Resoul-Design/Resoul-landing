@@ -1310,3 +1310,15 @@ h3{font-size:1.02rem;}
 .ls-pager button{appearance:none;cursor:pointer;font:inherit;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 13px;color:var(--ink-soft);transition:background .15s,color .15s,border-color .15s;}
 .ls-pager button:hover:not(:disabled){border-color:var(--gold);color:var(--gold-deep);}
 .ls-pager button:disabled{opacity:.4;cursor:default;}
+
+/* D10 — 安排預約接送：以彈窗（新視窗）形式開啟 */
+.order-modal{position:fixed;inset:0;z-index:120;display:none;}
+.order-modal.open{display:block;}
+.om-backdrop{position:absolute;inset:0;background:rgba(40,30,22,.55);backdrop-filter:blur(2px);}
+.om-card{position:absolute;inset:0;margin:auto;width:calc(100% - 28px);max-width:720px;max-height:calc(100% - 40px);background:#faf6ef;border:1px solid var(--line);border-radius:20px;box-shadow:0 40px 80px -24px rgba(45,34,25,.6);overflow:hidden;}
+.om-scroll{overflow-y:auto;max-height:calc(100vh - 40px);-webkit-overflow-scrolling:touch;padding:34px 22px 30px;}
+.om-close{position:absolute;top:10px;right:14px;z-index:3;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:1.25rem;line-height:1;color:var(--ink-soft);display:flex;align-items:center;justify-content:center;}
+.om-close:hover{background:var(--cream);color:var(--ink);}
+.order-modal .cremation{padding-top:0;padding-bottom:0;}
+.order-modal .cremation .wrap{padding-left:0;padding-right:0;}
+body.om-lock{overflow:hidden;}
