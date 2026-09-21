@@ -528,6 +528,9 @@
       : Promise.resolve(null);
     prep.then(function (photoUrl) {
       var attrs = [];
+      var projectNo = "";
+      try { projectNo = (localStorage.getItem("resoul:projectNo") || "").trim(); } catch (e) {}
+      if (projectNo) attrs.push({ key: "專案編號 Project no.", value: projectNo });
       if (req) attrs.push({ key: "特別要求 Special request", value: req });
       if (photoUrl) attrs.push({ key: "寵物相片 Pet photo", value: photoUrl });
       return ensureCartThen(v.id, state.qty, attrs);

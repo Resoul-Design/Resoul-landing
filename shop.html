@@ -234,10 +234,10 @@ body.cart-open .fab,body.cart-open .to-top{display:none!important;}
       </div>
       <div class="reveal" style="background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:20px 18px;margin-top:26px;text-align:center;">
         <p class="eyebrow" style="margin-bottom:8px;">善終客戶提示</p>
-        <p class="lead" style="margin:0 0 14px;">已選擇善終旅程？輸入發票編號，即可讓我們為你顯示適合的尺寸、已包含項目及可升級選擇。</p>
+        <p class="lead" style="margin:0 0 14px;">已有接送或善終服務？輸入專案編號，之後加入購物車的紀念品會記錄在同一專案，方便跟進尺寸、已包含項目及升級選擇。</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;">
-          <input id="caseNo" placeholder="發票編號（例如 #1024）" style="max-width:260px;">
-          <button class="cta light" type="button" id="caseBtn">以發票編號查詢</button>
+          <input id="caseNo" placeholder="專案編號（例如 #RS-1012）" style="max-width:260px;">
+          <button class="cta light" type="button" id="caseBtn">儲存並查詢專案</button>
         </div>
       </div>
     </div>
@@ -343,7 +343,7 @@ body.cart-open .fab,body.cart-open .to-top{display:none!important;}
 (function(){
   // 個案編號查詢
   var b=document.getElementById('caseBtn'),i=document.getElementById('caseNo');
-  if(b&&i){ b.addEventListener('click',function(){var c=i.value.trim();var t=c?('你好，我的善終發票編號是 '+c+'，想查詢適合的紀念品尺寸與已包含項目。'):('你好，我是善終旅程客戶，想查詢適合的紀念品。');window.open('https://wa.me/85264762951?text='+encodeURIComponent(t),'_blank','noopener');}); i.addEventListener('keydown',function(e){if(e.key==='Enter')b.click();}); }
+  if(b&&i){try{i.value=localStorage.getItem('resoul:projectNo')||'';}catch(e){} b.addEventListener('click',function(){var c=i.value.trim();try{if(c)localStorage.setItem('resoul:projectNo',c);else localStorage.removeItem('resoul:projectNo');}catch(e){} var t=c?('你好，我的 RESOUL 專案編號是 '+c+'，想查詢適合的紀念品尺寸與已包含項目。'):('你好，我是善終旅程客戶，想查詢適合的紀念品。');window.open('https://wa.me/85264762951?text='+encodeURIComponent(t),'_blank','noopener');}); i.addEventListener('keydown',function(e){if(e.key==='Enter')b.click();}); }
   // 分類入口 → 選購紀念品（彈出視窗）
   var wrap=document.querySelector('.shop-wrap'), back=document.getElementById('shopBack'), bd=document.getElementById('shopBackdrop');
   if(!wrap) return;
