@@ -64,9 +64,16 @@
 
   var ARTICLES_Q =
     "query($n:Int!){ articles(first:$n, sortKey:PUBLISHED_AT, reverse:true){ edges{ node{" +
-    " id handle title excerpt publishedAt contentHtml" +
+    " id handle title excerpt publishedAt contentHtml tags" +
     " image{ url altText } authorV2{ name } blog{ title handle }" +
     " } } } }";
+
+  // 語言區分：英文文章在 Shopify 後台加上標籤「en」；
+  // 英文版只顯示帶「en」標籤的文章，中文版顯示其餘（未標「en」）文章。
+  function isEnArticle(a) {
+    return (a.tags || []).some(function (t) { return String(t).trim().toLowerCase() === "en"; });
+  }
+  function matchesLang(a) { return EN ? isEnArticle(a) : !isEnArticle(a); }
 
   var state = { articles: [] };
 
@@ -74,7 +81,11 @@
     var grid = $("#blogGrid");
     var empty = $("#blogEmpty");
     grid.innerHTML = "";
-    if (!state.articles.length) { empty.style.display = "block"; return; }
+    if (!state.articles.length) {
+      // fallback：缺對應語言文章時明確顯示（英文版：暫無英文文章）
+      if (empty) { empty.textContent = L("文章即將刊登，請稍後再來看看。", "No English articles yet — please check back later."); empty.style.display = "block"; }
+      return;
+    }
     empty.style.display = "none";
     state.articles.forEach(function (a) {
       var img = a.image ? a.image.url : "";
@@ -132,8 +143,8 @@
   }
 
   function init() {
-    gql(ARTICLES_Q, { n: 30 }).then(function (data) {
-      state.articles = data.articles.edges.map(function (e) { return e.node; });
+    gql(ARTICLES_Q, { n: 50 }).then(function (data) {
+      state.articles = data.articles.edges.map(function (e) { return e.node; }).filter(matchesLang);
       renderList();
       $("#blogLoading").style.display = "none";
     }).catch(function (err) {
