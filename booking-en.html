@@ -291,6 +291,7 @@
           </div>
         </div>
         <div id="ofPrice" aria-live="polite" style="text-align:center;font-family:var(--serif);font-size:1.3rem;color:var(--ink);margin:6px 0 4px;">Pick-up booking deposit HK$1,800</div>
+        <div class="bf-field"><label for="ofProject">Existing project number (optional for returning clients)</label><input id="ofProject" placeholder="e.g. #RS-1012"></div>
         <div class="bf-field"><label for="ofPet">Pet's name</label><input id="ofPet" placeholder="Nickname welcome"></div>
         <div class="bf-field"><label for="ofName">Your name <span class="req">*</span></label><input id="ofName" required placeholder="How may we address you"></div>
         <div class="bf-field"><label for="ofPhone">Phone / WhatsApp <span class="req">*</span></label><input id="ofPhone" type="tel" required placeholder="e.g. 9xxx xxxx"></div>
@@ -548,7 +549,7 @@
   var pending=null,modal=document.getElementById('orderConfirm'),list=document.getElementById('orderConfirmList'),edit=document.getElementById('orderEditBtn'),confirm=document.getElementById('orderConfirmBtn');
   function close(){if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}}
   function row(k,v){return '<div class="confirm-row"><span>'+k+'</span><span>'+(v||'-')+'</span></div>';}
-  function openConfirm(data){pending=data;if(list){var s=data.s;var head=s.deposit?(row('Item','Pick-up booking deposit')+row('Deposit','HK$'+s.price.toLocaleString())):(row('Journey',s.plan)+row('Weight',s.weight)+row('Amount','HK$'+s.price.toLocaleString()));list.innerHTML=head+row('Pet name',v('ofPet'))+row('Your name',v('ofName'))+row('Phone / WhatsApp',v('ofPhone'))+row('Preferred date',v('ofDate'))+row('Preferred time',v('ofTime'))+row('Pickup address',v('ofAddr'))+row('Notes',v('ofNote'));}if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');}}
+  function openConfirm(data){pending=data;if(list){var s=data.s;var head=s.deposit?(row('Item','Pick-up booking deposit')+row('Deposit','HK$'+s.price.toLocaleString())):(row('Journey',s.plan)+row('Weight',s.weight)+row('Amount','HK$'+s.price.toLocaleString()));list.innerHTML=head+row('Existing project number',v('ofProject'))+row('Pet name',v('ofPet'))+row('Your name',v('ofName'))+row('Phone / WhatsApp',v('ofPhone'))+row('Preferred date',v('ofDate'))+row('Preferred time',v('ofTime'))+row('Pickup address',v('ofAddr'))+row('Notes',v('ofNote'));}if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');}}
   if(edit)edit.addEventListener('click',close);
   if(modal)modal.addEventListener('click',function(e){if(e.target===modal)close();});
   f.addEventListener('submit',function(e){e.preventDefault();var s=currentSel();if(!s){show('err','Please choose a journey and pet weight first.');return;}if(!v('ofName')||!v('ofPhone')){show('err','Please enter your name and phone / WhatsApp.');return;}openConfirm({s:s,paymentRef:ref()});});
@@ -557,12 +558,13 @@
     var s=pending.s,dep=!!s.deposit,paymentRef=pending.paymentRef,old=btn.innerHTML,oldConfirm=confirm.innerHTML;
     close();btn.disabled=true;confirm.disabled=true;btn.innerHTML='Processing...';confirm.innerHTML='Processing...';if(msg)msg.hidden=true;
     var attrs=[{key:"payment_ref",value:paymentRef}];
+    if(v('ofProject'))attrs.push({key:"Project no.",value:v('ofProject')});
     if(dep){attrs.push({key:"Item",value:"Pick-up booking deposit"},{key:"Deposit",value:"HK$"+s.price});}
     else{attrs.push({key:"Journey",value:s.plan},{key:"Weight",value:s.weight});}
     attrs.push({key:"Pet name",value:v('ofPet')||'-'},{key:"Customer name",value:v('ofName')},{key:"Phone",value:v('ofPhone')},{key:"Preferred date",value:v('ofDate')||'-'},{key:"Preferred time",value:v('ofTime')||'-'},{key:"Pickup address",value:v('ofAddr')||'-'},{key:"Notes",value:v('ofNote')||'-'});
     var q='mutation cc($lines:[CartLineInput!]!,$attrs:[AttributeInput!]!){cartCreate(input:{lines:$lines,attributes:$attrs}){cart{checkoutUrl}userErrors{message}}}';
     var noteHead=dep?'Pick-up booking deposit':'Payment form';
-    var base={owner_name:v('ofName'),contact:v('ofPhone'),plan:s.plan,pet_name:v('ofPet')||null,pet_type:null,service_date:v('ofDate')||null,service_time:v('ofTime')||null,pickup_address:v('ofAddr')||null,notes:noteHead+' | Ref:'+paymentRef+' | '+s.plan+(dep?'':' | '+s.weight)+' | HK$'+s.price+' | Preferred time: '+(v('ofTime')||'-')+' | Pet name: '+(v('ofPet')||'-')+' | Notes: '+(v('ofNote')||'-'),source:dep?'web:cremation-deposit-en':'web:cremation-order-en'};
+    var base={owner_name:v('ofName'),contact:v('ofPhone'),plan:s.plan,pet_name:v('ofPet')||null,pet_type:null,service_date:v('ofDate')||null,service_time:v('ofTime')||null,pickup_address:v('ofAddr')||null,notes:noteHead+' | Ref:'+paymentRef+' | Project no.: '+(v('ofProject')||'New project')+' | '+s.plan+(dep?'':' | '+s.weight)+' | HK$'+s.price+' | Preferred time: '+(v('ofTime')||'-')+' | Pet name: '+(v('ofPet')||'-')+' | Notes: '+(v('ofNote')||'-'),source:dep?'web:cremation-deposit-en':'web:cremation-order-en'};
     var payload=Object.assign({},base,{payment_ref:paymentRef,payment_status:'pending',payment_amount:s.price,payment_currency:'HKD'});
     saveDraft(payload);
     store(payload,dep)

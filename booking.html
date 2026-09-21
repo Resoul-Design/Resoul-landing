@@ -291,6 +291,7 @@
           </div>
         </div>
         <div id="ofPrice" aria-live="polite" style="text-align:center;font-family:var(--serif);font-size:1.3rem;color:var(--ink);margin:6px 0 4px;">接送訂金 HK$1,800</div>
+        <div class="bf-field"><label for="ofProject">已有專案編號（回訪客戶可選填）</label><input id="ofProject" placeholder="例如 #RS-1012"></div>
         <div class="bf-field"><label for="ofPet">毛孩名字</label><input id="ofPet" placeholder="可包括暱稱"></div>
         <div class="bf-field"><label for="ofName">主人稱呼 <span class="req">*</span></label><input id="ofName" required placeholder="怎麼稱呼你"></div>
         <div class="bf-field"><label for="ofPhone">聯絡電話 / WhatsApp <span class="req">*</span></label><input id="ofPhone" type="tel" required placeholder="例如 9xxx xxxx"></div>
@@ -548,7 +549,7 @@
   var pending=null,modal=document.getElementById('orderConfirm'),list=document.getElementById('orderConfirmList'),edit=document.getElementById('orderEditBtn'),confirm=document.getElementById('orderConfirmBtn');
   function close(){if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}}
   function row(k,v){return '<div class="confirm-row"><span>'+k+'</span><span>'+(v||'—')+'</span></div>';}
-  function openConfirm(data){pending=data;if(list){var s=data.s;var head=s.deposit?(row('項目','預約接送訂金')+row('訂金','HK$'+s.price.toLocaleString())):(row('旅程',s.plan)+row('體重',s.weight)+row('金額','HK$'+s.price.toLocaleString()));list.innerHTML=head+row('毛孩名字',v('ofPet'))+row('主人稱呼',v('ofName'))+row('聯絡電話',v('ofPhone'))+row('希望日期',v('ofDate'))+row('希望時段',v('ofTime'))+row('接送地址',v('ofAddr'))+row('備註',v('ofNote'));}if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');}}
+  function openConfirm(data){pending=data;if(list){var s=data.s;var head=s.deposit?(row('項目','預約接送訂金')+row('訂金','HK$'+s.price.toLocaleString())):(row('旅程',s.plan)+row('體重',s.weight)+row('金額','HK$'+s.price.toLocaleString()));list.innerHTML=head+row('已有專案編號',v('ofProject'))+row('毛孩名字',v('ofPet'))+row('主人稱呼',v('ofName'))+row('聯絡電話',v('ofPhone'))+row('希望日期',v('ofDate'))+row('希望時段',v('ofTime'))+row('接送地址',v('ofAddr'))+row('備註',v('ofNote'));}if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');}}
   if(edit)edit.addEventListener('click',close);
   if(modal)modal.addEventListener('click',function(e){if(e.target===modal)close();});
   f.addEventListener('submit',function(e){e.preventDefault();var s=currentSel();if(!s){show('err','請先選擇旅程與毛孩體重。');return;}if(!v('ofName')||!v('ofPhone')){show('err','請填主人稱呼及聯絡電話。');return;}openConfirm({s:s,paymentRef:ref()});});
@@ -557,12 +558,13 @@
     var s=pending.s,dep=!!s.deposit,paymentRef=pending.paymentRef,old=btn.innerHTML,oldConfirm=confirm.innerHTML;
     close();btn.disabled=true;confirm.disabled=true;btn.innerHTML='處理中…';confirm.innerHTML='處理中…';if(msg)msg.hidden=true;
     var attrs=[{key:"payment_ref",value:paymentRef}];
+    if(v('ofProject'))attrs.push({key:"專案編號 Project no.",value:v('ofProject')});
     if(dep){attrs.push({key:"項目",value:"預約接送訂金"},{key:"訂金",value:"HK$"+s.price});}
     else{attrs.push({key:"旅程",value:s.plan},{key:"體重",value:s.weight});}
     attrs.push({key:"毛孩名字",value:v('ofPet')||'-'},{key:"主人稱呼",value:v('ofName')},{key:"聯絡電話",value:v('ofPhone')},{key:"希望日期",value:v('ofDate')||'-'},{key:"希望時段",value:v('ofTime')||'-'},{key:"接送地址",value:v('ofAddr')||'-'},{key:"備註",value:v('ofNote')||'-'});
     var q='mutation cc($lines:[CartLineInput!]!,$attrs:[AttributeInput!]!){cartCreate(input:{lines:$lines,attributes:$attrs}){cart{checkoutUrl}userErrors{message}}}';
     var noteHead=dep?'預約接送訂金':'付款問卷';
-    var base={owner_name:v('ofName'),contact:v('ofPhone'),plan:s.plan,pet_name:v('ofPet')||null,pet_type:null,service_date:v('ofDate')||null,service_time:v('ofTime')||null,pickup_address:v('ofAddr')||null,notes:noteHead+'｜Ref:'+paymentRef+'｜'+s.plan+(dep?'':'｜'+s.weight)+'｜HK$'+s.price+'｜希望時段：'+(v('ofTime')||'—')+'｜毛孩名字：'+(v('ofPet')||'—')+'｜備註：'+(v('ofNote')||'—'),source:dep?'web:cremation-deposit':'web:cremation-order'};
+    var base={owner_name:v('ofName'),contact:v('ofPhone'),plan:s.plan,pet_name:v('ofPet')||null,pet_type:null,service_date:v('ofDate')||null,service_time:v('ofTime')||null,pickup_address:v('ofAddr')||null,notes:noteHead+'｜Ref:'+paymentRef+'｜專案編號：'+(v('ofProject')||'新專案')+'｜'+s.plan+(dep?'':'｜'+s.weight)+'｜HK$'+s.price+'｜希望時段：'+(v('ofTime')||'—')+'｜毛孩名字：'+(v('ofPet')||'—')+'｜備註：'+(v('ofNote')||'—'),source:dep?'web:cremation-deposit':'web:cremation-order'};
     var payload=Object.assign({},base,{payment_ref:paymentRef,payment_status:'pending',payment_amount:s.price,payment_currency:'HKD'});
     saveDraft(payload);
     store(payload,dep)
