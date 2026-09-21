@@ -1321,4 +1321,17 @@ h3{font-size:1.02rem;}
 .om-close:hover{background:var(--cream);color:var(--ink);}
 .order-modal .cremation{padding-top:0;padding-bottom:0;}
 .order-modal .cremation .wrap{padding-left:0;padding-right:0;}
+
+/* Standalone pick-up booking page. */
+.booking-page main > :not(.order-modal){display:none;}
+.booking-page .order-modal{position:static;display:block;min-height:calc(100vh - 180px);}
+.booking-page .order-modal .om-backdrop,
+.booking-page .order-modal .om-close{display:none;}
+.booking-page .order-modal .om-card{position:static;width:100%;max-width:none;max-height:none;border:0;border-radius:0;box-shadow:none;background:transparent;}
+.booking-page .order-modal .om-scroll{max-height:none;overflow:visible;padding:56px 0 80px;}
+.booking-page .order-modal .cremation{display:block;}
+@media (max-width:640px){
+  .booking-page .order-modal .om-scroll{padding:36px 0 64px;}
+  .booking-page .order-modal .cremation .wrap{padding-inline:20px;}
+}
 body.om-lock{overflow:hidden;}
