@@ -852,92 +852,6 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
   .nav-group:hover .nav-menu{display:flex;}
   .nav-group:hover .nav-caret{transform:rotate(180deg);}
 }
-/* 品牌 + 導覽並排需要約 840px（英文標籤較長），未夠就維持上下堆疊 */
-@media(max-width:819px){
-  .header-inner{padding-top:8px;padding-bottom:7px;gap:6px;}
-  .brand img{height:30px;}
-  .brand-slogan{font-size:clamp(.62rem,2.8vw,.72rem);max-width:100%;overflow:hidden;text-overflow:ellipsis;}
-  .nav{
-    width:100%;
-    justify-content:center;
-    gap:clamp(10px,3.2vw,16px);
-    padding:2px 4px 5px;
-    row-gap:12px;
-  }
-  .nav a,.nav-single,.nav-top,.nav .nav-group:nth-of-type(2) .nav-menu a{
-    font-size:clamp(.72rem,3.25vw,.84rem);
-    letter-spacing:.025em;
-  }
-  .nav-lang{
-    min-width:36px;
-    padding:2px 8px;
-    text-align:center;
-    letter-spacing:.04em;
-  }
-
-  /* 手機：兩組導覽都改為「平舖 + 分區」——永遠顯示、冇下拉、撳極都唔會推開版面 */
-  .nav-group,
-  .nav .nav-group:nth-of-type(2){
-    order:0;
-    flex-basis:100%;
-    width:100%;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:5px;
-  }
-  /* 客戶決議 2026-09-21：手機版「服務」組（第二組）排喺「陪伴支持」之前（桌面不變） */
-  .nav .nav-group:nth-of-type(2){order:-1;}
-  /* 兩組標題都顯示做分區標題（非互動，收起下拉箭嘴） */
-  .nav-top,
-  .nav .nav-group:nth-of-type(2) .nav-top{
-    display:inline-flex;
-    pointer-events:none;
-    cursor:default;
-    color:var(--gold-deep);
-    font-weight:600;
-    border-bottom:none;
-  }
-  .nav-caret{display:none;}
-  /* 兩組連結都平舖成一行（可換行），唔靠 .open 展開 */
-  .nav-menu,
-  .nav-group.open .nav-menu,
-  .nav .nav-group:nth-of-type(2) .nav-menu{
-    position:static;
-    display:flex;
-    flex-direction:row;
-    flex-wrap:wrap;
-    justify-content:center;
-    align-items:center;
-    gap:clamp(10px,3.2vw,16px);
-    row-gap:5px;
-    width:100%;
-    min-width:0;
-    margin:0;
-    padding:0;
-    background:transparent;
-    border:none;
-    box-shadow:none;
-  }
-  .nav-menu a,
-  .nav .nav-group:nth-of-type(2) .nav-menu a{
-    padding:2px 0;
-    border-radius:0;
-    border-bottom:1.5px solid transparent;
-    white-space:nowrap;
-    font-size:clamp(.72rem,3.25vw,.84rem);
-    letter-spacing:.025em;
-  }
-  .nav-menu a:hover,.nav-menu a:focus,.nav-menu a[aria-current]{
-    background:transparent;color:var(--gold-deep);border-color:var(--gold);
-  }
-}
-
-@media(max-width:340px){
-  .nav a,.nav-single,.nav-top,.nav .nav-group:nth-of-type(2) .nav-menu a{font-size:.7rem;}
-  .nav-lang{min-width:34px;padding:2px 7px;}
-}
-
 /* 關於 / 火化：內文段落靠左（標題維持置中） */
 .about .lead,.cremation .lead{text-align:left;}
 
@@ -1345,7 +1259,7 @@ body.om-lock{overflow:hidden;}
 .scard>i{grid-column:1 / -1;}
 
 /* =========================================================================
-   手機優化（客戶決議 2026-09-22，≤767px）
+   手機優化（客戶決議 2026-09-22，≤819px）
    1 留白20 · 2 字級 · 3 間距 · 4 觸控44 · 5 圖片比例 · 6 漢堡 · 7 底部CTA
    8 首屏一CTA · 9 捷徑橫滑 · 10 七步時間線 · 11 卡片一欄 · 12 FAQ摺疊
    ========================================================================= */
@@ -1353,7 +1267,7 @@ body.om-lock{overflow:hidden;}
 .nav-toggle{display:none;}
 .mobile-cta{display:none;}
 
-@media(max-width:767px){
+@media(max-width:819px){
   /* 1 — 左右留白統一 20px */
   :root{ --page-pad:20px; }
   /* 錨點捲動避開 sticky header */
