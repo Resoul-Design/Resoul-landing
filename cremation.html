@@ -544,7 +544,7 @@
   function saveDraft(o){try{localStorage.setItem('resoul:lastCremationBooking',JSON.stringify(Object.assign({saved_at:new Date().toISOString()},o)));}catch(e){}}
   function clearDraft(){try{localStorage.removeItem('resoul:lastCremationBooking');}catch(e){}}
   function store(o,dep){var ep=dep?'/api/deposit':'/api/order';return fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)}).then(function(res){if(!res.ok){return res.text().then(function(t){throw new Error('API HTTP '+res.status+': '+t);});}});}
-  function ref(){return 'RS-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8).toUpperCase();}
+  function ref(){return 'PAY-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8).toUpperCase();}
   var pending=null,modal=document.getElementById('orderConfirm'),list=document.getElementById('orderConfirmList'),edit=document.getElementById('orderEditBtn'),confirm=document.getElementById('orderConfirmBtn');
   function close(){if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}}
   function row(k,v){return '<div class="confirm-row"><span>'+k+'</span><span>'+(v||'—')+'</span></div>';}
