@@ -591,7 +591,7 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
 })();
 
 /* ---- 手機：漢堡選單（收起桌面導覽）+ 底部固定 CTA 條 ----
-   由 JS 注入，全站每頁自動生效；顯示與否交畀 CSS（≤767px）。 */
+   由 JS 注入，全站每頁自動生效；顯示與否交畀 CSS（≤819px）。 */
 (function(){
   "use strict";
   var WA='85264762951', TEL='+85264762951';
@@ -617,7 +617,7 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
     nav.addEventListener('click', function(e){ if(e.target.closest('a')) setNav(false); });
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') setNav(false); });
     // 由手機切返桌面時自動收起抽屜狀態
-    var mq=window.matchMedia('(max-width:767px)');
+    var mq=window.matchMedia('(max-width:819px)');
     var onMq=function(){ if(!mq.matches) setNav(false); };
     if(mq.addEventListener) mq.addEventListener('change', onMq);
   }
