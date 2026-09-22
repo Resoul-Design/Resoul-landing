@@ -78,11 +78,8 @@
     <h1 class="sr-only">Pet Cremation & Farewell Journey in Hong Kong | RESOUL</h1>
 
     <nav class="jump-nav reveal" aria-label="Farewell journey quick navigation">
-      <a href="#procedure">Process</a>
-      <a href="#plans">Pricing</a>
-      <a href="#notes">Cremation notes</a>
-      <a href="#faqs">FAQ</a>
-      <a href="/booking-en">Arrange pick-up booking</a>
+      <a href="/service-info-en">Service information</a>
+      <a class="jump-book" href="/booking-en">Arrange pick-up booking</a>
       <a class="jump-wa" href="https://wa.me/85264762951" target="_blank" rel="noopener">WhatsApp us</a>
     </nav>
 
@@ -291,7 +288,7 @@
           </div>
         </div>
         <div id="ofPrice" aria-live="polite" style="text-align:center;font-family:var(--serif);font-size:1.3rem;color:var(--ink);margin:6px 0 4px;">Pick-up booking deposit HK$1,800</div>
-        <div class="bf-field"><label for="ofProject">Existing project number (optional for returning clients)</label><input id="ofProject" placeholder="e.g. #RS-1012"></div>
+        <div class="bf-field"><label for="ofProject">Existing project number (optional for returning clients)</label><input id="ofProject" placeholder="e.g. RSL-260922-Y0IR"></div>
         <div class="bf-field"><label for="ofPet">Pet's name</label><input id="ofPet" placeholder="Nickname welcome"></div>
         <div class="bf-field"><label for="ofName">Your name <span class="req">*</span></label><input id="ofName" required placeholder="How may we address you"></div>
         <div class="bf-field"><label for="ofPhone">Phone / WhatsApp <span class="req">*</span></label><input id="ofPhone" type="tel" required placeholder="e.g. 9xxx xxxx"></div>
@@ -546,7 +543,7 @@
   function clearDraft(){try{localStorage.removeItem('resoul:lastCremationBooking');}catch(e){}}
   function store(o,dep){var ep=dep?'/api/deposit':'/api/order';return fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)}).then(function(res){if(!res.ok){return res.text().then(function(t){throw new Error('API HTTP '+res.status+': '+t);});}});}
   function ref(){return 'PAY-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8).toUpperCase();}
-  function ensureProject(){var p=v('ofProject');try{p=p||localStorage.getItem('resoul:projectNo')||'';}catch(e){}if(!p){var d=new Date(),ymd=String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');p='RSL-'+ymd+'-'+Math.random().toString(36).slice(2,6).toUpperCase();}var el=document.getElementById('ofProject');if(el)el.value=p;try{localStorage.setItem('resoul:projectNo',p);}catch(e){}return p;}
+  function ensureProject(){var p=v('ofProject');if(!p){var d=new Date(),ymd=String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0'),bytes=new Uint8Array(5);crypto.getRandomValues(bytes);p='RSL-'+ymd+'-'+Array.from(bytes,function(x){return x.toString(36).padStart(2,'0');}).join('').slice(0,8).toUpperCase();}var el=document.getElementById('ofProject');if(el)el.value=p;return p;}
   var pending=null,modal=document.getElementById('orderConfirm'),list=document.getElementById('orderConfirmList'),edit=document.getElementById('orderEditBtn'),confirm=document.getElementById('orderConfirmBtn');
   function close(){if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}}
   function row(k,v){return '<div class="confirm-row"><span>'+k+'</span><span>'+(v||'-')+'</span></div>';}

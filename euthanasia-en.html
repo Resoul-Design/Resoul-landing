@@ -164,6 +164,10 @@
           <input id="euPhone" name="phone" type="tel" required placeholder="e.g. 9xxx xxxx">
         </div>
         <div class="bf-field">
+          <label for="euProject">Existing project number (optional for returning clients)</label>
+          <input id="euProject" name="project" placeholder="e.g. RSL-260922-Y0IR">
+        </div>
+        <div class="bf-field">
           <label for="euPet">Pet type</label>
           <select id="euPet" name="pet">
             <option value="貓">Cat</option>
@@ -294,6 +298,7 @@
     });
   }
   var v = function (id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  function ensureProject(){var p=v('euProject');if(!p){var d=new Date(),ymd=String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0'),bytes=new Uint8Array(5);crypto.getRandomValues(bytes);p='RSL-'+ymd+'-'+Array.from(bytes,function(x){return x.toString(36).padStart(2,'0');}).join('').slice(0,8).toUpperCase();}var el=document.getElementById('euProject');if(el)el.value=p;return p;}
   var msg = document.getElementById('euMsg');
   var btn = f.querySelector('.book-submit');
   function showMsg(kind, html) {
@@ -335,6 +340,7 @@
     if (msg) { msg.hidden = true; }
 
     var gcName = v('euName'), gcDate = v('euDate'), gcTime = v('euTime');
+    var projectNo = ensureProject();
     bizCalWrite();
 
     fetch('/api/booking', {
@@ -347,12 +353,12 @@
         pet: v('euPet'),
         date: v('euDate') || null,
         place: v('euAddr') || null,
-        notes: 'Euthanasia｜location: ' + v('euPlace') + '｜date: ' + (v('euDate') || '—') + '｜time: ' + (v('euTime') || '—') + '｜condition: ' + (v('euCond') || '—')
+        notes: 'Veterinary assessment｜Project no.: ' + projectNo + '｜location: ' + v('euPlace') + '｜date: ' + (v('euDate') || '—') + '｜time: ' + (v('euTime') || '—') + '｜condition: ' + (v('euCond') || '—')
       })
     }).then(function (res) {
       if (res.ok) {
         f.reset();
-        showMsg('ok', '✅ <b>Enquiry received.</b> We\'ll be in touch soon to help organise and refer an independent registered vet.<br>For immediate support, feel free to call / <a href="https://wa.me/' + WA_NUMBER + '" target="_blank" rel="noopener">WhatsApp us (24 hours)</a>.');
+        showMsg('ok', '✅ <b>Enquiry received.</b> Project number: <b>' + projectNo + '</b>. Please keep it for future pick-up, cremation and memorial arrangements.<br>We\'ll be in touch soon to help organise and refer an independent registered vet.');
       } else {
         res.text().then(function (t) { console.error('[Resoul] euthanasia backend write failed HTTP ' + res.status + ': ' + t); });
         showMsg('err', 'Sorry, something went wrong. Please try again, or <a href="https://wa.me/' + WA_NUMBER + '" target="_blank" rel="noopener">WhatsApp us</a>.');

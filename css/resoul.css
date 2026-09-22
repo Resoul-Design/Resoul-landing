@@ -1205,6 +1205,19 @@ h3{font-size:1.02rem;}
 .jump-nav a:hover,.jump-nav a:focus{color:var(--gold-deep);border-color:var(--gold);background:var(--cream);}
 .jump-nav a.jump-wa{color:#1f7a4d;border-color:#bfe3cd;background:#f1faf4;}
 .jump-nav a.jump-wa:hover{background:#e4f5ea;border-color:#1f7a4d;color:#155c39;}
+.service-hub{min-height:100vh;display:grid;place-items:center;padding:34px var(--page-pad);background:var(--bg);}
+.service-hub>section{width:min(100%,620px);text-align:center;}
+.service-hub-brand{position:absolute;top:28px;left:var(--page-pad);}
+.service-hub-brand img{width:126px;height:auto;}
+.service-hub h1{margin-top:8px;font-size:clamp(2rem,5vw,3.2rem);}
+.service-hub-lead{margin:12px 0 24px;color:var(--ink-soft);}
+.service-hub-links{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left;}
+.service-hub-links a{display:flex;align-items:center;justify-content:space-between;min-height:68px;padding:16px 18px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);text-decoration:none;transition:border-color .18s,background .18s;}
+.service-hub-links a:hover,.service-hub-links a:focus{border-color:var(--gold);background:var(--cream);}
+.service-hub-links b{color:var(--gold-deep);font-weight:400;}
+.service-hub-actions{display:flex;justify-content:center;gap:20px;margin-top:24px;font-size:.86rem;}
+.service-hub-actions a{color:var(--ink-soft);}
+@media(max-width:559px){.service-hub{align-items:start;padding-top:120px}.service-hub-links{grid-template-columns:1fr}.service-hub-brand{left:50%;transform:translateX(-50%)}.service-hub-brand img{width:110px}}
 
 /* C8 — 分享頁：Google Reviews 與主人故事分開＋來源標籤＋相片支援 */
 .share-src-tag{display:inline-flex;align-items:center;gap:7px;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep);font-weight:600;margin-bottom:2px;}

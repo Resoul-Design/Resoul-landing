@@ -166,6 +166,10 @@
           <input id="euPhone" name="phone" type="tel" required placeholder="例如 9xxx xxxx">
         </div>
         <div class="bf-field">
+          <label for="euProject">已有專案編號（回訪客戶可選填）</label>
+          <input id="euProject" name="project" placeholder="例如 RSL-260922-Y0IR">
+        </div>
+        <div class="bf-field">
           <label for="euPet">寵物類型</label>
           <select id="euPet" name="pet">
             <option value="貓">貓</option>
@@ -296,6 +300,7 @@
     });
   }
   var v = function (id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  function ensureProject(){var p=v('euProject');if(!p){var d=new Date(),ymd=String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0'),bytes=new Uint8Array(5);crypto.getRandomValues(bytes);p='RSL-'+ymd+'-'+Array.from(bytes,function(x){return x.toString(36).padStart(2,'0');}).join('').slice(0,8).toUpperCase();}var el=document.getElementById('euProject');if(el)el.value=p;return p;}
   var msg = document.getElementById('euMsg');
   var btn = f.querySelector('.book-submit');
   function showMsg(kind, html) {
@@ -338,6 +343,7 @@
 
     // 預先擷取值（reset 後用於客戶日曆連結）
     var gcName = v('euName'), gcDate = v('euDate'), gcTime = v('euTime');
+    var projectNo = ensureProject();
 
     // 商戶日曆同步（best-effort）
     bizCalWrite();
@@ -353,12 +359,12 @@
         pet: v('euPet'),
         date: v('euDate') || null,
         place: v('euAddr') || null,
-        notes: '安樂死｜地點：' + v('euPlace') + '｜希望日期：' + (v('euDate') || '—') + '｜希望時段：' + (v('euTime') || '—') + '｜狀況：' + (v('euCond') || '—')
+        notes: '獸醫評估｜專案編號：' + projectNo + '｜地點：' + v('euPlace') + '｜希望日期：' + (v('euDate') || '—') + '｜希望時段：' + (v('euTime') || '—') + '｜狀況：' + (v('euCond') || '—')
       })
     }).then(function (res) {
       if (res.ok) {
         f.reset();
-        showMsg('ok', '✅ <b>查詢已收到</b>，我們會盡快與你聯絡，協助整理並轉介獨立註冊獸醫。<br>如需即時支援，歡迎致電／<a href="https://wa.me/' + WA_NUMBER + '" target="_blank" rel="noopener">WhatsApp 我們（24 小時）</a>。');
+        showMsg('ok', '✅ <b>查詢已收到</b>，專案編號：<b>' + projectNo + '</b>。請保留此編號，之後可用於接送、火化及紀念品安排。<br>我們會盡快與你聯絡，協助整理並轉介獨立註冊獸醫。');
       } else {
         res.text().then(function (t) { console.error('[Resoul] 安樂死預約寫入後台失敗 HTTP ' + res.status + '：' + t); });
         showMsg('err', '很抱歉，提交時發生問題，請稍後再試，或直接 <a href="https://wa.me/' + WA_NUMBER + '" target="_blank" rel="noopener">WhatsApp 我們</a>。');
