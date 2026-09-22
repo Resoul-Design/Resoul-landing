@@ -42,7 +42,7 @@
   function fmtDate(iso) {
     if (!iso) return "";
     try {
-      return new Intl.DateTimeFormat("zh-HK", { year: "numeric", month: "long", day: "numeric" }).format(new Date(iso));
+      return new Intl.DateTimeFormat(EN ? "en-GB" : "zh-HK", { year: "numeric", month: "long", day: "numeric" }).format(new Date(iso));
     } catch (e) { return iso.slice(0, 10); }
   }
 
