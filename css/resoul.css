@@ -1282,6 +1282,9 @@ body.om-lock{overflow:hidden;}
 
 @media(max-width:819px){
   html,body{max-width:100%;overflow-x:clip;}
+  html[lang="zh-Hant"] .sm-list a:first-child{gap:5px;padding-left:10px;padding-right:10px;white-space:nowrap;}
+  html[lang="zh-Hant"] .sm-list a:first-child b{font-size:.78rem;letter-spacing:0;}
+  html[lang="zh-Hant"] .sm-list a:first-child span{font-size:.78rem;letter-spacing:0;white-space:nowrap;}
   /* 1 — 左右留白統一 20px */
   :root{ --page-pad:20px; }
   /* 錨點捲動避開 sticky header */
