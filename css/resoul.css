@@ -1335,3 +1335,12 @@ h3{font-size:1.02rem;}
   .booking-page .order-modal .cremation .wrap{padding-inline:20px;}
 }
 body.om-lock{overflow:hidden;}
+
+/* 客戶要求（2026-09-22）：卡片 icon（logo）與標題同一行——文字放喺 logo 旁邊，全站 .scard 一致 */
+/* 部分 .scard 為 <a> 帶 inline display:block，故用 !important 確保一致改為 grid */
+.scard{display:grid !important;grid-template-columns:auto 1fr;align-items:center;column-gap:13px;}
+.scard>.sc-ic{grid-column:1;grid-row:1;margin-bottom:0;}
+.scard>h3{grid-column:2;grid-row:1;align-self:center;margin-bottom:0;}
+.scard>p{grid-column:1 / -1;margin-top:12px;}
+.scard>i{grid-column:1 / -1;}
+.scard>.scard-ill{grid-column:1 / -1;}
