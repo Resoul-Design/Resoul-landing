@@ -429,6 +429,7 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
   .header-inner{flex-direction:row;justify-content:space-between;align-items:center;padding:14px 28px;}
   .brand{justify-content:flex-start;}
   .nav{justify-content:flex-end;}
+  .jump-nav{position:sticky;top:63px;z-index:42;max-width:none;background:var(--bg);border-bottom:1px solid var(--line);box-shadow:0 8px 20px -20px rgba(45,34,25,.55);}
   .hero h1{font-size:2.6rem;}
   .pcard{flex:1;}
 }
