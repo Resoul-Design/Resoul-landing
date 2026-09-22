@@ -1390,3 +1390,26 @@ body.om-lock{overflow:hidden;}
   .widget{bottom:calc(72px + env(safe-area-inset-bottom));height:min(78vh,600px);}
 }
 .scard>.scard-ill{grid-column:1 / -1;}
+
+/* Mobile compact contact launcher */
+.contact-modal{display:none;}
+@media(max-width:819px){
+  body{padding-bottom:24px;}
+  .mobile-cta{display:inline-flex;left:50%;right:auto;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);width:auto;height:44px;min-height:44px;padding:0 18px;border:1px solid var(--line);border-radius:999px;background:var(--ink);color:#f4ece0;box-shadow:0 10px 30px -12px rgba(45,34,25,.65);font-family:var(--sans);font-size:.86rem;font-weight:600;align-items:center;justify-content:center;white-space:nowrap;cursor:pointer;}
+  .mobile-cta::before{content:"";width:15px;height:15px;margin-right:7px;background:currentColor;border-radius:50%;box-shadow:5px 5px 0 -3px var(--ink);}
+  .contact-modal{position:fixed;inset:0;z-index:119;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .22s ease;}
+  .contact-modal.open{opacity:1;pointer-events:auto;}
+  .contact-backdrop{position:absolute;inset:0;width:100%;height:100%;border:0;background:rgba(45,34,25,.52);backdrop-filter:blur(2px);}
+  .contact-card{position:relative;z-index:1;width:min(100%,340px);padding:26px 22px 22px;border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:0 35px 70px -24px rgba(45,34,25,.65);transform:translateY(12px) scale(.98);transition:transform .22s ease;}
+  .contact-modal.open .contact-card{transform:none;}
+  .contact-card h3{margin:0 34px 18px 0;font-size:1.2rem;}
+  .contact-close{position:absolute;right:12px;top:10px;width:38px;height:38px;border:0;background:transparent;color:var(--ink-soft);font-size:1.5rem;cursor:pointer;}
+  .contact-card a{display:flex;align-items:center;justify-content:center;min-height:48px;margin-top:10px;border-radius:8px;text-decoration:none;font-family:var(--sans);font-weight:600;}
+  .contact-card .mc-wa{background:#1f9d55;color:#fff;}
+  .contact-card .mc-tel{background:var(--ink);color:#f4ece0;}
+  body.contact-open{overflow:hidden;}
+  .fab{bottom:calc(68px + env(safe-area-inset-bottom));}
+  .to-top{bottom:calc(68px + env(safe-area-inset-bottom));}
+  .uctrl{bottom:calc(68px + env(safe-area-inset-bottom));}
+  .widget{bottom:calc(68px + env(safe-area-inset-bottom));height:min(78vh,600px);}
+}

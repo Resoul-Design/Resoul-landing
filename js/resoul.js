@@ -623,17 +623,31 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
   }
 
   if(!document.getElementById('mobileCta')){
-    var bar=document.createElement('div');
-    bar.id='mobileCta'; bar.className='mobile-cta';
-    bar.setAttribute('aria-label', RL('快速查詢','Quick contact'));
+    var bar=document.createElement('button');
+    bar.id='mobileCta'; bar.className='mobile-cta'; bar.type='button';
+    bar.setAttribute('aria-label', RL('開啟聯絡選項','Open contact options'));
+    bar.setAttribute('aria-expanded','false');
+    bar.textContent=RL('聯絡我們','Contact us');
+    var modal=document.createElement('div');
+    modal.className='contact-modal'; modal.setAttribute('aria-hidden','true');
+    var backdrop=document.createElement('button'); backdrop.className='contact-backdrop'; backdrop.type='button'; backdrop.setAttribute('aria-label',RL('關閉','Close'));
+    var card=document.createElement('div'); card.className='contact-card'; card.setAttribute('role','dialog'); card.setAttribute('aria-modal','true');
+    var close=document.createElement('button'); close.className='contact-close'; close.type='button'; close.setAttribute('aria-label',RL('關閉','Close')); close.textContent='×';
+    var title=document.createElement('h3'); title.textContent=RL('如何聯絡我們？','How can we help?');
     var wa=document.createElement('a');
     wa.className='mc-wa'; wa.href='https://wa.me/'+WA; wa.target='_blank'; wa.rel='noopener';
     wa.textContent=RL('WhatsApp 查詢','WhatsApp');
     var tel=document.createElement('a');
     tel.className='mc-tel'; tel.href='tel:'+TEL;
     tel.textContent=RL('立即致電','Call now');
-    bar.appendChild(wa); bar.appendChild(tel);
-    document.body.appendChild(bar);
+    card.appendChild(close); card.appendChild(title); card.appendChild(wa); card.appendChild(tel);
+    modal.appendChild(backdrop); modal.appendChild(card);
+    document.body.appendChild(bar); document.body.appendChild(modal);
+    function setContact(open){modal.classList.toggle('open',open);modal.setAttribute('aria-hidden',open?'false':'true');bar.setAttribute('aria-expanded',open?'true':'false');document.body.classList.toggle('contact-open',open);if(open)close.focus();}
+    bar.addEventListener('click',function(){setContact(true);});
+    close.addEventListener('click',function(){setContact(false);});
+    backdrop.addEventListener('click',function(){setContact(false);});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.classList.contains('open'))setContact(false);});
   }
 })();
 
