@@ -262,7 +262,7 @@
     <div class="wrap">
       <p class="eyebrow reveal">安排預約接送</p>
       <h2 class="reveal">填一份簡單問卷，<br>安排預約接送。</h2>
-      <p class="lead reveal" style="margin-top:12px;">留下聯絡與毛孩資料，並繳付 <b>HK$1,800 預約接送訂金</b>，我們會即時帶你到安全付款頁；付款後會盡快聯絡你確認接送時間及後續善終安排。訂金可於最終服務費用中扣減。付款後取得的 <b>#RS-xxxx 訂單號碼同時是你的專案編號</b>，日後安排火化或選購紀念品時可沿用。</p>
+      <p class="lead reveal" style="margin-top:12px;">留下聯絡與毛孩資料，並繳付 <b>HK$1,800 預約接送訂金</b>，我們會即時帶你到安全付款頁；付款後會盡快聯絡你確認接送時間及後續善終安排。訂金可於最終服務費用中扣減。首次預約會自動建立一個永久的 <b>RSL-xxxxxx-xxxx 專案編號</b>；每次付款另有獨立的 #RS-xxxx 發票編號。</p>
       <form class="book-form reveal" id="orderForm" style="margin-top:24px;">
         <!-- 「選擇旅程／體重」步驟：第二個客戶預約站可重用；現時先隱藏（JS: JOURNEY_SELECT=false）。請勿刪除。 -->
         <div id="journeySelect" hidden>
@@ -546,13 +546,14 @@
   function clearDraft(){try{localStorage.removeItem('resoul:lastCremationBooking');}catch(e){}}
   function store(o,dep){var ep=dep?'/api/deposit':'/api/order';return fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)}).then(function(res){if(!res.ok){return res.text().then(function(t){throw new Error('API HTTP '+res.status+': '+t);});}});}
   function ref(){return 'RS-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8).toUpperCase();}
+  function ensureProject(){var p=v('ofProject');try{p=p||localStorage.getItem('resoul:projectNo')||'';}catch(e){}if(!p){var d=new Date(),ymd=String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');p='RSL-'+ymd+'-'+Math.random().toString(36).slice(2,6).toUpperCase();}var el=document.getElementById('ofProject');if(el)el.value=p;try{localStorage.setItem('resoul:projectNo',p);}catch(e){}return p;}
   var pending=null,modal=document.getElementById('orderConfirm'),list=document.getElementById('orderConfirmList'),edit=document.getElementById('orderEditBtn'),confirm=document.getElementById('orderConfirmBtn');
   function close(){if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}}
   function row(k,v){return '<div class="confirm-row"><span>'+k+'</span><span>'+(v||'—')+'</span></div>';}
   function openConfirm(data){pending=data;if(list){var s=data.s;var head=s.deposit?(row('項目','預約接送訂金')+row('訂金','HK$'+s.price.toLocaleString())):(row('旅程',s.plan)+row('體重',s.weight)+row('金額','HK$'+s.price.toLocaleString()));list.innerHTML=head+row('已有專案編號',v('ofProject'))+row('毛孩名字',v('ofPet'))+row('主人稱呼',v('ofName'))+row('聯絡電話',v('ofPhone'))+row('希望日期',v('ofDate'))+row('希望時段',v('ofTime'))+row('接送地址',v('ofAddr'))+row('備註',v('ofNote'));}if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');}}
   if(edit)edit.addEventListener('click',close);
   if(modal)modal.addEventListener('click',function(e){if(e.target===modal)close();});
-  f.addEventListener('submit',function(e){e.preventDefault();var s=currentSel();if(!s){show('err','請先選擇旅程與毛孩體重。');return;}if(!v('ofName')||!v('ofPhone')){show('err','請填主人稱呼及聯絡電話。');return;}openConfirm({s:s,paymentRef:ref()});});
+  f.addEventListener('submit',function(e){e.preventDefault();var s=currentSel();if(!s){show('err','請先選擇旅程與毛孩體重。');return;}if(!v('ofName')||!v('ofPhone')){show('err','請填主人稱呼及聯絡電話。');return;}openConfirm({s:s,paymentRef:ref(),projectRef:ensureProject()});});
   if(confirm)confirm.addEventListener('click',function(){
     if(!pending)return;
     var s=pending.s,dep=!!s.deposit,paymentRef=pending.paymentRef,old=btn.innerHTML,oldConfirm=confirm.innerHTML;

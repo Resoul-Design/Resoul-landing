@@ -262,7 +262,7 @@
     <div class="wrap">
       <p class="eyebrow reveal">Arrange pick-up booking</p>
       <h2 class="reveal">Fill in a simple form<br>to arrange the pick-up booking.</h2>
-      <p class="lead reveal" style="margin-top:12px;">Leave your contact and your pet's details and pay a <b>HK$1,800 pick-up booking deposit</b>. We'll take you to a secure payment page right away; after payment we'll contact you shortly to confirm the pick-up time and the end-of-life arrangements. The deposit is credited toward the final service fee. Your <b>#RS-xxxx order number also becomes your project number</b> for later cremation arrangements or keepsake purchases.</p>
+      <p class="lead reveal" style="margin-top:12px;">Leave your contact and your pet's details and pay a <b>HK$1,800 pick-up booking deposit</b>. We'll take you to a secure payment page right away; after payment we'll contact you shortly to confirm the pick-up time and the end-of-life arrangements. The deposit is credited toward the final service fee. A permanent <b>RSL-xxxxxx-xxxx project number</b> is created for a first booking; every payment still receives its own separate #RS-xxxx invoice number.</p>
       <form class="book-form reveal" id="orderForm" style="margin-top:24px;">
         <!-- "Choose journey / weight" step: reusable for a second client booking site; hidden for now (JS: JOURNEY_SELECT=false). Do not delete. -->
         <div id="journeySelect" hidden>
@@ -546,13 +546,14 @@
   function clearDraft(){try{localStorage.removeItem('resoul:lastCremationBooking');}catch(e){}}
   function store(o,dep){var ep=dep?'/api/deposit':'/api/order';return fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)}).then(function(res){if(!res.ok){return res.text().then(function(t){throw new Error('API HTTP '+res.status+': '+t);});}});}
   function ref(){return 'RS-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8).toUpperCase();}
+  function ensureProject(){var p=v('ofProject');try{p=p||localStorage.getItem('resoul:projectNo')||'';}catch(e){}if(!p){var d=new Date(),ymd=String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');p='RSL-'+ymd+'-'+Math.random().toString(36).slice(2,6).toUpperCase();}var el=document.getElementById('ofProject');if(el)el.value=p;try{localStorage.setItem('resoul:projectNo',p);}catch(e){}return p;}
   var pending=null,modal=document.getElementById('orderConfirm'),list=document.getElementById('orderConfirmList'),edit=document.getElementById('orderEditBtn'),confirm=document.getElementById('orderConfirmBtn');
   function close(){if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}}
   function row(k,v){return '<div class="confirm-row"><span>'+k+'</span><span>'+(v||'-')+'</span></div>';}
   function openConfirm(data){pending=data;if(list){var s=data.s;var head=s.deposit?(row('Item','Pick-up booking deposit')+row('Deposit','HK$'+s.price.toLocaleString())):(row('Journey',s.plan)+row('Weight',s.weight)+row('Amount','HK$'+s.price.toLocaleString()));list.innerHTML=head+row('Existing project number',v('ofProject'))+row('Pet name',v('ofPet'))+row('Your name',v('ofName'))+row('Phone / WhatsApp',v('ofPhone'))+row('Preferred date',v('ofDate'))+row('Preferred time',v('ofTime'))+row('Pickup address',v('ofAddr'))+row('Notes',v('ofNote'));}if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');}}
   if(edit)edit.addEventListener('click',close);
   if(modal)modal.addEventListener('click',function(e){if(e.target===modal)close();});
-  f.addEventListener('submit',function(e){e.preventDefault();var s=currentSel();if(!s){show('err','Please choose a journey and pet weight first.');return;}if(!v('ofName')||!v('ofPhone')){show('err','Please enter your name and phone / WhatsApp.');return;}openConfirm({s:s,paymentRef:ref()});});
+  f.addEventListener('submit',function(e){e.preventDefault();var s=currentSel();if(!s){show('err','Please choose a journey and pet weight first.');return;}if(!v('ofName')||!v('ofPhone')){show('err','Please enter your name and phone / WhatsApp.');return;}openConfirm({s:s,paymentRef:ref(),projectRef:ensureProject()});});
   if(confirm)confirm.addEventListener('click',function(){
     if(!pending)return;
     var s=pending.s,dep=!!s.deposit,paymentRef=pending.paymentRef,old=btn.innerHTML,oldConfirm=confirm.innerHTML;
