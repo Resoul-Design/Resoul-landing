@@ -609,6 +609,10 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
     btn.innerHTML='<span class="nt-bar"></span><span class="nt-bar"></span><span class="nt-bar"></span>';
     inner.appendChild(btn);
     function setNav(open){
+      if(open){
+        var headerBottom=Math.ceil(header.getBoundingClientRect().bottom);
+        document.documentElement.style.setProperty('--mobile-nav-top',Math.max(headerBottom+14,96)+'px');
+      }
       header.classList.toggle('nav-open', open);
       document.body.classList.toggle('nav-lock', open);
       btn.setAttribute('aria-expanded', open?'true':'false');
