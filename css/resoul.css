@@ -1281,6 +1281,7 @@ body.om-lock{overflow:hidden;}
 .mobile-cta{display:none;}
 
 @media(max-width:819px){
+  html,body{max-width:100%;overflow-x:clip;}
   /* 1 — 左右留白統一 20px */
   :root{ --page-pad:20px; }
   /* 錨點捲動避開 sticky header */
@@ -1347,10 +1348,8 @@ body.om-lock{overflow:hidden;}
   .hero>.wrap>div{gap:0;}
 
   /* 9 — 捷徑（善終旅程等）：水平滑動 + scroll-snap，唔好直排成超長清單 */
-  .jump-nav{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;margin:0 -20px;padding:14px 20px;}
-  .jump-nav::-webkit-scrollbar{display:none;}
-  .jump-nav{scrollbar-width:none;}
-  .jump-nav a{flex:0 0 auto;scroll-snap-align:start;}
+  .jump-nav{position:sticky;top:61px;z-index:42;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;width:100%;max-width:none;margin:0;padding:9px 12px;background:color-mix(in srgb,var(--bg) 96%,transparent);border-bottom:1px solid var(--line);box-shadow:0 8px 18px -18px rgba(45,34,25,.5);overflow:visible;}
+  .jump-nav a{min-width:0;min-height:42px;padding:7px 6px;justify-content:center;text-align:center;font-size:.72rem;line-height:1.25;white-space:normal;}
 
   /* 10 — 7 步流程：單欄時間線 */
   .proc-walk{overflow:visible;margin:22px 0 0;padding:0;scroll-snap-type:none;}
