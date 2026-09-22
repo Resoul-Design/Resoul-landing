@@ -1343,4 +1343,120 @@ body.om-lock{overflow:hidden;}
 .scard>h3{grid-column:2;grid-row:1;align-self:center;margin-bottom:0;}
 .scard>p{grid-column:1 / -1;margin-top:12px;}
 .scard>i{grid-column:1 / -1;}
+
+/* =========================================================================
+   手機優化（客戶決議 2026-09-22，≤767px）
+   1 留白20 · 2 字級 · 3 間距 · 4 觸控44 · 5 圖片比例 · 6 漢堡 · 7 底部CTA
+   8 首屏一CTA · 9 捷徑橫滑 · 10 七步時間線 · 11 卡片一欄 · 12 FAQ摺疊
+   ========================================================================= */
+/* 漢堡掣 + 底部 CTA 條：桌面預設隱藏（由 resoul.js 動態注入到每頁） */
+.nav-toggle{display:none;}
+.mobile-cta{display:none;}
+
+@media(max-width:767px){
+  /* 1 — 左右留白統一 20px */
+  :root{ --page-pad:20px; }
+  /* 錨點捲動避開 sticky header */
+  section[id],[id="order"],[id="plans"],[id="notes"],[id="faqs"],[id="procedure"]{scroll-margin-top:72px;}
+
+  /* 2 — 字級 */
+  body{font-size:16px;}
+  .hero h1{font-size:28px;line-height:1.35;}
+  h2,.support h2,.listen h2,.products h2,.faq h2,.closing-body h2,.reviews h2,.entry h2,.official h2{font-size:22px;line-height:1.4;}
+  .lead,.hero .sub,.faq2-a p,.article-body{font-size:1rem;line-height:1.8;}
+
+  /* 3 — section 上下間距 48–56px */
+  section{padding:52px 0;}
+  .entry{padding:48px 0;}
+  .closing{padding:0;}
+
+  /* 4 — 可點元素最少 44×44 */
+  .cta{display:inline-flex;align-items:center;justify-content:center;min-height:44px;}
+  .cta.sm{min-height:44px;}
+  .nav-menu a,.nav-single,.jump-nav a,.paper-chip,.mf-chip,.flinks a,.fc-item,.ls-pager button,.faq2-q,.faq-q{min-height:44px;}
+
+  /* 5 — 圖片／卡片統一比例，避免高低跳動 */
+  .bcard-img{width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;}
+  .rc-img{aspect-ratio:4/3;height:auto;}
+  .pcard-img,.pcard img,.product-img,.card-img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;}
+  .cremation-figure img,.seaview-img img,.ill-fig img,.photo-fig img{width:100%;height:auto;}
+
+  /* 6 — Header：只留 logo + 漢堡；收起桌面導覽（抽屜） */
+  .header-inner{flex-direction:row;align-items:center;justify-content:space-between;gap:10px;padding:8px 20px;}
+  .brand{flex-direction:row;align-items:center;gap:9px;}
+  .brand img{height:30px;}
+  .brand-slogan{display:none;}
+  .nav-toggle{display:inline-flex;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;border:none;background:none;cursor:pointer;padding:0;flex:0 0 auto;}
+  .nt-bar{display:block;width:24px;height:2px;background:var(--ink);border-radius:2px;margin:0 auto;transition:transform .25s ease,opacity .2s ease;}
+  .site-header.nav-open .nt-bar:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .site-header.nav-open .nt-bar:nth-child(2){opacity:0;}
+  .site-header.nav-open .nt-bar:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  .site-header.nav-hidden{transform:none;}
+  .site-header .nav{
+    position:fixed;inset:0;z-index:48;width:100%;
+    background:var(--bg);
+    display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;
+    gap:2px;padding:78px 24px 40px;overflow-y:auto;
+    transform:translateX(100%);transition:transform .28s ease;
+  }
+  .site-header.nav-open .nav{transform:none;}
+  .nav .nav-group,.nav .nav-group:nth-of-type(2){display:flex;flex-direction:column;align-items:stretch;width:100%;gap:0;margin-bottom:12px;order:0;}
+  .nav .nav-group:nth-of-type(2){order:-1;}          /* 服務組先（延續手機次序） */
+  .nav-top,.nav .nav-group:nth-of-type(2) .nav-top{display:block;pointer-events:none;cursor:default;color:var(--gold-deep);font-weight:600;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;border:none;padding:6px 4px 4px;text-align:left;}
+  .nav-caret{display:none;}
+  .nav-menu,.nav-group.open .nav-menu,.nav .nav-group:nth-of-type(2) .nav-menu{position:static;display:flex;flex-direction:column;align-items:stretch;gap:0;background:transparent;border:none;box-shadow:none;padding:0;width:100%;}
+  .nav-menu a,.nav .nav-group:nth-of-type(2) .nav-menu a{display:flex;align-items:center;min-height:48px;padding:11px 6px;font-size:1.02rem;border-bottom:1px solid var(--line);border-radius:0;white-space:normal;letter-spacing:.02em;}
+  .nav-single{display:flex;align-items:center;min-height:48px;padding:11px 6px;font-size:1.02rem;border-bottom:1px solid var(--line);}
+  .nav-lang{align-self:flex-start;margin-top:16px;border:1px solid var(--line);border-radius:999px;min-height:40px;padding:6px 18px;}
+  body.nav-lock{overflow:hidden;}
+  body.nav-lock .fab,body.nav-lock .uctrl,body.nav-lock .to-top,body.nav-lock .mobile-cta{display:none !important;}
+
+  /* 8 — 首屏：只留一個主 CTA（隱藏次要 CTA） */
+  .hero .cta.light{display:none;}
+  .hero .sub{margin:16px 0 22px;}
+  .hero>.wrap>div{gap:0;}
+
+  /* 9 — 捷徑（善終旅程等）：水平滑動 + scroll-snap，唔好直排成超長清單 */
+  .jump-nav{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;margin:0 -20px;padding:14px 20px;}
+  .jump-nav::-webkit-scrollbar{display:none;}
+  .jump-nav{scrollbar-width:none;}
+  .jump-nav a{flex:0 0 auto;scroll-snap-align:start;}
+
+  /* 10 — 7 步流程：單欄時間線 */
+  .proc-walk{overflow:visible;margin:22px 0 0;padding:0;scroll-snap-type:none;}
+  .walk-track{flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;padding:0;}
+  .wstep{flex:0 0 auto;min-width:0;flex-direction:row;align-items:flex-start;text-align:left;gap:14px;padding-bottom:24px;scroll-snap-align:none;}
+  .wstep:nth-child(n){margin-top:0;}
+  .wstep:not(:last-child)::before{content:"";position:absolute;left:20px;top:46px;bottom:-2px;width:2px;background:var(--line);z-index:0;}
+  .wstep:not(:last-child) .wstone::after{display:none;}
+  .wstone{flex:0 0 42px;}
+  .wcard{margin-top:0;padding:0;flex:1 1 auto;text-align:left;}
+  .wcard h4{font-size:1rem;line-height:1.35;}
+  .wcard p{font-size:.9rem;line-height:1.6;}
+  .wcard i{display:none;}
+  .walk-hint{font-size:.82rem;}
+
+  /* 11 — 方案卡／故事卡：一欄直排 */
+  .services-grid,.services-grid.grid4,.board-list,.reviews-grid,.cat-grid,.farewell-steps{grid-template-columns:1fr !important;gap:14px;}
+  .about-values,.promise-cards{flex-direction:column;}
+
+  /* 7 — 底部固定 CTA 條（WhatsApp 查詢 + 立即致電），高約 56px */
+  body{padding-bottom:72px;}
+  .mobile-cta{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:70;height:56px;
+    background:var(--card);border-top:1px solid var(--line);box-shadow:0 -8px 24px -16px rgba(59,47,39,.5);
+    padding-bottom:env(safe-area-inset-bottom);}
+  .mobile-cta a{flex:1 1 0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:56px;
+    font-family:var(--sans);font-weight:600;font-size:.98rem;letter-spacing:.03em;text-decoration:none;}
+  .mobile-cta a::before{content:"";width:1.15em;height:1.15em;background-color:currentColor;-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;}
+  .mobile-cta .mc-wa{background:#1f9d55;color:#fff;}
+  .mobile-cta .mc-wa::before{-webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M17.47 14.38c-.29-.15-1.7-.84-1.96-.94-.26-.1-.45-.15-.64.14-.19.29-.74.94-.9 1.13-.17.19-.33.21-.62.07-.29-.15-1.22-.45-2.32-1.44-.86-.76-1.44-1.71-1.6-2-.17-.29-.02-.44.13-.59.13-.13.29-.34.43-.5.14-.17.19-.29.29-.48.1-.19.05-.36-.02-.5-.07-.14-.64-1.55-.88-2.12-.23-.55-.47-.48-.64-.49h-.55c-.19 0-.5.07-.76.36-.26.29-1 .98-1 2.38s1.02 2.76 1.17 2.95c.14.19 2.01 3.08 4.88 4.32.68.29 1.21.47 1.62.6.68.22 1.3.19 1.79.11.55-.08 1.7-.69 1.94-1.36.24-.67.24-1.24.17-1.36-.07-.12-.26-.19-.55-.34z'/><path d='M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5l-1.42 5.18 5.3-1.39c1.46.8 3.1 1.22 4.74 1.22h.01c5.49 0 9.95-4.46 9.95-9.96 0-2.66-1.04-5.16-2.92-7.04C17.2 3.04 14.7 2 12.04 2z'/></svg>");mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M17.47 14.38c-.29-.15-1.7-.84-1.96-.94-.26-.1-.45-.15-.64.14-.19.29-.74.94-.9 1.13-.17.19-.33.21-.62.07-.29-.15-1.22-.45-2.32-1.44-.86-.76-1.44-1.71-1.6-2-.17-.29-.02-.44.13-.59.13-.13.29-.34.43-.5.14-.17.19-.29.29-.48.1-.19.05-.36-.02-.5-.07-.14-.64-1.55-.88-2.12-.23-.55-.47-.48-.64-.49h-.55c-.19 0-.5.07-.76.36-.26.29-1 .98-1 2.38s1.02 2.76 1.17 2.95c.14.19 2.01 3.08 4.88 4.32.68.29 1.21.47 1.62.6.68.22 1.3.19 1.79.11.55-.08 1.7-.69 1.94-1.36.24-.67.24-1.24.17-1.36-.07-.12-.26-.19-.55-.34z'/><path d='M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5l-1.42 5.18 5.3-1.39c1.46.8 3.1 1.22 4.74 1.22h.01c5.49 0 9.95-4.46 9.95-9.96 0-2.66-1.04-5.16-2.92-7.04C17.2 3.04 14.7 2 12.04 2z'/></svg>");}
+  .mobile-cta .mc-tel{background:var(--ink);color:#f4ece0;}
+  .mobile-cta .mc-tel::before{-webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.24.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z'/></svg>");mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.24.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z'/></svg>");}
+
+  /* fixed 元素避開底部 CTA 條 */
+  .fab{bottom:calc(72px + env(safe-area-inset-bottom));right:14px;}
+  .to-top{bottom:calc(126px + env(safe-area-inset-bottom));}
+  .uctrl{bottom:calc(72px + env(safe-area-inset-bottom));}
+  .widget{bottom:calc(72px + env(safe-area-inset-bottom));height:min(78vh,600px);}
+}
 .scard>.scard-ill{grid-column:1 / -1;}

@@ -590,6 +590,53 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
   });
 })();
 
+/* ---- 手機：漢堡選單（收起桌面導覽）+ 底部固定 CTA 條 ----
+   由 JS 注入，全站每頁自動生效；顯示與否交畀 CSS（≤767px）。 */
+(function(){
+  "use strict";
+  var WA='85264762951', TEL='+85264762951';
+  var header=document.querySelector('.site-header');
+  var inner=header && header.querySelector('.header-inner');
+  var nav=header && header.querySelector('.nav');
+
+  if(inner && nav && !document.getElementById('navToggle')){
+    if(!nav.id) nav.id='primaryNav';
+    var btn=document.createElement('button');
+    btn.id='navToggle'; btn.className='nav-toggle'; btn.type='button';
+    btn.setAttribute('aria-label', RL('選單','Menu'));
+    btn.setAttribute('aria-expanded','false');
+    btn.setAttribute('aria-controls', nav.id);
+    btn.innerHTML='<span class="nt-bar"></span><span class="nt-bar"></span><span class="nt-bar"></span>';
+    inner.appendChild(btn);
+    function setNav(open){
+      header.classList.toggle('nav-open', open);
+      document.body.classList.toggle('nav-lock', open);
+      btn.setAttribute('aria-expanded', open?'true':'false');
+    }
+    btn.addEventListener('click', function(){ setNav(!header.classList.contains('nav-open')); });
+    nav.addEventListener('click', function(e){ if(e.target.closest('a')) setNav(false); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') setNav(false); });
+    // 由手機切返桌面時自動收起抽屜狀態
+    var mq=window.matchMedia('(max-width:767px)');
+    var onMq=function(){ if(!mq.matches) setNav(false); };
+    if(mq.addEventListener) mq.addEventListener('change', onMq);
+  }
+
+  if(!document.getElementById('mobileCta')){
+    var bar=document.createElement('div');
+    bar.id='mobileCta'; bar.className='mobile-cta';
+    bar.setAttribute('aria-label', RL('快速查詢','Quick contact'));
+    var wa=document.createElement('a');
+    wa.className='mc-wa'; wa.href='https://wa.me/'+WA; wa.target='_blank'; wa.rel='noopener';
+    wa.textContent=RL('WhatsApp 查詢','WhatsApp');
+    var tel=document.createElement('a');
+    tel.className='mc-tel'; tel.href='tel:'+TEL;
+    tel.textContent=RL('立即致電','Call now');
+    bar.appendChild(wa); bar.appendChild(tel);
+    document.body.appendChild(bar);
+  }
+})();
+
 /* Hero 影片：只喺闊螢幕且容許動畫時載入（效能） */
 (function(){
   try{
