@@ -60,6 +60,7 @@ module.exports = async (req, res) => {
   if (!ownerName || !contact) return res.status(400).json({ error: "missing_contact" });
   const date = clean(body.date, 10);
   const booking = {
+    case_no: clean(body.projectNo, 40) || null,
     owner_name: ownerName,
     contact,
     plan: clean(body.plan, 80) || null,
