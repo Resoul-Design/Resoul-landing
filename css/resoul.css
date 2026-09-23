@@ -1418,7 +1418,7 @@ body.om-lock{overflow:hidden;}
 /* Mobile compact contact launcher */
 .contact-modal{display:none;}
 @media(min-width:820px){
-  .mobile-cta{display:inline-flex;position:fixed;right:18px;bottom:82px;z-index:70;width:46px;height:46px;border:1px solid var(--line);border-radius:50%;background:var(--card);color:var(--gold-deep);box-shadow:0 10px 28px -12px rgba(45,34,25,.6);font-size:0;align-items:center;justify-content:center;cursor:pointer;}
+  .mobile-cta{display:inline-flex;position:fixed;left:14px;right:auto;bottom:65px;z-index:70;width:46px;height:46px;border:1px solid var(--line);border-radius:50%;background:var(--card);color:var(--gold-deep);box-shadow:0 10px 28px -12px rgba(45,34,25,.6);font-size:0;align-items:center;justify-content:center;cursor:pointer;}
   .mobile-cta::before{content:"☎";font-family:var(--sans);font-size:1.2rem;line-height:1;}
   .contact-modal{position:fixed;inset:0;z-index:119;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .22s ease;}
   .contact-modal.open{opacity:1;pointer-events:auto;}
@@ -1433,7 +1433,7 @@ body.om-lock{overflow:hidden;}
 }
 @media(max-width:819px){
   body{padding-bottom:24px;}
-  .mobile-cta{display:inline-flex;left:auto;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));transform:none;width:48px;height:48px;min-height:48px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--card);color:var(--ink-soft);box-shadow:0 10px 30px -12px rgba(45,34,25,.65);font-size:0;align-items:center;justify-content:center;cursor:pointer;}
+  .mobile-cta{display:inline-flex;left:14px;right:auto;bottom:calc(63px + env(safe-area-inset-bottom));transform:none;width:48px;height:48px;min-height:48px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--card);color:var(--ink-soft);box-shadow:0 10px 30px -12px rgba(45,34,25,.65);font-size:0;align-items:center;justify-content:center;cursor:pointer;}
   .mobile-cta::before{content:"☎";font-family:var(--sans);font-size:1.25rem;line-height:1;color:var(--gold-deep);}
   .contact-modal{position:fixed;inset:0;z-index:119;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .22s ease;}
   .contact-modal.open{opacity:1;pointer-events:auto;}
