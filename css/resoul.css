@@ -374,6 +374,11 @@ body.shop-modal-lock{overflow:hidden;}
 body.shop-modal-lock .cart-drawer{z-index:1100;}
 body.shop-modal-lock #shopOverlay{z-index:1099;}
 /* 分享頁 / 紀念故事 */
+.wall-tools{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:26px;}
+.wall-search{display:flex;align-items:center;gap:8px;width:min(390px,100%);min-height:48px;padding:0 16px;border:1px solid var(--line);border-radius:999px;background:var(--white,#fff);color:var(--ink-faint);}
+.wall-search input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:var(--ink);font:inherit;}
+.wall-search input::placeholder{color:var(--ink-faint);}
+.mform[hidden]{display:none !important;}
 .mform{margin-top:24px;text-align:left;display:flex;flex-direction:column;gap:18px;}
 .mform .mf-row{display:flex;gap:14px;flex-wrap:wrap;}
 .mform .board-upload{margin:2px 0;}
@@ -382,7 +387,7 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 .mshare-in{display:flex;gap:8px;flex-wrap:wrap;}
 .mshare-in input{flex:1 1 220px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--white,#fff);color:var(--ink);font-size:.85rem;}
 .mshare-in button{padding:10px 16px;border:1px solid var(--gold);background:transparent;color:var(--ink);border-radius:10px;cursor:pointer;white-space:nowrap;}
-.mstory{background:var(--white,#fff);border:1px solid var(--line);border-radius:16px;padding:22px 20px;margin:0 auto 16px;max-width:560px;box-shadow:0 6px 20px rgba(59,47,39,.05);text-align:left;}
+.mstory{background:var(--white,#fff);border:1px solid var(--line);border-radius:16px;padding:22px 20px;margin:0;max-width:none;width:100%;box-shadow:0 6px 20px rgba(59,47,39,.05);text-align:left;}
 .mstory .ms-photo{width:100%;max-height:340px;object-fit:cover;border-radius:12px;margin-bottom:14px;}
 .ms-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px;}
 .ms-name{font-family:var(--serif);font-size:1.3rem;color:var(--ink);}
@@ -395,6 +400,19 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 .ms-heart:hover:not(:disabled){transform:translateY(-1px);background:var(--gold);color:#2f251e;}
 .ms-heart.on{background:var(--gold);color:#2f251e;}
 .ms-heart:disabled{cursor:default;}
+/* 專業機構與支援資源 */
+.institution-section{margin-top:24px;padding:26px 24px;border:1px solid var(--line);border-radius:16px;background:var(--card);text-align:left;}
+.institution-section h3{margin:4px 0 8px;font-family:var(--serif);font-size:1.45rem;}
+.institution-section>.lead{margin:0;text-align:left;}
+.institution-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:20px;}
+.institution-card{display:flex;min-height:190px;flex-direction:column;align-items:flex-start;gap:9px;padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--white,#fff);color:var(--ink);text-decoration:none;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;}
+.institution-card:hover{transform:translateY(-2px);border-color:var(--gold);box-shadow:0 10px 24px -20px rgba(59,47,39,.5);}
+.institution-card strong{font-family:var(--serif);font-size:1.15rem;}
+.institution-card>span:not(.institution-tag){color:var(--ink-soft);line-height:1.65;}
+.institution-card b{margin-top:auto;color:var(--gold-deep);font-size:.88rem;}
+.institution-tag{display:inline-flex;padding:4px 9px;border-radius:999px;background:var(--cream);color:var(--gold-deep);font-size:.74rem;font-weight:700;}
+.institution-card.urgent{border-color:#dfc9a4;background:#fffaf1;}
+@media(max-width:639px){.institution-section{padding:22px 16px;}.institution-grid{grid-template-columns:1fr;}.institution-card{min-height:0;}}
 /* Google 評價 */
 .reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px;}
 .rcard{background:var(--white,#fff);border:1px solid var(--line);border-radius:16px;padding:22px 20px;margin:0;text-align:left;box-shadow:0 6px 20px rgba(59,47,39,.05);display:flex;flex-direction:column;}
@@ -685,6 +703,8 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
 #boardPreview{max-width:180px;border-radius:12px;margin:0 auto;border:1px solid var(--line);}
 .board-list{margin-top:32px;display:grid;grid-template-columns:1fr;gap:15px;text-align:left;}
 @media(min-width:640px){.board-list{grid-template-columns:1fr 1fr;}}
+@media(min-width:1000px){.board-list{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:639px){.wall-tools .cta,.wall-search{width:100%;}.wall-tools .cta{justify-content:center;}}
 .bpost{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 17px;box-shadow:0 8px 26px -22px rgba(70,52,34,.5);animation:candleIn .4s ease;}
 .bpost img{width:100%;max-height:260px;object-fit:cover;border-radius:10px;margin-bottom:10px;display:block;}
 .bp-name{font-family:var(--serif);font-weight:600;color:var(--ink);font-size:.95rem;}

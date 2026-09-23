@@ -13,6 +13,29 @@
   var list = document.getElementById("boardList");
   if (!list) return;
 
+  var formToggle = document.getElementById("storyFormToggle");
+  var storyForm = document.getElementById("storyForm");
+  if (formToggle && storyForm) {
+    formToggle.setAttribute("aria-expanded", "false");
+    formToggle.addEventListener("click", function () {
+      var opening = storyForm.hidden;
+      storyForm.hidden = !opening;
+      formToggle.setAttribute("aria-expanded", opening ? "true" : "false");
+      formToggle.querySelector(".arw").textContent = opening ? "−" : "＋";
+      if (opening) storyForm.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  var boardSearch = document.getElementById("boardSearch");
+  if (boardSearch) {
+    boardSearch.addEventListener("input", function () {
+      var query = boardSearch.value.trim().toLocaleLowerCase();
+      list.querySelectorAll(".mstory").forEach(function (story) {
+        story.hidden = !!query && story.textContent.toLocaleLowerCase().indexOf(query) === -1;
+      });
+    });
+  }
+
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];

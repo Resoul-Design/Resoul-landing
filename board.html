@@ -81,14 +81,15 @@
     <div class="wrap">
       <p class="eyebrow reveal">分享頁</p>
       <h2 class="reveal">讓牠的故事，<br>繼續被記得。</h2>
-      <p class="lead reveal" style="margin-top:14px;">主人可選擇以文字、照片或一封短信，記錄毛孩的名字、性格和一起生活的故事。分享可以公開、只限連結瀏覽，或只供自己保存。所有公開內容須經主人同意及審核。</p>
+      <p class="lead reveal" style="margin-top:14px;">以文字、照片或一封短信，記錄毛孩的名字、性格和一起生活的故事。分享可選擇公開或只限連結瀏覽，所有內容均會先經審核。</p>
 
       <!-- 主人故事分享與 Google 評價已分成兩個頁面；此頁為主人故事分享 -->
       <div class="reviews-cta reveal" style="margin-top:22px;justify-content:flex-start;">
         <a class="cta light" href="/reviews">查看 Google 評價 <span class="arw">→</span></a>
       </div>
 
-      <div class="mform reveal" id="storyForm">
+      <div class="wall-tools reveal"><button class="cta" id="storyFormToggle" type="button">建立分享 <span class="arw">＋</span></button><label class="wall-search"><span class="sr-only">搜尋毛孩故事</span><input id="boardSearch" type="search" placeholder="搜尋毛孩名字或故事"><span aria-hidden="true">⌕</span></label></div>
+      <div class="mform reveal" id="storyForm" hidden>
         <div class="mf-row">
           <div class="bf-field"><label for="mPet">毛孩名字</label><input id="mPet" maxlength="40" placeholder="可包括暱稱"></div>
           <div class="bf-field"><label for="mYears">年份／一起生活了多久</label><input id="mYears" maxlength="40" placeholder="例如 2010–2024"></div>
