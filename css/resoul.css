@@ -966,22 +966,6 @@ body.shop-modal-lock #shopOverlay{z-index:1099;}
    信紙 / AI 寫信（情緒支援頁）
    ============================================================ */
 .letter-form{max-width:520px;margin:26px auto 0;}
-.letter-form .lf-save{
-  width:100%;
-  max-width:520px;
-  margin:6px auto 0;
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-  gap:10px;
-  color:var(--ink-soft);
-  font-size:.82rem;
-  line-height:1.75;
-  text-align:left;
-  cursor:pointer;
-}
-.letter-form .lf-save input{width:auto;flex:0 0 auto;margin:5px 0 0;padding:0;}
-.letter-form .lf-save span{display:block;max-width:430px;min-width:0;white-space:normal;word-break:normal;overflow-wrap:break-word;}
 .letter-sheet{background:#fbf7ef;border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);
   max-width:640px;margin:30px auto 0;padding:46px 44px 0;position:relative;overflow:hidden;}
 .letter-sheet .ls-head{text-align:center;margin-bottom:18px;}
@@ -1258,6 +1242,8 @@ h3{font-size:1.02rem;}
 .ls-pager button{appearance:none;cursor:pointer;font:inherit;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 13px;color:var(--ink-soft);transition:background .15s,color .15s,border-color .15s;}
 .ls-pager button:hover:not(:disabled){border-color:var(--gold);color:var(--gold-deep);}
 .ls-pager button:disabled{opacity:.4;cursor:default;}
+/* 寫信：請求進行中或已達使用上限時停用的 AI 按鈕 */
+.letter-actions .cta:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none;}
 
 /* D10 — 安排預約接送：以彈窗（新視窗）形式開啟 */
 .order-modal{position:fixed;inset:0;z-index:120;display:none;}
@@ -1351,18 +1337,18 @@ body.om-lock{overflow:hidden;}
     position:fixed;inset:0;z-index:48;width:100%;
     background:var(--bg);
     display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;
-    gap:2px;padding:var(--mobile-nav-top,130px) 24px calc(40px + env(safe-area-inset-bottom));overflow-y:auto;
+    gap:0;padding:var(--mobile-nav-top,96px) 24px calc(12px + env(safe-area-inset-bottom));overflow:hidden;
     transform:translateX(100%);transition:transform .28s ease;
   }
   .site-header.nav-open .nav{transform:none;}
-  .nav .nav-group,.nav .nav-group:nth-of-type(2){position:static;display:flex;flex:0 0 auto;flex-direction:column;align-items:stretch;width:100%;gap:0;margin-bottom:12px;order:0;}
+  .nav .nav-group,.nav .nav-group:nth-of-type(2){position:static;display:flex;flex:0 0 auto;flex-direction:column;align-items:stretch;width:100%;gap:0;margin-bottom:6px;order:0;}
   .nav .nav-group:nth-of-type(2){order:-1;}          /* 服務組先（延續手機次序） */
-  .nav-top,.nav .nav-group:nth-of-type(2) .nav-top{display:block;pointer-events:none;cursor:default;color:var(--gold-deep);font-weight:600;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;border:none;padding:6px 4px 4px;text-align:left;}
+  .nav-top,.nav .nav-group:nth-of-type(2) .nav-top{display:block;pointer-events:none;cursor:default;color:var(--gold-deep);font-weight:600;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;border:none;padding:4px;text-align:left;}
   .nav-caret{display:none;}
   .nav-menu,.nav-group.open .nav-menu,.nav .nav-group:nth-of-type(2) .nav-menu{position:static;display:flex !important;flex:0 0 auto;flex-direction:column;align-items:stretch;gap:0;background:transparent;border:none;box-shadow:none;padding:0;width:100%;min-width:0;}
-  .nav-menu a,.nav .nav-group:nth-of-type(2) .nav-menu a{display:flex;flex:0 0 auto;align-items:center;min-height:48px;padding:11px 6px;font-size:1.02rem;border-bottom:1px solid var(--line);border-radius:0;white-space:normal;letter-spacing:.02em;}
-  .nav-single{display:flex;flex:0 0 auto;align-items:center;min-height:48px;padding:11px 6px;font-size:1.02rem;border-bottom:1px solid var(--line);}
-  .nav-lang{align-self:flex-start;margin-top:16px;border:1px solid var(--line);border-radius:999px;min-height:40px;padding:6px 18px;}
+  .nav-menu a,.nav .nav-group:nth-of-type(2) .nav-menu a{display:flex;flex:0 0 auto;align-items:center;min-height:40px;padding:8px 6px;font-size:.96rem;border-bottom:1px solid var(--line);border-radius:0;white-space:normal;letter-spacing:.02em;}
+  .nav-single{display:flex;flex:0 0 auto;align-items:center;min-height:40px;padding:8px 6px;font-size:.96rem;border-bottom:1px solid var(--line);}
+  .nav-lang{align-self:flex-start;margin-top:8px;border:1px solid var(--line);border-radius:999px;min-height:36px;padding:5px 16px;}
   body.nav-lock{overflow:hidden;}
   body.nav-lock .fab,body.nav-lock .uctrl,body.nav-lock .to-top,body.nav-lock .mobile-cta{display:none !important;}
 

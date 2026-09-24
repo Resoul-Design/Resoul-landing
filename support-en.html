@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/resoul.css?v=20260920-letterpaper-print-clear">
+<link rel="stylesheet" href="css/resoul.css?v=20260924-letter-revise">
 <link rel="canonical" href="https://resoul-landing-beta.vercel.app/support-en">
 <link rel="alternate" hreflang="zh-Hant" href="https://resoul-landing-beta.vercel.app/support">
 <link rel="alternate" hreflang="en" href="https://resoul-landing-beta.vercel.app/support-en">
@@ -236,7 +236,7 @@
           <div class="faq2">
             <div class="faq2-item"><button class="faq2-q" type="button" aria-expanded="false"><span class="faq2-ic" aria-hidden="true">＋</span><span class="faq2-qt">Should I get another pet?</span></button><div class="faq2-a"><p>This decision has no timetable and no right or wrong. Consider it slowly when you're ready; a new companion won't replace them — it's simply the start of another story.</p></div></div>
             <div class="faq2-item"><button class="faq2-q" type="button" aria-expanded="false"><span class="faq2-ic" aria-hidden="true">＋</span><span class="faq2-qt">How can I explain this to my child?</span></button><div class="faq2-a"><p>Use simple, honest words, and allow them to be sad and to ask questions. Remembering the happy moments together helps everyone slowly come to terms with it.</p></div></div>
-            <div class="faq2-item"><button class="faq2-q" type="button" aria-expanded="false"><span class="faq2-ic" aria-hidden="true">＋</span><span class="faq2-qt">This sadness has lasted a long time — do I need professional help?</span></button><div class="faq2-a"><p>Seeking professional help doesn't mean something is "wrong" with you; it means you're willing to care for yourself. If the sadness lasts a long time and affects daily life, contact the Mental Health Association of HK (2528 0196) or The Samaritans 24-hour hotline (2389 2222).</p></div></div>
+            <div class="faq2-item"><button class="faq2-q" type="button" aria-expanded="false"><span class="faq2-ic" aria-hidden="true">＋</span><span class="faq2-qt">This sadness has lasted a long time — do I need professional help?</span></button><div class="faq2-a"><p>Seeking professional help doesn't mean something is "wrong" with you; it means you're willing to care for yourself. If the sadness lasts a long time and affects daily life, contact the Mental Health Association of HK (2528 0196) or The Samaritan Befrienders Hong Kong 24-hour hotline (2389 2222).</p></div></div>
           </div>
         </div>
       </div>
@@ -296,7 +296,7 @@
     <h3 id="smTitle" class="sm-title">If you feel you can't hold on</h3>
     <p class="sm-lead">You don't have to carry it alone. Talking to someone or seeking professional support are both good ways to care for yourself. Here are some places you can reach out to:</p>
     <div class="sm-list">
-      <a href="tel:23892222"><b>The Samaritans (24 hours)</b><span>2389 2222</span></a>
+      <a href="tel:23892222"><b>The Samaritan Befrienders Hong Kong (24 hours)</b><span>2389 2222</span></a>
       <a href="tel:25280196"><b>The Mental Health Association of HK</b><span>2528 0196</span></a>
       <a href="tel:21776168"><b>Evermind Psychological Services</b><span>2177 6168</span></a>
       <a href="tel:27111000"><b>SPCA Hong Kong</b><span>2711 1000</span></a>
@@ -341,13 +341,9 @@
         <div id="lfSelf" hidden>
           <div class="bf-field"><label for="lfOwn">What you'd like to say to them</label><textarea id="lfOwn" rows="7" placeholder="Take your time and write your own words…"></textarea></div>
         </div>
-        <label class="lf-save">
-          <input type="checkbox" id="lfSave">
-          <span>Keep this letter in this browser (stored only on your device, so you can return to it; clear anytime).</span>
-        </label>
         <button type="submit" class="cta book-submit" id="lfBtn">Help me start this letter <span class="arw">→</span></button>
         <button type="button" class="cta book-submit" id="lfSelfBtn" hidden>Put it on the letter <span class="arw">→</span></button>
-        <p class="book-note">What you enter is used only to draft this letter and is not stored on our servers; unless you tick the box above, nothing is kept after you leave the page. This is AI-assisted writing, <b>not psychotherapy or professional counselling</b>; if grief keeps affecting daily life, please seek professional help.</p>
+        <p class="book-note">What you enter is used only to draft this letter and is not stored on our servers; nothing is kept after you leave the page. This is AI-assisted writing, <b>not psychotherapy or professional counselling</b>; if grief keeps affecting daily life, please seek professional help.</p>
         <div class="book-msg" id="lfMsg" role="status" aria-live="polite" hidden></div>
       </form>
       <div class="letter-sheet empty" id="letterSheet" data-paper="room">
@@ -376,21 +372,34 @@
 <script>
 // AI letter: submit → /api/write-letter → show on the letter sheet → print
 (function(){
+  var S={
+    fallbackName:'them', needInput:'Please add at least your pet’s name or one memory.', writing:'Writing…',
+    failed:'Sorry, we couldn’t generate it just now. Please try again, or write what you’d like to say.', network:'Network seems unstable. Please try again.', limited:'You’ve reached this hour’s limit for AI writing. Please try again in about an hour. You can still download or print this letter, or choose “Write it myself”.',
+    needOwn:'Please write a few words first.', needLetter:'Please create a letter first.', memPrompt:'Add a memory or something you’d like to say:', memSep:'; '
+  };
   var f=document.getElementById('letterForm'); if(!f) return;
   var body=document.getElementById('lsBody'), sheet=document.getElementById('letterSheet');
   var actions=document.getElementById('letterActions'), btn=document.getElementById('lfBtn'), msg=document.getElementById('lfMsg');
-  var saveEl=document.getElementById('lfSave');
-  var STORE='resoul_letter_en', lastLetter='';
+  var laTone=document.getElementById('laTone'), laShort=document.getElementById('laShort'), laMemory=document.getElementById('laMemory'), laDl=document.getElementById('laDownload'), laPrint=document.getElementById('laPrint');
+  var aiBtns=[laTone,laShort,laMemory];
+  var lastLetter='', busy=false, rateLimited=false;
+  // 信件不再保存於瀏覽器；清除舊版曾保存的內容
+  try{ localStorage.removeItem('resoul_letter'); localStorage.removeItem('resoul_letter_en'); }catch(e){}
   function v(id){var e=document.getElementById(id);return e?e.value.trim():'';}
   function show(k,t){if(!msg)return;msg.className='book-msg '+k;msg.textContent=t;msg.hidden=false;}
+  // 修改信件時把提示移到按鈕下方，避免提示出現在畫面外；生成新信時放回表單
+  var msgHome=msg?msg.parentNode:null, msgNext=msg?msg.nextSibling:null;
+  function placeMsg(nearActions){ if(!msg||!actions||!msgHome) return; if(nearActions){ actions.parentNode.insertBefore(msg, actions.nextSibling); } else { msgHome.insertBefore(msg, msgNext); } }
   var nameEl=document.getElementById('lfName'), titleEl=document.getElementById('lmName');
-  function syncName(){ if(titleEl) titleEl.textContent=(nameEl&&nameEl.value.trim())||'them'; }
+  function syncName(){ if(titleEl) titleEl.textContent=(nameEl&&nameEl.value.trim())||S.fallbackName; }
   if(nameEl) nameEl.addEventListener('input',syncName);
-  // Mode: AI help / write it myself
+  // 模式：AI 協助／自己寫
   var aiWrap=document.getElementById('lfAi'), selfWrap=document.getElementById('lfSelf'), selfBtn=document.getElementById('lfSelfBtn');
   var mAi=document.getElementById('lfModeAi'), mSelf=document.getElementById('lfModeSelf');
   function aiOn(){ return aiWrap && !aiWrap.hidden; }
-  function toggleAiActions(){ Array.prototype.forEach.call(document.querySelectorAll('#letterActions [data-ai]'),function(b){ b.style.display=aiOn()?'':'none'; }); }
+  function toggleAiActions(){ aiBtns.forEach(function(b){ if(b) b.style.display=aiOn()?'':'none'; }); }
+  // 請求進行中或已達使用上限（伺服器回 429）時，停用「修改語氣／縮短／加入回憶」
+  function syncAiButtons(){ aiBtns.forEach(function(b){ if(b) b.disabled=busy||rateLimited; }); if(btn) btn.disabled=busy; }
   function setMode(ai){
     if(aiWrap)aiWrap.hidden=!ai; if(selfWrap)selfWrap.hidden=ai;
     if(btn)btn.hidden=!ai; if(selfBtn)selfBtn.hidden=ai;
@@ -400,11 +409,7 @@
   if(mAi)mAi.addEventListener('click',function(){setMode(true);});
   if(mSelf)mSelf.addEventListener('click',function(){setMode(false);});
 
-  // Private save (this browser only, owner's choice)
-  function persist(){ try{ if(saveEl&&saveEl.checked&&lastLetter){ localStorage.setItem(STORE,lastLetter); } else { localStorage.removeItem(STORE); } }catch(e){} }
-  if(saveEl) saveEl.addEventListener('change',persist);
-
-  // ---- Letter pagination (about one A4 per page; smaller font; keeps text within the sheet) ----
+  // ---- 信紙分頁（每頁約一版 A4；字體較細；避免超出信紙）----
   var lsPager=document.getElementById('lsPager'), lsPrev=document.getElementById('lsPrev'), lsNext=document.getElementById('lsNext'), lsInfo=document.getElementById('lsPageInfo');
   var pages=[''], curPage=0;
   function usableHeight(){ var w=body.clientWidth||480; return Math.max(360, Math.round(w*(297/210)*0.82)); }
@@ -417,6 +422,7 @@
     probe.style.lineHeight=cs.lineHeight; probe.style.letterSpacing=cs.letterSpacing;
     document.body.appendChild(probe);
     var maxH=usableHeight();
+    // 先按段落，再把過長段落按句子切細（避免無斷點）
     var units=[]; text.split(/\n{2,}/).forEach(function(b,i){
       if(i>0) units.push('\n\n');
       if(b.length<=80){ units.push(b); }
@@ -437,51 +443,75 @@
   if(lsPrev)lsPrev.addEventListener('click',function(){ showPage(curPage-1); });
   if(lsNext)lsNext.addEventListener('click',function(){ showPage(curPage+1); });
 
-  function renderLetter(text,noScroll){
+  function renderLetter(text){
     lastLetter=String(text||'').trim();
-    sheet.classList.remove('empty'); actions.hidden=false; toggleAiActions(); persist();
+    sheet.classList.remove('empty'); actions.hidden=false; toggleAiActions(); syncAiButtons();
     pages=splitPages(lastLetter); showPage(0);
-    if(!noScroll){ try{sheet.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){} }
+    try{sheet.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}
   }
+  // 列印：先展開全文（分頁只影響畫面，列印用 A4 自然分頁），列印後還原分頁檢視
   window.addEventListener('beforeprint',function(){ if(lastLetter){ body.textContent=lastLetter; if(lsPager)lsPager.classList.remove('on'); } });
   window.addEventListener('afterprint',function(){ if(pages.length){ showPage(curPage); } });
 
-  function generate(opts){
-    opts=opts||{};
-    if(!v('lfName') && !v('lfMemory')){show('err','Please add at least your pet’s name or one memory.');return;}
-    var old=btn.innerHTML; btn.disabled=true; btn.innerHTML='Writing…'; if(msg)msg.hidden=true;
-    var payload={petName:v('lfName'),years:v('lfYears'),trait:v('lfTrait'),memory:v('lfMemory'),thanks:v('lfThanks'),sorry:v('lfSorry'),tone:opts.tone||v('lfTone'),lang:v('lfLang')};
-    if(opts.adjust) payload.adjust=opts.adjust;
+  function cleanLetter(t){ return String(t||'').replace(/^\s*[（(]?\s*(約|approx\.?)?\s*\d+\s*(字|個字|characters?|words?)\s*[）)]?\s*/i,'').trim(); }
+  // 送出請求：成功時先執行 onOk 再顯示信件；伺服器回 429 即標記已達使用上限
+  function request(payload,onOk){
+    placeMsg(!!payload.current);
+    if(rateLimited){ show('err',S.limited); return; }
+    if(busy) return;
+    busy=true; syncAiButtons(); var old=btn.innerHTML; btn.innerHTML=S.writing; if(msg)msg.hidden=true;
     fetch('/api/write-letter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
-    .then(function(r){return r.json().then(function(d){return {ok:r.ok,d:d};});})
+    .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return {status:r.status,ok:r.ok,d:d}; }); })
     .then(function(x){
-      if(x.ok && x.d && x.d.letter){ var L=String(x.d.letter).replace(/^\s*[（(]?\s*(約|approx\.?)?\s*\d+\s*(字|個字|characters?|words?)\s*[）)]?\s*/i,'').trim(); renderLetter(L); }
-      else { show('err','Sorry, we couldn’t generate it just now. Please try again, or write what you’d like to say.'); }
-    }).catch(function(){ show('err','Network seems unstable. Please try again.'); })
-    .then(function(){ btn.disabled=false; btn.innerHTML=old; });
+      if(x.status===429){ rateLimited=true; show('err',S.limited); return; }
+      if(x.ok && x.d && x.d.letter){ if(onOk) onOk(); renderLetter(cleanLetter(x.d.letter)); }
+      else { show('err',S.failed); }
+    }).catch(function(){ show('err',S.network); })
+    .then(function(){ busy=false; btn.innerHTML=old; syncAiButtons(); });
+  }
+  function formPayload(){ return {petName:v('lfName'),years:v('lfYears'),trait:v('lfTrait'),memory:v('lfMemory'),thanks:v('lfThanks'),sorry:v('lfSorry'),tone:v('lfTone'),lang:v('lfLang')}; }
+  // 生成一封新信
+  function generate(){
+    if(!v('lfName') && !v('lfMemory')){show('err',S.needInput);return;}
+    request(formPayload());
+  }
+  // 修改現有信件：附上原信，伺服器只按要求調整
+  function revise(adjust,extra,onOk){
+    if(!lastLetter){ show('err',S.needLetter); return; }
+    var p=formPayload(); p.adjust=adjust; p.current=lastLetter;
+    if(extra){ for(var k in extra){ p[k]=extra[k]; } }
+    request(p,onOk);
   }
   f.addEventListener('submit',function(e){ e.preventDefault(); generate(); });
-  if(selfBtn)selfBtn.addEventListener('click',function(){ var t=v('lfOwn'); if(!t){show('err','Please write a few words first.');return;} renderLetter(t); });
+  if(selfBtn)selfBtn.addEventListener('click',function(){ var t=v('lfOwn'); if(!t){show('err',S.needOwn);return;} renderLetter(t); });
 
-  // Output options: adjust tone / shorten / add a memory / download / print
-  var TONES=['溫柔','平靜','像日常對話'];
-  var laTone=document.getElementById('laTone'), laShort=document.getElementById('laShort'), laMemory=document.getElementById('laMemory'), laDl=document.getElementById('laDownload'), laPrint=document.getElementById('laPrint');
-  if(laTone) laTone.addEventListener('click',function(){ var sel=document.getElementById('lfTone'); var i=TONES.indexOf(sel.value); var next=TONES[(i+1)%TONES.length]; sel.value=next; generate({tone:next}); });
-  if(laShort) laShort.addEventListener('click',function(){ generate({adjust:'shorten'}); });
-  if(laMemory) laMemory.addEventListener('click',function(){ var m=window.prompt('Add a memory or something you’d like to say:'); if(m&&m.trim()){ var mem=document.getElementById('lfMemory'); if(mem) mem.value=(mem.value?mem.value+'; ':'')+m.trim(); generate(); } });
+  // 輸出後選項：修改語氣／縮短／加入回憶（均修改現有信件）／下載／列印
+  if(laTone) laTone.addEventListener('click',function(){
+    var sel=document.getElementById('lfTone'); if(!sel||!sel.options.length) return;
+    var vals=Array.prototype.map.call(sel.options,function(o){ return o.value; });
+    var next=vals[(vals.indexOf(sel.value)+1)%vals.length];
+    revise('tone',{tone:next},function(){ sel.value=next; });
+  });
+  if(laShort) laShort.addEventListener('click',function(){ revise('shorten'); });
+  if(laMemory) laMemory.addEventListener('click',function(){
+    if(rateLimited){ placeMsg(true); show('err',S.limited); return; }
+    var m=window.prompt(S.memPrompt); if(!m||!m.trim()) return; var add=m.trim();
+    revise('memory',{addMemory:add},function(){ var mem=document.getElementById('lfMemory'); if(mem) mem.value=(mem.value?mem.value+S.memSep:'')+add; });
+  });
   if(laDl) laDl.addEventListener('click',function(){ var name=(v('lfName')||'letter'); var blob=new Blob([lastLetter||body.textContent||''],{type:'text/plain;charset=utf-8'}); var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='RESOUL_letter_to_'+name+'.txt'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },120); });
   if(laPrint) laPrint.addEventListener('click',function(){ window.print(); });
 
-  var papers=document.querySelectorAll('.paper-chip'), sheetEl=document.getElementById('letterSheet');
-  papers.forEach(function(c){ c.addEventListener('click',function(){ if(sheetEl) sheetEl.setAttribute('data-paper', c.getAttribute('data-paper')); papers.forEach(function(x){ x.classList.toggle('active', x===c); }); }); });
+  // 信紙款式
+  var papers=document.querySelectorAll('.paper-chip');
+  papers.forEach(function(c){ c.addEventListener('click',function(){ sheet.setAttribute('data-paper', c.getAttribute('data-paper')); papers.forEach(function(x){ x.classList.toggle('active', x===c); }); }); });
 
+  // 彈窗開／關
   var modal=document.getElementById('letterModal');
   function openM(){ modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('lm-lock'); }
   function closeM(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); document.body.classList.remove('lm-lock'); }
   document.querySelectorAll('[data-open-letter]').forEach(function(b){ b.addEventListener('click',function(e){ e.preventDefault(); openM(); }); });
   modal && modal.querySelectorAll('[data-lclose]').forEach(function(b){ b.addEventListener('click',closeM); });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape' && modal.classList.contains('open')) closeM(); });
-  try{ var saved=localStorage.getItem(STORE); if(saved){ if(saveEl)saveEl.checked=true; renderLetter(saved,true); } }catch(e){}
 })();
 </script>
 <script src="js/resoul.js" defer></script>

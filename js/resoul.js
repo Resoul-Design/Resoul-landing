@@ -79,7 +79,7 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
       + "I hear how hard this is right now, and thank you for saying it. You are not alone — I'm here with you."
       + '<div class="blk">📞 Please reach out now</div>'
       + "If you're having thoughts of harming yourself, please contact a 24-hour hotline right away — professionals there can help you now:"
-      + '<div class="hot">・The Samaritans (24 h): 2389 2222</div>'
+      + '<div class="hot">・The Samaritan Befrienders Hong Kong (24 h): 2389 2222</div>'
       + '<div class="hot">・Hospital Authority Mental Health Line: 2466 7350</div>'
       + '<div class="hot">・TWGHs CEASE Crisis Centre: 18281</div>'
       + 'If it is urgent or there is immediate danger, please call 999 right away.'
@@ -89,7 +89,7 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
       + '我聽到你而家好辛苦，多謝你願意講出嚟。你並唔孤單，我會喺度陪你。'
       + '<div class="blk">📞 請即刻搵人幫手</div>'
       + '如果你有啲想法會傷害自己，請即刻聯絡以下 24 小時專線，佢哋有專業人士可以即刻幫到你：'
-      + '<div class="hot">・撒瑪利亞會（24 小時）：2389 2222</div>'
+      + '<div class="hot">・撒瑪利亞防止自殺會（24 小時）：2389 2222</div>'
       + '<div class="hot">・醫院管理局精神健康專線：2466 7350</div>'
       + '<div class="hot">・東華三院芷若園：18281</div>'
       + '如果情況緊急、有即時危險，請即刻致電 999。'
@@ -165,7 +165,7 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
 
   // 轉介選項（依手冊，溫和）
   function referralNote(){
-    return '<div class="disc">' + RL('如果呢種難受持續咗好耐、影響到日常生活，搵專業傾下唔代表你「有問題」，而係願意好好照顧自己。可以聯絡 <b>香港心理衞生會 2528 0196</b>，或 <b>撒瑪利亞會（24 小時）2389 2222</b>。', "If this pain lasts a long time and affects daily life, talking to a professional doesn't mean something is \"wrong\" with you — it means you're willing to care for yourself. You can contact <b>The Mental Health Association of HK 2528 0196</b>, or <b>The Samaritans (24 h) 2389 2222</b>.") + '</div>';
+    return '<div class="disc">' + RL('如果呢種難受持續咗好耐、影響到日常生活，搵專業傾下唔代表你「有問題」，而係願意好好照顧自己。可以聯絡 <b>香港心理衞生會 2528 0196</b>，或 <b>撒瑪利亞防止自殺會（24 小時）2389 2222</b>。', "If this pain lasts a long time and affects daily life, talking to a professional doesn't mean something is \"wrong\" with you — it means you're willing to care for yourself. You can contact <b>The Mental Health Association of HK 2528 0196</b>, or <b>The Samaritan Befrienders Hong Kong (24 h) 2389 2222</b>.") + '</div>';
   }
 
   function respond(t){
