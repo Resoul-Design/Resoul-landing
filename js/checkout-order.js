@@ -11,6 +11,9 @@
     invoice: "Invoice number",
     payment: "Payment reference",
     projectLabel: "Existing project number (optional for returning clients)",
+    projectMismatch: "We could not match that project number with this phone number. Check both details or leave the project number blank to start a new project.",
+    lookupFailed: "We could not verify that project right now. Please try again shortly.",
+    alreadyPaid: "This booking deposit is already marked as paid. Please contact us if you need help.",
     confirmTitle: "Please confirm your booking details",
     confirmLead: "Check your details before continuing to secure payment.",
     edit: "Edit details",
@@ -44,6 +47,9 @@
     invoice: "發票編號",
     payment: "付款參考",
     projectLabel: "已有專案編號（回訪客戶可選填）",
+    projectMismatch: "找不到與此電話相符的專案編號，請檢查專案編號及電話；如屬新專案，請留空。",
+    lookupFailed: "暫時未能核實專案，請稍後再試。",
+    alreadyPaid: "此預約訂金已確認付款，請勿重複付款。如需協助，請聯絡我們。",
     confirmTitle: "確認預約資料",
     confirmLead: "請確認以下資料無誤，再前往安全付款頁。",
     edit: "返回修改",
@@ -83,6 +89,7 @@
   var confirmButton = document.getElementById("orderConfirmBtn");
   var editButton = document.getElementById("orderEditBtn");
   var pending = null;
+  var generatedProjectNo = "";
 
   function value(id) {
     var field = document.getElementById(id);
@@ -137,6 +144,19 @@
     );
     confirmModal.classList.add("open");
     confirmModal.setAttribute("aria-hidden", "false");
+  }
+
+  function verifyReturningProject(projectNumber) {
+    return fetch("/api/project-lookup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ project_no: projectNumber, contact: value("ofPhone") })
+    }).then(function (response) {
+      if (!response.ok) throw new Error("Project lookup failed");
+      return response.json();
+    }).then(function (result) {
+      if (!result || result.exists !== true) throw new Error("Project does not match");
+    });
   }
 
   function closeConfirmation() {
@@ -221,9 +241,27 @@
       return;
     }
     var projectField = document.getElementById("ofProject");
-    var projectNumber = enteredProject || makeProjectNumber();
+    var isExistingProject = Boolean(enteredProject && enteredProject !== generatedProjectNo);
+    var projectNumber = enteredProject;
+    if (!projectNumber) {
+      projectNumber = makeProjectNumber();
+      generatedProjectNo = projectNumber;
+    }
     projectField.value = projectNumber;
-    openConfirmation({ projectNumber: projectNumber, paymentRef: paymentReference() });
+    var continueToConfirmation = function () {
+      openConfirmation({ projectNumber: projectNumber, paymentRef: paymentReference() });
+    };
+    if (!isExistingProject) {
+      continueToConfirmation();
+      return;
+    }
+    submitButton.disabled = true;
+    show("ok", copy.loading);
+    verifyReturningProject(projectNumber).then(continueToConfirmation).catch(function (error) {
+      show("err", error.message === "Project does not match" ? copy.projectMismatch : copy.lookupFailed);
+    }).finally(function () {
+      submitButton.disabled = false;
+    });
   });
 
   editButton.addEventListener("click", closeConfirmation);
@@ -270,10 +308,23 @@
       body: JSON.stringify(payload)
     }).then(function (response) {
       if (!response.ok) throw new Error("Booking save failed");
+      return response.json();
+    }).then(function (result) {
+      if (result.already_paid) {
+        show("ok", copy.alreadyPaid);
+        submitButton.disabled = false;
+        confirmButton.disabled = false;
+        submitButton.innerHTML = oldSubmit;
+        confirmButton.innerHTML = oldConfirm;
+        pending = null;
+        return null;
+      }
       return findDepositVariant();
     }).then(function (variant) {
+      if (!variant) return null;
       return createCart(variant, data);
     }).then(function (checkoutUrl) {
+      if (!checkoutUrl) return;
       show("ok", copy.success);
       window.location.assign(checkoutUrl);
     }).catch(function (error) {

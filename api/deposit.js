@@ -35,12 +35,55 @@ module.exports = async (req, res) => {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!sbUrl || !serviceKey) return res.status(503).json({ error: "server_not_configured" });
 
-  const response = await fetch(sbUrl + "/rest/v1/deposit_bookings", {
+  const base = sbUrl.replace(/\/+$/, "") + "/rest/v1/deposit_bookings";
+  const headers = { apikey: serviceKey, Authorization: "Bearer " + serviceKey };
+  async function findExisting() {
+    const query = new URLSearchParams({
+      select: "project_no,contact,payment_status",
+      payment_ref: "eq." + paymentRef,
+      limit: "1",
+    });
+    const result = await fetch(base + "?" + query, { headers });
+    if (!result.ok) throw new Error("deposit_lookup_failed");
+    const rows = await result.json();
+    return Array.isArray(rows) ? rows[0] || null : null;
+  }
+  function sameAttempt(existing) {
+    const digits = (value) => String(value || "").replace(/\D/g, "").slice(-8);
+    return existing &&
+      String(existing.project_no || "").toUpperCase() === projectNo &&
+      digits(existing.contact) && digits(existing.contact) === digits(contact);
+  }
+  function duplicateResponse(existing) {
+    if (!sameAttempt(existing)) return res.status(409).json({ error: "payment_ref_conflict" });
+    return res.status(200).json({ ok: true, reused: true, already_paid: existing.payment_status === "paid" });
+  }
+
+  try {
+    const existing = await findExisting();
+    if (existing) return duplicateResponse(existing);
+  } catch (error) {
+    console.error("[Resoul] deposit retry lookup failed");
+    return res.status(503).json({ error: "deposit_lookup_failed" });
+  }
+
+  const response = await fetch(base, {
     method: "POST",
-    headers: { apikey: serviceKey, Authorization: "Bearer " + serviceKey, "Content-Type": "application/json", Prefer: "return=minimal" },
+    headers: { ...headers, "Content-Type": "application/json", Prefer: "return=minimal" },
     body: JSON.stringify(full),
   });
   if (!response.ok) {
+    let detail = null;
+    try { detail = await response.json(); } catch (error) {}
+    if (detail && detail.code === "23505") {
+      try {
+        const existing = await findExisting();
+        if (existing) return duplicateResponse(existing);
+      } catch (error) {
+        console.error("[Resoul] deposit retry lookup failed");
+        return res.status(503).json({ error: "deposit_lookup_failed" });
+      }
+    }
     console.error("[Resoul] deposit store failed");
     return res.status(502).json({ error: "deposit_store_failed" });
   }
