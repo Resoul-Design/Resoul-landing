@@ -1440,7 +1440,8 @@ body.om-lock{overflow:hidden;}
 
 /* Cremation page visual system: shared treatment for ZH and EN. */
 .cremation .cremation-slogan{margin:12px 0 0;}
-.cremation .cremation-lead{max-width:680px;margin:18px auto 0;color:var(--ink-soft);}
+.cremation .cremation-copy{width:min(100%, 860px);margin:22px auto 0;color:var(--ink-soft);text-align:left;line-height:1.9;}
+.cremation .cremation-copy + .cremation-copy{margin-top:18px;}
 .cremation .services-grid{align-items:stretch;}
 .cremation .scard{min-height:176px;height:100%;border-radius:var(--radius);box-shadow:var(--shadow);}
 .cremation-figure,.seaview-img{border-radius:var(--radius);box-shadow:var(--shadow);}
@@ -1467,7 +1468,8 @@ body.om-lock{overflow:hidden;}
 .mobile-cta{box-sizing:border-box;}
 
 @media(max-width:819px){
-  .cremation .cremation-lead{margin-top:14px;}
+  .cremation .cremation-copy{margin-top:18px;line-height:1.8;}
+  .cremation .cremation-copy + .cremation-copy{margin-top:14px;}
   .cremation .cremation-points{margin-top:20px;}
   .cremation .scard{min-height:0;padding:20px 18px;}
   .cremation-figure{margin-top:24px;}
