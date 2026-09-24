@@ -608,6 +608,25 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
     btn.setAttribute('aria-controls', nav.id);
     btn.innerHTML='<span class="nt-bar"></span><span class="nt-bar"></span><span class="nt-bar"></span>';
     inner.appendChild(btn);
+    // iOS Safari 唔理 body{overflow:hidden}：打開選單時改用 position:fixed 鎖定背後頁面，
+    // 令導覽抽屜同背後內容都唔會捲動；關閉時還原原本捲動位置。
+    var lockedY=0;
+    function lockScroll(lock){
+      var bs=document.body.style;
+      if(lock){
+        if(bs.position==='fixed') return;
+        lockedY=window.scrollY||window.pageYOffset||0;
+        bs.position='fixed'; bs.top=(-lockedY)+'px'; bs.left='0'; bs.right='0'; bs.width='100%';
+      }else{
+        if(bs.position!=='fixed') return;
+        bs.position=''; bs.top=''; bs.left=''; bs.right=''; bs.width='';
+        // html 設有 scroll-behavior:smooth；還原時暫時改 auto，避免由頁頂慢慢捲返落去
+        var hs=document.documentElement.style, prev=hs.scrollBehavior;
+        hs.scrollBehavior='auto';
+        window.scrollTo(0,lockedY);
+        hs.scrollBehavior=prev;
+      }
+    }
     function setNav(open){
       if(open){
         var headerBottom=Math.ceil(header.getBoundingClientRect().bottom);
@@ -615,6 +634,7 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
       }
       header.classList.toggle('nav-open', open);
       document.body.classList.toggle('nav-lock', open);
+      lockScroll(open);
       btn.setAttribute('aria-expanded', open?'true':'false');
     }
     btn.addEventListener('click', function(){ setNav(!header.classList.contains('nav-open')); });

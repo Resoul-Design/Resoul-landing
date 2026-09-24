@@ -138,9 +138,13 @@ section{padding:64px 0;}
 .step h3{font-size:1.12rem;margin:6px 0 10px;}
 .step p{color:var(--ink-soft);font-size:.96rem;}
 /* journey path styling */
-.steps.journey .step{position:relative;}
+.steps.journey .step{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:14px;}
 .steps.journey .num{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--gold);background:var(--card);
-  display:inline-flex;align-items:center;justify-content:center;font-size:1.02rem;margin-bottom:8px;letter-spacing:.02em;}
+  display:inline-flex;align-items:center;justify-content:center;font-size:1.02rem;margin-bottom:0;letter-spacing:.02em;}
+/* 數字圓圈與標題同一行，說明文字在下方跨滿 */
+.steps.journey .step>.num{grid-column:1;grid-row:1;}
+.steps.journey .step>h3{grid-column:2;grid-row:1;margin:0;}
+.steps.journey .step>p{grid-column:1 / -1;margin-top:12px;}
 .steps.journey .step:not(:last-child)::after{content:"↓";position:absolute;bottom:-19px;left:50%;transform:translateX(-50%);
   color:var(--gold);font-size:1.1rem;line-height:1;opacity:.6;pointer-events:none;}
 @media(min-width:560px){
@@ -1322,7 +1326,7 @@ body.om-lock{overflow:hidden;}
   /* 6 — Header：只留 logo + 漢堡；收起桌面導覽（抽屜） */
   /* backdrop-filter 會令 fixed 子元素以 header 作 containing block，導致抽屜被裁成 header 高度 */
   .site-header{background:var(--bg);backdrop-filter:none;-webkit-backdrop-filter:none;}
-  .site-header.nav-open{z-index:100;}
+  .site-header.nav-open{z-index:100;position:fixed;top:0;left:0;right:0;}  /* body 鎖定時保持 logo 與 × 在頂部 */
   .header-inner{position:relative;z-index:49;flex-direction:row;align-items:center;justify-content:space-between;gap:10px;padding:8px 20px;background:var(--bg);border-bottom:1px solid var(--line);}
   .brand{position:relative;z-index:50;flex-direction:row;align-items:center;gap:9px;}
   .brand img{height:30px;}
@@ -1340,7 +1344,7 @@ body.om-lock{overflow:hidden;}
     gap:0;padding:var(--mobile-nav-top,96px) 24px calc(12px + env(safe-area-inset-bottom));overflow:hidden;
     transform:translateX(100%);transition:transform .28s ease;
   }
-  .site-header.nav-open .nav{transform:none;}
+  .site-header.nav-open .nav{transform:none;overscroll-behavior:contain;touch-action:none;}
   .nav .nav-group,.nav .nav-group:nth-of-type(2){position:static;display:flex;flex:0 0 auto;flex-direction:column;align-items:stretch;width:100%;gap:0;margin-bottom:6px;order:0;}
   .nav .nav-group:nth-of-type(2){order:-1;}          /* 服務組先（延續手機次序） */
   .nav-top,.nav .nav-group:nth-of-type(2) .nav-top{display:block;pointer-events:none;cursor:default;color:var(--gold-deep);font-weight:600;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;border:none;padding:4px;text-align:left;}
@@ -1351,6 +1355,12 @@ body.om-lock{overflow:hidden;}
   .nav-lang{align-self:flex-start;margin-top:8px;border:1px solid var(--line);border-radius:999px;min-height:36px;padding:5px 16px;}
   body.nav-lock{overflow:hidden;}
   body.nav-lock .fab,body.nav-lock .uctrl,body.nav-lock .to-top,body.nav-lock .mobile-cta{display:none !important;}
+  /* 導覽抽屜不捲動：矮屏手機自動收窄行距，確保全部項目一屏內顯示 */
+  @media(max-height:700px){
+    .nav-menu a,.nav .nav-group:nth-of-type(2) .nav-menu a,.nav-single{min-height:34px;padding:5px 6px;font-size:.92rem;}
+    .nav-top,.nav .nav-group:nth-of-type(2) .nav-top{padding:2px 4px;}
+    .nav-lang{margin-top:4px;min-height:32px;padding:3px 14px;}
+  }
 
   /* 8 — 首屏：只留一個主 CTA（隱藏次要 CTA） */
   .hero .cta.light{display:none;}
