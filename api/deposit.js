@@ -9,13 +9,15 @@ module.exports = async (req, res) => {
   const ownerName = clean(body.owner_name, 100);
   const contact = clean(body.contact, 40);
   const paymentRef = clean(body.payment_ref, 60);
-  if (!ownerName || !contact || !paymentRef) return res.status(400).json({ error: "missing_fields" });
+  const projectNo = clean(body.project_no, 40).toUpperCase();
+  if (!ownerName || !contact || !paymentRef || !/^RSL-[A-Z0-9]+-[A-Z0-9]+$/.test(projectNo)) return res.status(400).json({ error: "missing_or_invalid_fields" });
 
   const date = clean(body.service_date, 10);
   const amount = Number(body.payment_amount);
   const full = {
     owner_name: ownerName,
     contact,
+    project_no: projectNo,
     pet_name: clean(body.pet_name, 100) || null,
     pet_type: clean(body.pet_type, 80) || null,
     service_date: /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null,

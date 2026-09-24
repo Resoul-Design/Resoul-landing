@@ -12,25 +12,27 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/resoul.css">
-<link rel="canonical" href="https://resoul-landing-beta.vercel.app/booking">
-<link rel="alternate" hreflang="zh-Hant" href="https://resoul-landing-beta.vercel.app/booking">
-<link rel="alternate" hreflang="en" href="https://resoul-landing-beta.vercel.app/booking-en">
-<link rel="alternate" hreflang="x-default" href="https://resoul-landing-beta.vercel.app/booking">
+<link rel="canonical" href="https://resoul.hk/booking">
+<link rel="alternate" hreflang="zh-Hant" href="https://resoul.hk/booking">
+<link rel="alternate" hreflang="en" href="https://resoul.hk/booking-en">
+<link rel="alternate" hreflang="x-default" href="https://resoul.hk/booking">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:site_name" content="RESOUL">
-<meta property="og:title" content="善終旅程｜Resoul">
-<meta property="og:description" content="RESOUL 香港寵物火化與善終旅程：私人接送、告別儀式、個別火化、海景紀念室、骨灰及紀念安排，可網上預約即時付款。">
+<meta property="og:title" content="安排預約接送｜Resoul">
+<meta property="og:description" content="繳付 HK$1,800 預約接送訂金；專人會在 24 小時內聯絡確認。緊急接送請致電 +852 6476 2951。">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://resoul-landing-beta.vercel.app/cremation">
+<meta property="og:url" content="https://resoul.hk/booking">
 <meta property="og:locale" content="zh_HK">
 <meta property="og:image" content="https://resoul-landing-beta.vercel.app/images/og-cover.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="善終旅程｜Resoul">
-<meta name="twitter:description" content="RESOUL 香港寵物火化與善終旅程：私人接送、告別儀式、個別火化、海景紀念室、骨灰及紀念安排，可網上預約即時付款。">
+<meta name="twitter:title" content="安排預約接送｜Resoul">
+<meta name="twitter:description" content="繳付 HK$1,800 預約接送訂金；專人會在 24 小時內聯絡確認。緊急接送請致電 +852 6476 2951。">
 <meta name="twitter:image" content="https://resoul-landing-beta.vercel.app/images/og-cover.jpg">
+<script type="application/ld+json" id="pageStructuredData">{"@context":"https://schema.org","@type":"WebPage","@id":"https://resoul.hk/booking#webpage","url":"https://resoul.hk/booking","name":"安排預約接送｜Resoul","inLanguage":"zh-Hant"}</script>
+<script src="js/site-meta.js" defer></script>
 </head>
 <body class="booking-page">
 <a class="skip-link" href="#top">跳至主要內容</a>
@@ -259,36 +261,10 @@
     <div class="wrap">
       <p class="eyebrow reveal">安排預約接送</p>
       <h2 class="reveal">填一份簡單問卷，<br>安排預約接送。</h2>
-      <p class="lead reveal" style="margin-top:12px;">留下聯絡與毛孩資料並繳付 <b>HK$1,800 預約接送訂金</b>，專人會在 24 小時內聯絡你確認安排。其後可憑專案編號或發票編號向我們查詢；如需緊急接送，請立即致電 <a href="tel:+85264762951">+852 6476 2951</a>。</p>
+      <p class="lead reveal" style="margin-top:12px;">留下聯絡與毛孩資料並繳付 <b>HK$1,800 預約接送訂金</b>，專人會在 24 小時內聯絡你確認安排。日後查詢可提供專案編號（RSL-…）或 Shopify 發票編號（#RS-…）；付款參考（PAY-…）只用於付款核對。如需緊急接送，請立即致電 <a href="tel:+85264762951">+852 6476 2951</a>。</p>
       <form class="book-form reveal" id="orderForm" style="margin-top:24px;">
-        <!-- 「選擇旅程／體重」步驟：第二個客戶預約站可重用；現時先隱藏（JS: JOURNEY_SELECT=false）。請勿刪除。 -->
-        <div id="journeySelect" hidden>
-          <div class="bf-field">
-            <label for="ofPlan">選擇旅程</label>
-            <select id="ofPlan">
-              <option value="">請選擇…</option>
-              <option value="breeze">風之旅 Breeze（簡約）</option>
-              <option value="cloud">雲之旅 Cloud（完整儀式）</option>
-              <option value="star">星之旅 Star（深度個人化）</option>
-            </select>
-          </div>
-          <div class="bf-field">
-            <label for="ofWeight">毛孩體重</label>
-            <select id="ofWeight">
-              <option value="">請選擇…</option>
-              <option value="0">&lt; 1 kg</option>
-              <option value="1">1.1–5 kg</option>
-              <option value="2">5.1–10 kg</option>
-              <option value="3">10.1–15 kg</option>
-              <option value="4">15.1–20 kg</option>
-              <option value="5">20.1–30 kg</option>
-              <option value="6">30.1–40 kg</option>
-              <option value="7">40.1–50 kg</option>
-            </select>
-          </div>
-        </div>
         <div id="ofPrice" aria-live="polite" style="text-align:center;font-family:var(--serif);font-size:1.3rem;color:var(--ink);margin:6px 0 4px;">接送訂金 HK$1,800</div>
-        <div class="bf-field"><label for="ofProject">已有專案編號（回訪客戶可選填）</label><input id="ofProject" placeholder="例如 RSL-260922-Y0IR"></div>
+        <div class="bf-field"><label for="ofProject">已有專案編號（回訪客戶可選填）</label><input id="ofProject" autocomplete="off" placeholder="例如 RSL-260922-Y0IR"></div>
         <div class="bf-field"><label for="ofPet">毛孩名字</label><input id="ofPet" placeholder="可包括暱稱"></div>
         <div class="bf-field"><label for="ofName">主人稱呼 <span class="req">*</span></label><input id="ofName" required placeholder="怎麼稱呼你"></div>
         <div class="bf-field"><label for="ofPhone">聯絡電話 / WhatsApp <span class="req">*</span></label><input id="ofPhone" type="tel" required placeholder="例如 9xxx xxxx"></div>
@@ -314,85 +290,6 @@
       </div>
     </div>
   </div>
-
-  <hr class="divider" id="bookingDivider" style="display:none">
-
-  <section class="booking" id="booking" style="display:none">
-    <div class="wrap">
-      <p class="eyebrow reveal">網上預約</p>
-      <h2 class="reveal">預約火化服務</h2>
-      <p class="lead reveal" style="margin-top:12px;text-align:center;">填好以下資料，按「送出預約」，我們會盡快與你聯絡，溫柔安排每一步。</p>
-
-      <form class="book-form reveal" id="bookForm">
-        <div class="bf-field">
-          <label for="bkName">主人稱呼 <span class="req">*</span></label>
-          <input id="bkName" name="name" required placeholder="怎麼稱呼你">
-        </div>
-        <div class="bf-field">
-          <label for="bkPhone">聯絡電話 / WhatsApp <span class="req">*</span></label>
-          <input id="bkPhone" name="phone" type="tel" required placeholder="例如 9xxx xxxx">
-        </div>
-        <div class="bf-field">
-          <label for="bkPet">寵物類型</label>
-          <select id="bkPet" name="pet">
-            <option value="貓">貓</option>
-            <option value="狗">狗</option>
-            <option value="兔">兔</option>
-            <option value="倉鼠">倉鼠</option>
-            <option value="鳥">鳥</option>
-            <option value="其他">其他</option>
-          </select>
-        </div>
-        <div class="bf-field">
-          <label for="bkPlan">火化方案</label>
-          <select id="bkPlan" name="plan">
-            <option value="未決定／想先了解">未決定／想先了解</option>
-            <option value="風之旅">風之旅（$1,800 起）</option>
-            <option value="雲之旅">雲之旅（$2,800 起）</option>
-            <option value="星之旅">星之旅（$3,800 起）</option>
-          </select>
-        </div>
-        <div class="bf-field">
-          <label for="bkWeight">寵物體重（約，方便估算）</label>
-          <input id="bkWeight" name="weight" placeholder="例如 5 kg（可留空）">
-        </div>
-        <div class="bf-field">
-          <label for="bkPlace">接送地點</label>
-          <input id="bkPlace" name="place" placeholder="住址或獸醫診所（可留空）">
-        </div>
-        <div class="bf-field">
-          <label for="bkSituation">目前情況</label>
-          <select id="bkSituation" name="situation">
-            <option value="寵物已離世，需盡快接送">寵物已離世，需盡快接送</option>
-            <option value="預先了解與安排">預先了解與安排</option>
-            <option value="其他">其他</option>
-          </select>
-        </div>
-        <div class="bf-field">
-          <label for="bkDate">希望日期</label>
-          <input id="bkDate" name="date" type="date">
-        </div>
-        <div class="bf-field">
-          <label for="bkTime">希望時段</label>
-          <select id="bkTime" name="time">
-            <option value="">未定 / 待聯絡</option>
-            <option value="上午（09:00–12:00）">上午（09:00–12:00）</option>
-            <option value="下午（12:00–17:00）">下午（12:00–17:00）</option>
-            <option value="傍晚至晚上（17:00–21:00）">傍晚至晚上（17:00–21:00）</option>
-          </select>
-        </div>
-        <div class="bf-field">
-          <label for="bkNote">想我們知道的事</label>
-          <textarea id="bkNote" name="note" rows="3" placeholder="任何特別安排或心願（可留空）"></textarea>
-        </div>
-        <button type="submit" class="cta book-submit">送出預約 <span class="arw">→</span></button>
-        <p class="book-note">送出後我們會盡快與你聯絡，確認接送與火化安排。你的資料只用於處理此預約。</p>
-        <div class="book-msg" id="bookMsg" role="status" aria-live="polite" hidden></div>
-      </form>
-
-      <div class="book-urgent reveal">🕊️ <b>緊急個案</b>：如寵物剛離世、需要即時接送，歡迎直接 <a href="https://wa.me/85264762951" target="_blank" rel="noopener">WhatsApp 我們（24 小時待命）</a>。</div>
-    </div>
-  </section>
 
   <hr class="divider">
 
@@ -497,7 +394,7 @@
 <div class="confirm-modal" id="orderConfirm" aria-hidden="true">
   <div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="orderConfirmTitle">
     <h3 id="orderConfirmTitle">確認預約資料</h3>
-    <p class="book-note" style="margin-top:0;">請確認以下資料無誤，再前往安全付款頁。</p>
+    <p class="book-note" style="margin-top:0;">請確認專案編號、付款參考及以下資料無誤，再前往安全付款頁。</p>
     <div class="confirm-list" id="orderConfirmList"></div>
     <div class="confirm-actions">
       <button type="button" class="cta light" id="orderEditBtn">返回修改</button>
@@ -506,73 +403,7 @@
   </div>
 </div>
 
-<script>
-// 火化問卷 → Shopify 結帳（答案帶入訂單 line item）+ Supabase 記錄
-(function(){
-  var f=document.getElementById('orderForm'); if(!f) return;
-  // 功能旗標：現時「安排預約接送」只收 HK$1,800 訂金，唔需要「選擇旅程」步驟。
-  // 第二個客戶預約站可將 JOURNEY_SELECT 設為 true，即恢復選擇旅程／體重（HTML #journeySelect 亦會顯示）。
-  var JOURNEY_SELECT=false;
-  var DEPOSIT={id:"49929174221028",price:1800,label:"預約接送訂金"}; // Shopify variant：預約接送訂金｜安排預約接送
-  var jsel=document.getElementById('journeySelect'); if(jsel) jsel.hidden=!JOURNEY_SELECT;
-  // 「安排預約接送」以彈窗（新視窗）形式開啟
-  var oc=document.getElementById('orderCta'), oj=document.getElementById('orderJump'), omodal=document.getElementById('orderModal');
-  function openOrder(e){ if(e)e.preventDefault(); if(!omodal)return; omodal.classList.add('open'); omodal.setAttribute('aria-hidden','false'); document.body.classList.add('om-lock'); var sc=omodal.querySelector('.om-scroll'); if(sc)sc.scrollTop=0; }
-  function closeOrder(){ if(!omodal)return; omodal.classList.remove('open'); omodal.setAttribute('aria-hidden','true'); document.body.classList.remove('om-lock'); }
-  if(oc)oc.addEventListener('click',openOrder);
-  if(oj)oj.addEventListener('click',openOrder);
-  if(omodal){ Array.prototype.forEach.call(omodal.querySelectorAll('[data-oclose]'),function(b){ b.addEventListener('click',closeOrder); }); }
-  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && omodal && omodal.classList.contains('open')) closeOrder(); });
-  var SF_ENDPOINT="https://qs1nmv-b3.myshopify.com/api/2026-01/graphql.json";
-  var SF_TOKEN="90f06d055534783ae5a7ad3f0f1e5004";
-  var WEIGHTS=["< 1 kg","1.1–5 kg","5.1–10 kg","10.1–15 kg","15.1–20 kg","20.1–30 kg","30.1–40 kg","40.1–50 kg"];
-  var PLANS={
-    breeze:{name:"風之旅 Breeze",v:[["49803969691876",1800],["49803969724644",2600],["49803969757412",2800],["49803969790180",3000],["49803969822948",3200],["49803969855716",3500],["49803969888484",4500],["49803969921252",4800]]},
-    cloud:{name:"雲之旅 Cloud",v:[["49803970576612",2800],["49803970609380",3600],["49803970642148",3800],["49803970674916",4000],["49803970707684",4200],["49803970740452",4500],["49803970773220",5500],["49803970805988",5800]]},
-    star:{name:"星之旅 Star",v:[["49803971887332",3800],["49803971920100",4600],["49803971952868",4800],["49803971985636",5000],["49803972018404",5200],["49803972051172",5500],["49803972083940",6500],["49803972116708",6800]]}
-  };
-  var planEl=document.getElementById('ofPlan'),wEl=document.getElementById('ofWeight'),priceEl=document.getElementById('ofPrice'),btn=document.getElementById('ofBtn'),msg=document.getElementById('ofMsg');
-  function v(id){var e=document.getElementById(id);return e?e.value.trim():'';}
-  // 選擇旅程／體重（保留供將來重用）
-  function sel(){if(!planEl||!wEl)return null;var p=PLANS[planEl.value],wi=wEl.value;if(p&&wi!==''){var pr=p.v[+wi][1];if(priceEl)priceEl.textContent=p.name+" · "+WEIGHTS[+wi]+" — HK$"+pr.toLocaleString();return{id:p.v[+wi][0],price:pr,plan:p.name,weight:WEIGHTS[+wi]};}if(priceEl)priceEl.textContent="請選擇旅程與體重";return null;}
-  if(JOURNEY_SELECT&&planEl&&wEl){planEl.addEventListener('change',sel);wEl.addEventListener('change',sel);}
-  // 目前流程：固定訂金
-  function currentSel(){ if(JOURNEY_SELECT) return sel(); return {id:DEPOSIT.id,price:DEPOSIT.price,plan:DEPOSIT.label,weight:'—',deposit:true}; }
-  function show(k,t){if(!msg)return;msg.className='book-msg '+k;msg.textContent=t;msg.hidden=false;}
-  function saveDraft(o){try{localStorage.setItem('resoul:lastCremationBooking',JSON.stringify(Object.assign({saved_at:new Date().toISOString()},o)));}catch(e){}}
-  function clearDraft(){try{localStorage.removeItem('resoul:lastCremationBooking');}catch(e){}}
-  function store(o,dep){var ep=dep?'/api/deposit':'/api/order';return fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)}).then(function(res){if(!res.ok){return res.text().then(function(t){throw new Error('API HTTP '+res.status+': '+t);});}});}
-  function ref(){return 'PAY-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8).toUpperCase();}
-  function ensureProject(){var p=v('ofProject');if(!p){var d=new Date(),ymd=String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0'),bytes=new Uint8Array(5);crypto.getRandomValues(bytes);p='RSL-'+ymd+'-'+Array.from(bytes,function(x){return x.toString(36).padStart(2,'0');}).join('').slice(0,8).toUpperCase();}var el=document.getElementById('ofProject');if(el)el.value=p;return p;}
-  var pending=null,modal=document.getElementById('orderConfirm'),list=document.getElementById('orderConfirmList'),edit=document.getElementById('orderEditBtn'),confirm=document.getElementById('orderConfirmBtn');
-  function close(){if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}}
-  function row(k,v){return '<div class="confirm-row"><span>'+k+'</span><span>'+(v||'—')+'</span></div>';}
-  function openConfirm(data){pending=data;if(list){var s=data.s;var head=s.deposit?(row('項目','預約接送訂金')+row('訂金','HK$'+s.price.toLocaleString())):(row('旅程',s.plan)+row('體重',s.weight)+row('金額','HK$'+s.price.toLocaleString()));list.innerHTML=head+row('已有專案編號',v('ofProject'))+row('毛孩名字',v('ofPet'))+row('主人稱呼',v('ofName'))+row('聯絡電話',v('ofPhone'))+row('希望日期',v('ofDate'))+row('希望時段',v('ofTime'))+row('接送地址',v('ofAddr'))+row('備註',v('ofNote'));}if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');}}
-  if(edit)edit.addEventListener('click',close);
-  if(modal)modal.addEventListener('click',function(e){if(e.target===modal)close();});
-  f.addEventListener('submit',function(e){e.preventDefault();var s=currentSel();if(!s){show('err','請先選擇旅程與毛孩體重。');return;}if(!v('ofName')||!v('ofPhone')){show('err','請填主人稱呼及聯絡電話。');return;}openConfirm({s:s,paymentRef:ref(),projectRef:ensureProject()});});
-  if(confirm)confirm.addEventListener('click',function(){
-    if(!pending)return;
-    var s=pending.s,dep=!!s.deposit,paymentRef=pending.paymentRef,old=btn.innerHTML,oldConfirm=confirm.innerHTML;
-    close();btn.disabled=true;confirm.disabled=true;btn.innerHTML='處理中…';confirm.innerHTML='處理中…';if(msg)msg.hidden=true;
-    var attrs=[{key:"payment_ref",value:paymentRef}];
-    if(v('ofProject'))attrs.push({key:"專案編號 Project no.",value:v('ofProject')});
-    if(dep){attrs.push({key:"項目",value:"預約接送訂金"},{key:"訂金",value:"HK$"+s.price});}
-    else{attrs.push({key:"旅程",value:s.plan},{key:"體重",value:s.weight});}
-    attrs.push({key:"毛孩名字",value:v('ofPet')||'-'},{key:"主人稱呼",value:v('ofName')},{key:"聯絡電話",value:v('ofPhone')},{key:"希望日期",value:v('ofDate')||'-'},{key:"希望時段",value:v('ofTime')||'-'},{key:"接送地址",value:v('ofAddr')||'-'},{key:"備註",value:v('ofNote')||'-'});
-    var q='mutation cc($lines:[CartLineInput!]!,$attrs:[AttributeInput!]!){cartCreate(input:{lines:$lines,attributes:$attrs}){cart{checkoutUrl}userErrors{message}}}';
-    var noteHead=dep?'預約接送訂金':'付款問卷';
-    var base={owner_name:v('ofName'),contact:v('ofPhone'),plan:s.plan,pet_name:v('ofPet')||null,pet_type:null,service_date:v('ofDate')||null,service_time:v('ofTime')||null,pickup_address:v('ofAddr')||null,notes:noteHead+'｜Ref:'+paymentRef+'｜專案編號：'+(v('ofProject')||'新專案')+'｜'+s.plan+(dep?'':'｜'+s.weight)+'｜HK$'+s.price+'｜希望時段：'+(v('ofTime')||'—')+'｜毛孩名字：'+(v('ofPet')||'—')+'｜備註：'+(v('ofNote')||'—'),source:dep?'web:cremation-deposit':'web:cremation-order'};
-    var payload=Object.assign({},base,{payment_ref:paymentRef,payment_status:'pending',payment_amount:s.price,payment_currency:'HKD'});
-    saveDraft(payload);
-    store(payload,dep)
-    .then(function(){return fetch(SF_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','X-Shopify-Storefront-Access-Token':SF_TOKEN},body:JSON.stringify({query:q,variables:{lines:[{merchandiseId:"gid://shopify/ProductVariant/"+s.id,quantity:1,attributes:attrs}],attrs:[{key:"payment_ref",value:paymentRef},{key:"預約來源",value:dep?"網站安排預約接送":"網站火化問卷"}]}})});})
-    .then(function(r){return r.json();})
-    .then(function(d){var c=d&&d.data&&d.data.cartCreate;var url=c&&c.cart&&c.cart.checkoutUrl;if(url){clearDraft();show('ok','已收到資料，正在前往付款頁…');window.location.href=url;}else{show('err','已暫存你的預約資料，但暫時未能建立付款。請稍後再試或 WhatsApp 我們，並提供 Ref：'+paymentRef);btn.disabled=false;btn.innerHTML=old;confirm.disabled=false;confirm.innerHTML=oldConfirm;}})
-    .catch(function(err){console.error('[Resoul] 安排預約接送送出失敗：',err);show('err','暫時未能完成送出，資料已暫存在此裝置。請稍後再試或 WhatsApp 我們，並提供 Ref：'+paymentRef);btn.disabled=false;btn.innerHTML=old;confirm.disabled=false;confirm.innerHTML=oldConfirm;});
-  });
-})();
-</script>
+<script src="js/checkout-order.js" defer></script>
 <script src="js/resoul.js" defer></script>
 </body>
 </html>

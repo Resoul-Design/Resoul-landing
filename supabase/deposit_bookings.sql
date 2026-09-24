@@ -12,6 +12,7 @@ create table if not exists public.deposit_bookings (
   created_at       timestamptz not null    default now(),
   owner_name       text        not null,
   contact          text        not null,
+  project_no       text,
   pet_name         text,
   pet_type         text,
   plan             text,                               -- 目前固定為「預約接送訂金」
@@ -33,6 +34,9 @@ create table if not exists public.deposit_bookings (
   shopify_order_name text,
   paid_at          timestamptz
 );
+
+alter table public.deposit_bookings
+  add column if not exists project_no text;
 
 create unique index if not exists deposit_payment_ref_idx
   on public.deposit_bookings (payment_ref)
