@@ -1451,3 +1451,47 @@ body.om-lock{overflow:hidden;}
   .uctrl{bottom:calc(14px + env(safe-area-inset-bottom));}
   .widget{bottom:calc(14px + env(safe-area-inset-bottom));height:min(78vh,600px);}
 }
+
+/* Cremation page visual system: shared treatment for ZH and EN. */
+.cremation .cremation-slogan{margin:12px 0 0;}
+.cremation .cremation-lead{max-width:680px;margin:18px auto 0;color:var(--ink-soft);}
+.cremation .services-grid{align-items:stretch;}
+.cremation .scard{min-height:176px;height:100%;border-radius:var(--radius);box-shadow:var(--shadow);}
+.cremation-figure,.seaview-img{border-radius:var(--radius);box-shadow:var(--shadow);}
+.cremation-figure{margin-top:32px;}
+.cremation-figure img{aspect-ratio:16/10;object-fit:cover;}
+.seaview-img img{aspect-ratio:4/3;object-fit:cover;}
+.cremation .plans-lead{max-width:620px;margin:14px auto 0;text-align:center;color:var(--ink-soft);}
+.plans-scroll{border:1px solid var(--line);border-radius:var(--radius);overflow-x:auto;background:var(--cream);box-shadow:var(--shadow);}
+.plans-table{background:var(--cream);}
+.plans-table th,.plans-table td{border-color:var(--line);color:var(--ink-soft);}
+.plans-table thead th{color:var(--ink);}
+.plans-table tfoot .price-row td{color:var(--gold-deep);border-top-color:var(--gold);font-size:.98rem;}
+.plans-table tfoot .price-row td:first-child{color:var(--ink-soft);}
+.weight-title{margin:36px 0 4px;text-align:center;font-weight:600;}
+.notes-lead{margin:16px 0 0;color:var(--ink-soft);}
+.notes-grid{margin-top:24px;}
+.prep-card{margin-top:24px;padding:24px 22px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow);text-align:left;}
+.prep-card>.eyebrow{margin-bottom:10px;}
+.prep-note{margin:0;text-align:left;color:var(--ink-soft);}
+.jump-nav a.jump-wa{color:var(--ink-soft);border-color:var(--line);background:var(--card);}
+.jump-nav a.jump-wa:hover,.jump-nav a.jump-wa:focus{color:var(--gold-deep);border-color:var(--gold);background:var(--cream);}
+.contact-card .mc-tel{background:transparent;color:var(--ink);border:1px solid var(--line);}
+.contact-card .mc-tel:hover,.contact-card .mc-tel:focus{border-color:var(--gold);background:var(--cream);}
+.mobile-cta{box-sizing:border-box;}
+
+@media(max-width:819px){
+  .cremation .cremation-lead{margin-top:14px;}
+  .cremation .cremation-points{margin-top:20px;}
+  .cremation .scard{min-height:0;padding:20px 18px;}
+  .cremation-figure{margin-top:24px;}
+  .plans-scroll{margin-top:20px;}
+  .plans-table th,.plans-table td{padding:10px 5px;font-size:.76rem;}
+  .plans-table thead th{font-size:.82rem;}
+  .plans-table tfoot .price-row td{font-size:.84rem;}
+  .weight-title{margin-top:28px;}
+  .prep-card{padding:20px 18px;}
+  .jump-nav{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .jump-nav a{overflow-wrap:anywhere;}
+  .contact-card .mc-wa,.contact-card .mc-tel{min-height:48px;}
+}

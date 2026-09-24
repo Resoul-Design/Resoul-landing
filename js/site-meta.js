@@ -11,7 +11,11 @@
   var localized = routes[path];
   if (!localized) return;
 
-  fetch("/api/site-config").then(function (response) {
+  fetch("/api/site-config", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{}"
+  }).then(function (response) {
     if (!response.ok) throw new Error("Site URL configuration unavailable");
     return response.json();
   }).then(function (config) {

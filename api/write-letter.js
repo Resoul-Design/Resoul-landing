@@ -75,7 +75,7 @@ module.exports = async (req, res) => {
   try {
     r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
   } catch (e) { res.status(502).json({ error: "upstream_unreachable" }); return; }
-  if (!r.ok) { const detail = (await r.text().catch(() => "")).slice(0, 300); res.status(502).json({ error: "gemini_error", detail }); return; }
+  if (!r.ok) { res.status(502).json({ error: "gemini_error" }); return; }
 
   let data;
   try { data = await r.json(); } catch (e) { res.status(502).json({ error: "bad_response" }); return; }

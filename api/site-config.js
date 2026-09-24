@@ -1,4 +1,8 @@
+const { requireAllowedOrigin } = require("./_security");
+
 module.exports = (req, res) => {
+  if (!requireAllowedOrigin(req, res)) return;
+  if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
   const previewUrl = process.env.VERCEL_ENV && process.env.VERCEL_ENV !== "production" && process.env.VERCEL_URL
     ? "https://" + process.env.VERCEL_URL
     : "https://resoul.hk";

@@ -27,6 +27,7 @@ wrangler secret put GEMINI_API_KEY
 # 提示時貼上你嘅 Gemini key，按 Enter
 wrangler deploy
 ```
+另請以 `wrangler secret put` 設定 `SUPABASE_URL` 和 `SUPABASE_SERVICE_ROLE_KEY`（限流使用 Supabase RPC `consume_api_quota`，須先執行 `supabase/public_api_security.sql`）；聊天 API 沒有持久化限流服務時會拒絕處理。
 部署成功會顯示一個網址，例如：
 ```
 https://resoul-grief-chat.<你的子網域>.workers.dev

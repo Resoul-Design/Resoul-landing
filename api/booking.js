@@ -59,8 +59,10 @@ module.exports = async (req, res) => {
   const contact = clean(body.phone, 40);
   if (!ownerName || !contact) return res.status(400).json({ error: "missing_contact" });
   const date = clean(body.date, 10);
+  const submittedProjectNo = clean(body.projectNo, 40).toUpperCase();
+  const projectNo = /^RSL-[A-Z0-9]+-[A-Z0-9]+$/.test(submittedProjectNo) ? submittedProjectNo : null;
   const booking = {
-    case_no: clean(body.projectNo, 40) || null,
+    case_no: projectNo,
     owner_name: ownerName,
     contact,
     plan: clean(body.plan, 80) || null,

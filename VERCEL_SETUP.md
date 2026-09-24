@@ -24,6 +24,14 @@
 - **Environment**：Production（同 Preview 亦可）
 - **Save**
 
+## 安全設定：Supabase 全域限流
+
+所有公開 POST API 都使用 Supabase RPC `consume_api_quota` 的持久化計數（表 `api_rate_limits`），不依賴 serverless 記憶體，亦毋須另設第三方服務。沿用 Vercel 現有環境變數：
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+請確保已在 Supabase 執行 `supabase/public_api_security.sql`（建立 `consume_api_quota`；可重複執行）。缺少上述設定或函數時，API 會 fail closed（回應 503），不會退回無限流模式。詳見 `SECURITY.md`；部署前亦須在 Supabase 先執行 `supabase/deposit_bookings.sql`（若訂金表尚未建立），再執行 `supabase/api_pii_security.sql`，鎖住預約個人資料表。
+
 ## 步驟 4｜重新部署令 key 生效
 Vercel → **Deployments → 最新一個 → ⋯ → Redeploy**（或者 push 任何 commit 都會自動重新部署）。
 

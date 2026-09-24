@@ -66,29 +66,8 @@ function loadSystemPrompt() {
 
 const SYSTEM_PROMPT = loadSystemPrompt();
 
-/* ---------- 防濫用：per-IP 速率限制（best-effort，記憶體內） ----------
- * 無伺服器環境下每個實例獨立，屬盡力而為的防護；如需嚴格限制可接 Vercel KV / Upstash。 */
-const RATE = { windowMs: 60000, max: 25, burstMs: 10000, burstMax: 8 };
-const hits = new Map(); // ip -> [timestamps]
-function clientIp(req) {
-  const xff = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
-  return xff || (req.socket && req.socket.remoteAddress) || "unknown";
-}
-function rateLimited(ip) {
-  const now = Date.now();
-  let arr = (hits.get(ip) || []).filter((t) => now - t < RATE.windowMs);
-  const burst = arr.filter((t) => now - t < RATE.burstMs).length;
-  if (arr.length >= RATE.max || burst >= RATE.burstMax) { hits.set(ip, arr); return true; }
-  arr.push(now);
-  hits.set(ip, arr);
-  if (hits.size > 5000) { for (const [k, v] of hits) { if (!v.some((t) => now - t < RATE.windowMs)) hits.delete(k); } }
-  return false;
-}
-
 module.exports = async (req, res) => {
   if (!(await guardPublicPost(req, res, { endpoint: "grief-chat", limit: 25, windowSeconds: 3600, maxBytes: 65536 }))) return;
-
-  if (rateLimited(clientIp(req))) { res.status(429).json({ error: "rate_limited" }); return; }
 
   const key = process.env.GEMINI_API_KEY;
   if (!key) { res.status(500).json({ error: "server_not_configured" }); return; }
@@ -134,8 +113,7 @@ module.exports = async (req, res) => {
     return;
   }
   if (!upstream.ok || !upstream.body) {
-    const detail = (await upstream.text().catch(() => "")).slice(0, 400);
-    res.status(502).json({ error: "gemini_error", detail });
+    res.status(502).json({ error: "gemini_error" });
     return;
   }
 

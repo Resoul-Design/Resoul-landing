@@ -51,8 +51,7 @@ module.exports = async (req, res) => {
       response = await insert(base);
     }
     if (!response.ok) {
-      const t = response.bodyUsed ? detail : await response.text();
-      console.error("[Resoul] order store failed " + response.status + ": " + t);
+      console.error("[Resoul] order store failed");
       return res.status(502).json({ error: "order_store_failed" });
     }
   }

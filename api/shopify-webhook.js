@@ -15,6 +15,7 @@
  */
 
 const crypto = require("crypto");
+const { requireAllowedOrigin } = require("./_security");
 
 function readRaw(req) {
   return new Promise((resolve, reject) => {
@@ -26,6 +27,13 @@ function readRaw(req) {
 }
 
 module.exports = async (req, res) => {
+  // Shopify server-to-server webhooks omit Origin and are authenticated by HMAC.
+  // If a browser Origin is present, it must still be one of our trusted sites.
+  if (req.headers.origin && !requireAllowedOrigin(req, res)) return;
+  if (!req.headers.origin && !req.headers["x-shopify-hmac-sha256"]) {
+    res.status(403).json({ error: "invalid_origin" });
+    return;
+  }
   if (req.method !== "POST") { res.status(405).json({ error: "method_not_allowed" }); return; }
 
   const raw = await readRaw(req);
@@ -37,7 +45,11 @@ module.exports = async (req, res) => {
   const digest = crypto.createHmac("sha256", secret).update(raw, "utf8").digest("base64");
   let ok = false;
   try { ok = crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(hmac)); } catch (e) { ok = false; }
-  if (!ok) { res.status(401).json({ error: "invalid_hmac" }); return; }
+  if (!ok) {
+    if (!req.headers.origin) { res.status(403).json({ error: "invalid_origin" }); return; }
+    res.status(401).json({ error: "invalid_hmac" });
+    return;
+  }
 
   // 2) 解析訂單
   let order;
@@ -89,9 +101,8 @@ module.exports = async (req, res) => {
         body: JSON.stringify(patch),
       });
       if (!r.ok) {
-        const t = await r.text();
         // deposit_bookings 尚未建立時會 404/400，可忽略，不阻礙 cremation 更新。
-        console.error("[Resoul] webhook patch " + tbl + " failed " + r.status + ": " + t);
+        console.error("[Resoul] webhook patch failed for " + tbl);
         anyErr = "supabase_error";
       }
     }

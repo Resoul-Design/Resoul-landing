@@ -41,8 +41,7 @@ module.exports = async (req, res) => {
     body: JSON.stringify(full),
   });
   if (!response.ok) {
-    const t = await response.text();
-    console.error("[Resoul] deposit store failed " + response.status + ": " + t);
+    console.error("[Resoul] deposit store failed");
     return res.status(502).json({ error: "deposit_store_failed" });
   }
   return res.status(201).json({ ok: true });
