@@ -208,7 +208,7 @@
             });
           }
         } else {
-          setStatus(L("多謝分享 🤍 經審核後會顯示喺分享頁。", "Thank you for sharing 🤍 it will appear here after review."), true);
+          setStatus(L("多謝分享 🤍 經審核後會在本頁顯示。", "Thank you for sharing 🤍 it will appear here after review."), true);
           if (share) share.hidden = true;
         }
       }).catch(function () {
