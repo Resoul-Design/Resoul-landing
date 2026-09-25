@@ -616,10 +616,12 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
       if(lock){
         if(bs.position==='fixed') return;
         lockedY=window.scrollY||window.pageYOffset||0;
+        document.documentElement.classList.add('nav-locked');   // iOS：停用回彈（overscroll），heading 唔會被拖動
         bs.position='fixed'; bs.top=(-lockedY)+'px'; bs.left='0'; bs.right='0'; bs.width='100%';
       }else{
         if(bs.position!=='fixed') return;
         bs.position=''; bs.top=''; bs.left=''; bs.right=''; bs.width='';
+        document.documentElement.classList.remove('nav-locked');
         // html 設有 scroll-behavior:smooth；還原時暫時改 auto，避免由頁頂慢慢捲返落去
         var hs=document.documentElement.style, prev=hs.scrollBehavior;
         hs.scrollBehavior='auto';
