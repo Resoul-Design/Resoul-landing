@@ -5,9 +5,9 @@ module.exports = (req, res) => {
   if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
   const previewUrl = process.env.VERCEL_ENV && process.env.VERCEL_ENV !== "production" && process.env.VERCEL_URL
     ? "https://" + process.env.VERCEL_URL
-    : "https://resoul.hk";
+    : "https://resoul-landing-beta.vercel.app";
   const configured = (process.env.SITE_URL || previewUrl).trim().replace(/\/+$/, "");
-  let siteUrl = "https://resoul.hk";
+  let siteUrl = "https://resoul-landing-beta.vercel.app";
   try {
     const parsed = new URL(configured);
     if (parsed.protocol === "https:") siteUrl = parsed.origin;

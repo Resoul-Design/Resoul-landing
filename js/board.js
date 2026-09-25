@@ -226,13 +226,15 @@
       var old = letterBtn.innerHTML; letterBtn.disabled = true; letterBtn.innerHTML = L("正在草擬…", "Drafting…");
       fetch("/api/write-letter", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ petName: pet, years: val("mYears"), trait: val("mOne"), memory: story, tone: "溫柔", lang: EN ? "en" : "zh" })
-      }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        body: JSON.stringify({ purpose: "story", petName: pet, years: val("mYears"), trait: val("mOne"), memory: story, tone: "溫柔", lang: EN ? "en" : "zh" })
+      }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
         .then(function (x) {
           if (x.ok && x.d && x.d.letter) {
             var t = String(x.d.letter).replace(/^\s*[（(]?\s*(約|approx\.?)?\s*\d+\s*(字|個字|characters?|words?)\s*[）)]?\s*/i, "").trim();
             var e = document.getElementById("mStory"); if (e) e.value = t;
             setStatus(L("已幫你草擬，可自由修改後再分享。", "Drafted for you — edit freely, then share."), true);
+          } else if (x.status === 429) {
+            setStatus(L("已達本小時 AI 草擬的使用上限，請約一小時後再試，或直接自己寫。", "You’ve reached this hour’s limit for AI drafting. Please try again in about an hour, or write your own."));
           } else {
             setStatus(L("暫時未能草擬，請稍後再試，或直接自己寫。", "Couldn't draft just now — please try again, or write your own."));
           }

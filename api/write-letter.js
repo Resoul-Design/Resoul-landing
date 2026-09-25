@@ -14,15 +14,17 @@ function clean(s, n) { return String(s == null ? "" : s).slice(0, n || 400).trim
 const REVISE_ADJUSTS = new Set(["shorten", "tone", "memory"]);
 
 module.exports = async (req, res) => {
-  // maxBytes 32KB：修改信件時會附上原信（中文 UTF-8 每字 3 bytes）
-  if (!(await guardPublicPost(req, res, { endpoint: "write-letter", limit: 8, windowSeconds: 3600, maxBytes: 32768 }))) return;
-
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) { res.status(500).json({ error: "server_not_configured" }); return; }
-
   let b = req.body;
   if (typeof b === "string") { try { b = JSON.parse(b); } catch (e) { b = {}; } }
   b = b || {};
+
+  // 情緒支援頁寫信（letter）與分享頁草擬故事（story）分開計算限流配額
+  const endpoint = b.purpose === "story" ? "write-story" : "write-letter";
+  // maxBytes 32KB：修改信件時會附上原信（中文 UTF-8 每字 3 bytes）
+  if (!(await guardPublicPost(req, res, { endpoint, limit: 8, windowSeconds: 3600, maxBytes: 32768 }))) return;
+
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) { res.status(500).json({ error: "server_not_configured" }); return; }
 
   const petName = clean(b.petName, 60);
   const years = clean(b.years, 60);

@@ -31,7 +31,6 @@ function response() {
 
 const browserHandlers = [
   ["booking", loadApi("api/booking.js"), "POST"],
-  ["booking-calendar", loadApi("api/booking-calendar.js"), "GET"],
   ["custom-upload", loadApi("api/custom-upload.js"), "POST"],
   ["deposit", loadApi("api/deposit.js"), "POST"],
   ["grief-chat", loadApi("api/grief-chat.js"), "POST"],
@@ -53,7 +52,7 @@ test("all browser API handlers reject untrusted, missing, and null origins first
   }
 });
 
-test("trusted origins reach route validation and the legacy calendar route stays 410", async () => {
+test("trusted origins reach route validation and the site URL defaults to the beta site", async () => {
   const previousFetch = global.fetch;
   const previousUrl = process.env.SUPABASE_URL;
   const previousToken = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -68,7 +67,7 @@ test("trusted origins reach route validation and the legacy calendar route stays
       "https://resoul.hk",
       "https://www.resoul.hk",
     ]) {
-      for (const [name, handler] of browserHandlers.filter(([name]) => !["site-config", "booking-calendar"].includes(name))) {
+      for (const [name, handler] of browserHandlers.filter(([name]) => name !== "site-config")) {
         const res = response();
         await handler({ method: "POST", headers: { origin }, body: {} }, res);
         assert.equal(res.code, 400, `${name} should reach business validation for ${origin}`);
@@ -76,15 +75,8 @@ test("trusted origins reach route validation and the legacy calendar route stays
       const config = response();
       await loadApi("api/site-config.js")({ method: "POST", headers: { origin }, body: {} }, config);
       assert.equal(config.code, 200);
-      assert.ok(config.body.siteUrl);
+      assert.equal(config.body.siteUrl, "https://resoul-landing-beta.vercel.app");
     }
-    const calendar = response();
-    await loadApi("api/booking-calendar.js")(
-      { method: "GET", headers: { origin: "https://resoul.hk" } },
-      calendar
-    );
-    assert.equal(calendar.code, 410);
-    assert.deepEqual(calendar.body, { error: "use_booking_endpoint" });
   } finally {
     global.fetch = previousFetch;
     if (previousUrl === undefined) delete process.env.SUPABASE_URL;

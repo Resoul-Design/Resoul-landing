@@ -310,30 +310,6 @@
     msg.hidden = false;
     try { msg.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
   }
-  // 商戶 Google Calendar（Vercel function，best-effort）
-  function bizCalWrite() {
-    try {
-      fetch('/api/booking-calendar', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'euthanasia', name: v('euName'), phone: v('euPhone'),
-          pet: v('euPet'), place: v('euPlace'), date: v('euDate'),
-          time: v('euTime'), cond: v('euCond')
-        })
-      }).catch(function () {});
-    } catch (e) {}
-  }
-  // 客戶「加入 Google 日曆」預填連結
-  function gcalLink(title, details, ymd) {
-    var u = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
-      + '&text=' + encodeURIComponent(title) + '&details=' + encodeURIComponent(details);
-    if (ymd && /^\d{4}-\d{2}-\d{2}$/.test(ymd)) {
-      var s = ymd.replace(/-/g, '');
-      var d = new Date(ymd + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + 1);
-      u += '&dates=' + s + '/' + d.toISOString().slice(0, 10).replace(/-/g, '');
-    }
-    return u;
-  }
   f.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!v('euName') || !v('euPhone')) { showMsg('err', '請填寫主人稱呼與聯絡電話。'); return; }
@@ -341,12 +317,8 @@
     if (btn) { btn.disabled = true; btn.innerHTML = '提交中…'; }
     if (msg) { msg.hidden = true; }
 
-    // 預先擷取值（reset 後用於客戶日曆連結）
-    var gcName = v('euName'), gcDate = v('euDate'), gcTime = v('euTime');
     var projectNo = ensureProject();
 
-    // 商戶日曆同步（best-effort）
-    bizCalWrite();
 
     // Supabase 為正式預約記錄，以此判斷成功／失敗
     fetch('/api/booking', {

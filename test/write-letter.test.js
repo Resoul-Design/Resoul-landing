@@ -38,8 +38,10 @@ async function callWriteLetter(body, { quotaAllowed = true } = {}) {
     gemini: process.env.GEMINI_API_KEY,
   };
   let prompt = null;
+  let quotaKey = null;
   global.fetch = async (url, options) => {
     if (String(url).includes("/rpc/consume_api_quota")) {
+      quotaKey = JSON.parse(options.body).p_key;
       return { ok: true, json: async () => quotaAllowed };
     }
     prompt = JSON.parse(options.body).contents[0].parts[0].text;
@@ -58,7 +60,7 @@ async function callWriteLetter(body, { quotaAllowed = true } = {}) {
       headers: { origin: "https://resoul-landing-beta.vercel.app" },
       body,
     }, res);
-    return { res, prompt };
+    return { res, prompt, quotaKey };
   } finally {
     global.fetch = saved.fetch;
     for (const [name, value] of [["SUPABASE_URL", saved.url], ["SUPABASE_SERVICE_ROLE_KEY", saved.key], ["GEMINI_API_KEY", saved.gemini]]) {
@@ -116,4 +118,12 @@ test("an exhausted quota returns 429 so the page can disable the AI buttons", as
   assert.equal(res.code, 429);
   assert.deepEqual(res.body, { error: "rate_limited" });
   assert.equal(prompt, null, "Gemini must not be called once rate limited");
+});
+
+test("story drafts on the share page use a separate quota from letters", async () => {
+  const letter = await callWriteLetter({ petName: "豆豆" });
+  assert.match(letter.quotaKey, /^write-letter:[a-f0-9]{64}$/);
+  const story = await callWriteLetter({ purpose: "story", petName: "豆豆" });
+  assert.equal(story.res.code, 200);
+  assert.match(story.quotaKey, /^write-story:[a-f0-9]{64}$/);
 });

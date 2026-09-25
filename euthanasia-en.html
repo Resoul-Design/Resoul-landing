@@ -222,7 +222,7 @@
     <img class="fbrand-img" src="images/resoul-wordmark.png" alt="Resoul">
     <div class="fslogan">Your last greatest love to show</div>
     <div class="fcontact">
-      <span class="fc-item">10 Lei Hing Street, Ap Lei Chau, Hong Kong</span>
+      <span class="fc-item">10 Lee Hing Street, Ap Lei Chau, Hong Kong</span>
       <a class="fc-item" href="tel:+85264762951">+852 6476 2951</a>
       <a class="fc-item" href="mailto:resoulhk@gmail.com">resoulhk@gmail.com</a>
     </div>
@@ -308,30 +308,6 @@
     msg.hidden = false;
     try { msg.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
   }
-  // Business Google Calendar (Vercel function, best-effort)
-  function bizCalWrite() {
-    try {
-      fetch('/api/booking-calendar', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'euthanasia', name: v('euName'), phone: v('euPhone'),
-          pet: v('euPet'), place: v('euPlace'), date: v('euDate'),
-          time: v('euTime'), cond: v('euCond')
-        })
-      }).catch(function () {});
-    } catch (e) {}
-  }
-  // Customer "Add to Google Calendar" prefilled link
-  function gcalLink(title, details, ymd) {
-    var u = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
-      + '&text=' + encodeURIComponent(title) + '&details=' + encodeURIComponent(details);
-    if (ymd && /^\d{4}-\d{2}-\d{2}$/.test(ymd)) {
-      var s = ymd.replace(/-/g, '');
-      var d = new Date(ymd + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + 1);
-      u += '&dates=' + s + '/' + d.toISOString().slice(0, 10).replace(/-/g, '');
-    }
-    return u;
-  }
   f.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!v('euName') || !v('euPhone')) { showMsg('err', 'Please fill in your name and contact number.'); return; }
@@ -339,9 +315,7 @@
     if (btn) { btn.disabled = true; btn.innerHTML = 'Submitting…'; }
     if (msg) { msg.hidden = true; }
 
-    var gcName = v('euName'), gcDate = v('euDate'), gcTime = v('euTime');
     var projectNo = ensureProject();
-    bizCalWrite();
 
     fetch('/api/booking', {
       method: 'POST',
