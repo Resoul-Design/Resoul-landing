@@ -1521,3 +1521,7 @@ body.om-lock{overflow:hidden;}
 @media(max-width:819px){
   .header-inner:not(:has(.nav-toggle))::after{content:"";position:absolute;right:30px;top:29px;width:24px;height:2px;border-radius:2px;background:var(--ink);box-shadow:0 -7px 0 var(--ink),0 7px 0 var(--ink);}
 }
+
+/* 分享頁：「查看 Google 評價」「建立分享」與搜尋同一行；手機兩個按鈕並排、搜尋在下一行 */
+.wall-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+@media(max-width:639px){.wall-actions{width:100%;flex-wrap:nowrap;gap:10px;}.wall-actions .cta{flex:1 1 0;width:auto;min-width:0;padding-left:10px;padding-right:10px;white-space:nowrap;font-size:.88rem;}.wall-actions .cta .arw{display:none;}}
