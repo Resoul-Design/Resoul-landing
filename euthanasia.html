@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#faf6ef">
-<style id="flash-fix">html,body{background:#faf6ef;}</style>
+<style id="flash-fix">html,body{background:#faf6ef;}html[data-theme="dark"],html[data-theme="dark"] body{background:#1f1914;}</style>
+<script>/* 首次繪製前套用深色／安靜模式，避免轉頁時先閃淺色 */try{var d=document.documentElement,t=localStorage.getItem('resoul-theme');if(t)d.setAttribute('data-theme',t);if(localStorage.getItem('resoul-quiet')==='on')d.setAttribute('data-quiet','on');}catch(e){}</script>
 <meta name="description" content="安樂在家（在宅安樂死轉介及善終協調）：RESOUL 提供行政協調及獸醫轉介，協助安排獨立註冊獸醫進行評估，並銜接接送及善終安排。">
 <title>安樂在家・在宅善終協調｜Resoul</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">

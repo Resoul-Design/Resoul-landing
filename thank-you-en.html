@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#faf6ef">
-<style id="flash-fix">html,body{background:#faf6ef;}</style>
+<style id="flash-fix">html,body{background:#faf6ef;}html[data-theme="dark"],html[data-theme="dark"] body{background:#1f1914;}</style>
+<script>/* 首次繪製前套用深色／安靜模式，避免轉頁時先閃淺色 */try{var d=document.documentElement,t=localStorage.getItem('resoul-theme');if(t)d.setAttribute('data-theme',t);if(localStorage.getItem('resoul-quiet')==='on')d.setAttribute('data-quiet','on');}catch(e){}</script>
 <meta name="description" content="RESOUL booking confirmation: we have received your details and will contact you shortly to confirm pickup, cremation and payment arrangements.">
 <title>Booking Received｜Resoul</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">

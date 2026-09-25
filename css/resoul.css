@@ -1505,3 +1505,19 @@ body.om-lock{overflow:hidden;}
   .site-header.nav-open{touch-action:none;}
   html.nav-locked,html.nav-locked body{overscroll-behavior:none;}
 }
+
+/* 轉頁不閃動：同站轉頁時淡入淡出，避免中途出現空白畫面
+   （Chrome／Edge 126+、Safari 18.2+；不支援的瀏覽器照常轉頁）。
+   安靜模式或系統「減少動態效果」時不做動畫。 */
+@view-transition{navigation:auto;}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.2s;}
+:root[data-quiet="on"]::view-transition-group(*),
+:root[data-quiet="on"]::view-transition-old(*),
+:root[data-quiet="on"]::view-transition-new(*){animation:none;}
+@media (prefers-reduced-motion:reduce){
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none;}
+}
+/* 手機：漢堡掣由 resoul.js 注入；注入前先以 CSS 在同一位置畫三條線佔位，避免轉頁時按鈕「彈出」 */
+@media(max-width:819px){
+  .header-inner:not(:has(.nav-toggle))::after{content:"";position:absolute;right:30px;top:29px;width:24px;height:2px;border-radius:2px;background:var(--ink);box-shadow:0 -7px 0 var(--ink),0 7px 0 var(--ink);}
+}
