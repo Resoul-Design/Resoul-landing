@@ -1530,3 +1530,9 @@ body.om-lock{overflow:hidden;}
    避免寫死高度造成空隙（手機）或被 header 遮住（桌面）。 */
 @media(max-width:819px){.jump-nav{top:var(--header-h,48px);}}
 @media(min-width:820px){.jump-nav{top:var(--header-h,85px);}}
+
+/* 桌面：快捷列放在有最大闊度的 <main> 內，底色只蓋中間一段；以陰影把底色及底線延伸至整個畫面闊度，
+   捲動時兩旁顏色一致（陰影不影響版面，不會產生橫向卷軸）。 */
+@media(min-width:820px){
+  .jump-nav{border-bottom:0;box-shadow:0 0 0 100vmax var(--bg),0 1px 0 100vmax var(--line);clip-path:inset(0 -100vmax -1px);}
+}
