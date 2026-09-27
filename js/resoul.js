@@ -355,6 +355,15 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
   supportModal.querySelectorAll('[data-sclose]').forEach(function(x){ x.addEventListener('click', closeSupport); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeSupport(); });
 
+  /* ---- 快捷列緊貼 header：按 header 實際高度設定 --header-h（隨闊度／字型載入變化自動更新） ---- */
+  (function(){
+    var hd=document.querySelector('.site-header');
+    if(!hd || !document.querySelector('.jump-nav')) return;
+    function setH(){ document.documentElement.style.setProperty('--header-h', hd.offsetHeight+'px'); }
+    setH();
+    if(window.ResizeObserver) new ResizeObserver(setH).observe(hd); else window.addEventListener('resize', setH);
+  })();
+
   /* ---- Back to top + 手機捲動收起導覽 ---- */
   var toTop=document.getElementById('toTop');
   var header=document.querySelector('.site-header');
