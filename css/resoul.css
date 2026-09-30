@@ -1545,6 +1545,8 @@ body.om-lock{overflow:hidden;}
 /* 手機導覽抽屜：「關於我們」與其他項目同一字級及分隔線（原本被 .nav a 規則蓋過，字較細、無分隔線）。 */
 @media(max-width:819px){
   .nav .nav-single:not(.nav-lang){display:flex;align-items:center;min-height:40px;padding:8px 6px;font-size:.96rem;letter-spacing:.02em;border-bottom:1px solid var(--line);}
+  /* 客戶意見（2026-09-30）：「關於我們」放在手機導覽抽屜最頂（服務組 order:-1 之前） */
+  .nav .nav-single:not(.nav-lang){order:-2;margin-bottom:10px;}
 }
 @media(max-width:819px) and (max-height:700px){
   .nav .nav-single:not(.nav-lang){min-height:34px;padding:5px 6px;font-size:.92rem;}
