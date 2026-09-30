@@ -48,13 +48,15 @@
   function heartedKey(id) { return "resoul-heart-" + id; }
 
   /* ---------- 渲染紀念卡 ---------- */
-  function card(p) {
+  function card(p, full) {
     var el = document.createElement("div");
     el.className = "mstory";
     var name = p.pet_name ? esc(p.pet_name) : L("牠", "Them");
     var years = p.years ? '<span class="ms-years">' + esc(p.years) + "</span>" : "";
     var one = p.one_line ? '<blockquote class="ms-one">「' + esc(p.one_line) + "」</blockquote>" : "";
-    var story = p.body ? '<div class="ms-story">' + esc(p.body).replace(/\n/g, "<br>") + "</div>" : "";
+    // 長故事預設只顯示數行（按「閱讀全文」展開）；以專屬連結開啟單一故事時顯示全文
+    var story = p.body ? '<div class="ms-story' + (full ? "" : " clamped") + '">' + esc(p.body).replace(/\n/g, "<br>") + "</div>" +
+      (full ? "" : '<button class="ms-more" type="button" aria-expanded="false">' + L("閱讀全文", "Read more") + "</button>") : "";
     var by = '<span class="ms-by">— ' + (p.name ? esc(p.name) : L("一位主人", "A pet parent")) + "</span>";
     var hearted = false; try { hearted = !!localStorage.getItem(heartedKey(p.id)); } catch (e) {}
     el.innerHTML =
@@ -64,6 +66,19 @@
       '<div class="ms-foot">' + by +
       '<button class="ms-heart' + (hearted ? " on" : "") + '" type="button" data-id="' + esc(p.id) + '"' + (hearted ? " disabled" : "") + '>🤍 <span>' + (p.hearts || 0) + "</span></button></div>";
     return el;
+  }
+
+  // 未超出行數的故事不需要「閱讀全文」
+  function bindMore() {
+    list.querySelectorAll(".ms-more").forEach(function (btn) {
+      var story = btn.previousElementSibling;
+      if (!story || story.scrollHeight <= story.clientHeight + 2) { btn.remove(); if (story) story.classList.remove("clamped"); return; }
+      btn.addEventListener("click", function () {
+        var open = story.classList.toggle("clamped") === false;
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+        btn.textContent = open ? L("收起", "Show less") : L("閱讀全文", "Read more");
+      });
+    });
   }
 
   function bindHearts() {
@@ -103,7 +118,8 @@
                  : L("還沒有公開的故事。願意的話，成為第一個分享的人。", "No public stories yet. If you'd like, be the first to share.")) + "</div>";
       return;
     }
-    rows.forEach(function (p) { list.appendChild(card(p)); });
+    rows.forEach(function (p) { list.appendChild(card(p, focused)); });
+    bindMore();
     bindHearts();
   }
 

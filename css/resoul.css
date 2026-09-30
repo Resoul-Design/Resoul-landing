@@ -1574,3 +1574,9 @@ main:has(.jump-nav-4) section[id]{scroll-margin-top:calc(var(--header-h,60px) + 
   html[lang="en"] .header-inner{padding-left:20px;padding-right:20px;}
 }
 @media(min-width:1100px){.header-inner{max-width:1080px;}}
+
+/* 分享頁故事卡（2026-10-01）：長故事預設顯示 6 行，按「閱讀全文」展開；各卡按內容高度排列，不再被同行最長一張拉高。 */
+#boardList{align-items:start;}
+.ms-story.clamped{display:-webkit-box;-webkit-line-clamp:6;line-clamp:6;-webkit-box-orient:vertical;overflow:hidden;}
+.ms-more{display:inline-block;margin-top:8px;padding:0;border:0;background:none;color:var(--gold-deep);font:inherit;font-size:.88rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+.ms-more:hover,.ms-more:focus{color:var(--ink);}
