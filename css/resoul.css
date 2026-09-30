@@ -1557,3 +1557,18 @@ body.om-lock{overflow:hidden;}
   .jump-nav.jump-nav-4 a{padding-left:4px;padding-right:4px;}
 }
 main:has(.jump-nav-4) section[id]{scroll-margin-top:calc(var(--header-h,60px) + 76px);}
+
+/* 英文版桌面導覽列排成一行（2026-09-30）：英文項目較長，原 900px header 放不下，About us／中 跌落第二行。
+   收窄英文字距及間距；820–1099px 英文字級略減；1100px 以上 header 放寬至 1080px（中英同樣）。 */
+@media(min-width:820px){
+  html[lang="en"] .nav{gap:16px;}
+  html[lang="en"] .nav .nav-group:nth-of-type(2),html[lang="en"] .nav .nav-group:nth-of-type(2) .nav-menu{gap:14px;}
+  html[lang="en"] .nav a,html[lang="en"] .nav-top,html[lang="en"] .nav .nav-group:nth-of-type(2) .nav-menu a{letter-spacing:.02em;}
+}
+@media(min-width:820px) and (max-width:1099px){
+  html[lang="en"] .nav{gap:12px;}
+  html[lang="en"] .nav .nav-group:nth-of-type(2),html[lang="en"] .nav .nav-group:nth-of-type(2) .nav-menu{gap:12px;}
+  html[lang="en"] .nav a,html[lang="en"] .nav-top,html[lang="en"] .nav .nav-group:nth-of-type(2) .nav-menu a{font-size:.78rem;letter-spacing:0;}
+  html[lang="en"] .header-inner{padding-left:20px;padding-right:20px;}
+}
+@media(min-width:1100px){.header-inner{max-width:1080px;}}
