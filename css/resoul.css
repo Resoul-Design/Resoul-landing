@@ -1582,15 +1582,14 @@ main:has(.jump-nav-4) section[id]{scroll-margin-top:calc(var(--header-h,60px) + 
 .ms-more:hover,.ms-more:focus{color:var(--ink);}
 
 /* 語言切換（2026-10-02）：原 EN 掣被 .nav a 蓋過內邊距及底線，變成半個橢圓。
-   桌面改為「中｜EN」切換掣（目前語言金色底）；手機改在漢堡掣旁顯示語言掣，選單內不再重複。 */
+   客人選用「地球圖示＋語言名稱」：中文頁顯示「English」，英文頁顯示「中文」；桌面放在導覽列最右，手機放在漢堡掣旁（選單內不重複）。
+   地球用線條圖示（CSS mask），各平台顯示一致。 */
 .hdr-lang{display:none;}
-.nav .nav-lang{display:inline-flex;align-items:stretch;padding:0;border:1px solid var(--line);border-radius:999px;overflow:hidden;font-size:.78rem;font-weight:600;letter-spacing:.04em;line-height:1;}
-.nav .nav-lang span{display:flex;align-items:center;padding:5px 10px;color:var(--ink-soft);transition:background .15s,color .15s;}
-.nav .nav-lang .lang-on{background:var(--gold);color:#fff;}
-.nav .nav-lang:hover,.nav .nav-lang:focus{border-color:var(--gold);}
-.nav .nav-lang:hover span:not(.lang-on),.nav .nav-lang:focus span:not(.lang-on){background:rgba(184,154,110,.12);color:var(--gold-deep);}
+.nav .nav-lang,.hdr-lang{align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;color:var(--gold-deep);font-family:var(--sans);font-weight:600;letter-spacing:.02em;line-height:1;text-decoration:none;white-space:nowrap;}
+.nav .nav-lang::before,.hdr-lang::before{content:"";flex:0 0 auto;width:1.05em;height:1.05em;background-color:currentColor;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M3 12h18'/><path d='M12 3a14 14 0 0 1 0 18'/><path d='M12 3a14 14 0 0 0 0 18'/></svg>") center/contain no-repeat;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M3 12h18'/><path d='M12 3a14 14 0 0 1 0 18'/><path d='M12 3a14 14 0 0 0 0 18'/></svg>") center/contain no-repeat;}
+.nav .nav-lang{display:inline-flex;padding:6px 13px;font-size:.8rem;}
+.nav .nav-lang:hover,.nav .nav-lang:focus,.hdr-lang:hover,.hdr-lang:focus{border-color:var(--gold);background:rgba(184,154,110,.12);}
 @media(max-width:819px){
   .nav .nav-lang{display:none !important;}
-  .hdr-lang{display:inline-flex;align-items:center;justify-content:center;position:absolute;right:70px;top:15px;z-index:50;height:30px;min-width:42px;padding:0 12px;border:1px solid var(--gold);border-radius:999px;background:var(--bg);color:var(--gold-deep);font:600 .8rem var(--sans);letter-spacing:.06em;text-decoration:none;}
-  .hdr-lang:hover,.hdr-lang:focus{background:rgba(184,154,110,.12);}
+  .hdr-lang{display:inline-flex;position:absolute;right:70px;top:15px;z-index:50;height:30px;padding:0 11px;border-color:var(--gold);background:var(--bg);font-size:.78rem;}
 }
