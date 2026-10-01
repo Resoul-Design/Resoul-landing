@@ -1580,3 +1580,17 @@ main:has(.jump-nav-4) section[id]{scroll-margin-top:calc(var(--header-h,60px) + 
 .ms-story.clamped{display:-webkit-box;-webkit-line-clamp:6;line-clamp:6;-webkit-box-orient:vertical;overflow:hidden;}
 .ms-more{display:inline-block;margin-top:8px;padding:0;border:0;background:none;color:var(--gold-deep);font:inherit;font-size:.88rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
 .ms-more:hover,.ms-more:focus{color:var(--ink);}
+
+/* 語言切換（2026-10-02）：原 EN 掣被 .nav a 蓋過內邊距及底線，變成半個橢圓。
+   桌面改為「中｜EN」切換掣（目前語言金色底）；手機改在漢堡掣旁顯示語言掣，選單內不再重複。 */
+.hdr-lang{display:none;}
+.nav .nav-lang{display:inline-flex;align-items:stretch;padding:0;border:1px solid var(--line);border-radius:999px;overflow:hidden;font-size:.78rem;font-weight:600;letter-spacing:.04em;line-height:1;}
+.nav .nav-lang span{display:flex;align-items:center;padding:5px 10px;color:var(--ink-soft);transition:background .15s,color .15s;}
+.nav .nav-lang .lang-on{background:var(--gold);color:#fff;}
+.nav .nav-lang:hover,.nav .nav-lang:focus{border-color:var(--gold);}
+.nav .nav-lang:hover span:not(.lang-on),.nav .nav-lang:focus span:not(.lang-on){background:rgba(184,154,110,.12);color:var(--gold-deep);}
+@media(max-width:819px){
+  .nav .nav-lang{display:none !important;}
+  .hdr-lang{display:inline-flex;align-items:center;justify-content:center;position:absolute;right:70px;top:15px;z-index:50;height:30px;min-width:42px;padding:0 12px;border:1px solid var(--gold);border-radius:999px;background:var(--bg);color:var(--gold-deep);font:600 .8rem var(--sans);letter-spacing:.06em;text-decoration:none;}
+  .hdr-lang:hover,.hdr-lang:focus{background:rgba(184,154,110,.12);}
+}
