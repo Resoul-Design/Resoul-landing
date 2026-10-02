@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/resoul.css?v=20261003-board-merge">
+<link rel="stylesheet" href="css/resoul.css?v=20261003-board-masonry">
 <link rel="canonical" href="https://resoul-landing-beta.vercel.app/board">
 <link rel="alternate" hreflang="zh-Hant" href="https://resoul-landing-beta.vercel.app/board">
 <link rel="alternate" hreflang="en" href="https://resoul-landing-beta.vercel.app/board-en">
@@ -83,11 +83,11 @@
     <div class="wrap">
       <p class="eyebrow reveal">主人評價及故事分享</p>
       <h2 class="reveal">讓牠的故事，<br>繼續被記得。</h2>
-      <p class="lead reveal" style="margin-top:14px;">以文字、照片或一封短信，記錄毛孩的名字、性格和一起生活的故事。分享可選擇公開或只限連結瀏覽，所有內容均會先經審核。</p>
+      <p class="lead reveal" style="margin-top:14px;">這裡有曾使用 RESOUL 服務的主人在 Google 留下的真實評價，也有主人以文字、照片或一封短信寫下的毛孩故事。你也可以分享毛孩的名字、性格和一起生活的點滴，選擇公開或只限連結瀏覽；所有分享均會先經審核。</p>
 
       <!-- 主人故事分享與 Google 評價已分成兩個頁面；此頁為主人故事分享 -->
 
-      <div class="wall-tools reveal"><div class="wall-actions"><a class="cta light" href="/reviews">查看服務評價 <span class="arw">→</span></a><button class="cta" id="storyFormToggle" type="button">建立分享 <span class="arw">＋</span></button></div><label class="wall-search"><span class="sr-only">搜尋毛孩故事</span><input id="boardSearch" type="search" placeholder="搜尋毛孩名字或故事"><span aria-hidden="true">⌕</span></label></div>
+      <div class="wall-tools reveal"><div class="wall-actions"><button class="cta" id="storyFormToggle" type="button">建立分享 <span class="arw">＋</span></button></div><label class="wall-search"><span class="sr-only">搜尋毛孩故事</span><input id="boardSearch" type="search" placeholder="搜尋毛孩名字或故事"><span aria-hidden="true">⌕</span></label></div>
       <div class="mform reveal" id="storyForm" hidden>
         <div class="mf-row">
           <div class="bf-field"><label for="mPet">毛孩名字</label><input id="mPet" maxlength="40" placeholder="可包括暱稱"></div>
@@ -178,6 +178,6 @@
 </div>
 
 <script src="js/resoul.js" defer></script>
-<script src="js/board.js?v=20261003-board-merge" defer></script>
+<script src="js/board.js?v=20261003-board-masonry" defer></script>
 </body>
 </html>

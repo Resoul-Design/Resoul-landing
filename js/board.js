@@ -96,7 +96,7 @@
       '<div class="ms-story clamped">「' + esc(quote) + "」</div>" +
       '<button class="ms-more" type="button" aria-expanded="false">' + L("閱讀全文", "Read more") + "</button>" +
       '<div class="ms-foot"><div class="ms-foot-left"><span class="ms-tag ms-tag-review">' + L("主人評價", "Owner review") + "</span>" +
-      (source ? '<a class="ms-src" href="' + esc(source) + '" target="_blank" rel="noopener noreferrer">Google ↗</a>' : '<span class="ms-src">Google</span>') +
+      (source ? '<a class="ms-src" href="' + esc(source) + '" target="_blank" rel="noopener noreferrer">' + L("來自 Google", "via Google") + " ↗</a>" : '<span class="ms-src">' + L("來自 Google", "via Google") + "</span>") +
       "</div></div>";
     return el;
   }

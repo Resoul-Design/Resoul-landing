@@ -1618,3 +1618,15 @@ main:has(.jump-nav-4) section[id]{scroll-margin-top:calc(var(--header-h,60px) + 
 .ms-stars{color:#d9a13a;font-size:.88rem;letter-spacing:.06em;}
 .ms-src{font-size:.8rem;color:var(--ink-faint,#9a8b78);text-decoration:none;}
 .ms-src:hover{text-decoration:underline;}
+
+/* 分享頁瀑布式排列（2026-10-03）：卡片高矮不一時逐張緊接排列，不再留大片空白；卡片底部統一分隔線及較細心心掣 */
+#boardList{display:block;columns:1;column-gap:18px;}
+@media(min-width:640px){#boardList{columns:2;}}
+@media(min-width:1000px){#boardList{columns:3;}}
+#boardList > *{display:block;break-inside:avoid;margin:0 0 18px;}
+#boardList > [hidden]{display:none;}
+#boardList > .board-note{column-span:all;}
+#boardList .mstory{padding:22px 22px 16px;border-radius:18px;}
+#boardList .ms-foot{margin-top:16px;padding-top:12px;border-top:1px solid var(--line);}
+#boardList .ms-heart{padding:4px 12px;font-size:.85rem;}
+#boardList .mreview .ms-story{font-family:var(--serif);color:var(--ink-soft);}
