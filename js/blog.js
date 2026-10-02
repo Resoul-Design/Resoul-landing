@@ -75,7 +75,43 @@
   }
   function matchesLang(a) { return EN ? isEnArticle(a) : !isEnArticle(a); }
 
-  var state = { articles: [] };
+  // 分類：在 Shopify 文章加上與下列中文名稱相同的標籤（Tags），網誌頁即顯示對應篩選掣；中英文文章共用中文標籤
+  var CATEGORIES = [
+    { tag: "突發應急與善終指南", en: "Emergency & farewell guide" },
+    { tag: "服務流程與方案選擇", en: "Process & plans" },
+    { tag: "永恆紀念與骨灰飾物", en: "Keepsakes & ashes jewellery" },
+    { tag: "心靈陪伴與哀傷輔導", en: "Grief support & counselling" }
+  ];
+  function hasTag(a, tag) {
+    return (a.tags || []).some(function (t) { return String(t).trim() === tag; });
+  }
+  var state = { articles: [], filter: "all" };
+
+  function renderFilter() {
+    var list = $("#blogList");
+    var bar = $("#blogFilter");
+    var used = CATEGORIES.filter(function (c) { return state.articles.some(function (a) { return hasTag(a, c.tag); }); });
+    if (!used.length) { if (bar) bar.remove(); return; }
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "blogFilter";
+      bar.className = "blog-filter";
+      bar.setAttribute("role", "group");
+      bar.setAttribute("aria-label", L("按分類篩選文章", "Filter articles by category"));
+      list.insertBefore(bar, $("#blogGrid"));
+    }
+    var items = [{ key: "all", label: L("全部", "All") }].concat(used.map(function (c) { return { key: c.tag, label: L(c.tag, c.en) }; }));
+    bar.innerHTML = items.map(function (it) {
+      return '<button type="button" data-cat="' + esc(it.key) + '" aria-pressed="' + (state.filter === it.key ? "true" : "false") + '">' + esc(it.label) + "</button>";
+    }).join("");
+    bar.querySelectorAll("button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        state.filter = b.getAttribute("data-cat");
+        renderFilter();
+        renderList();
+      });
+    });
+  }
 
   function renderList() {
     var grid = $("#blogGrid");
@@ -87,7 +123,7 @@
       return;
     }
     empty.style.display = "none";
-    state.articles.forEach(function (a) {
+    state.articles.filter(function (a) { return state.filter === "all" || hasTag(a, state.filter); }).forEach(function (a) {
       var img = a.image ? a.image.url : "";
       var alt = a.image ? (a.image.altText || a.title) : a.title;
       var author = a.authorV2 ? a.authorV2.name : "";
@@ -145,6 +181,7 @@
   function init() {
     gql(ARTICLES_Q, { n: 50 }).then(function (data) {
       state.articles = data.articles.edges.map(function (e) { return e.node; }).filter(matchesLang);
+      renderFilter();
       renderList();
       $("#blogLoading").style.display = "none";
     }).catch(function (err) {

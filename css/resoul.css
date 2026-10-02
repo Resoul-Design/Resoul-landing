@@ -1641,3 +1641,10 @@ main:has(.jump-nav-4) section[id]{scroll-margin-top:calc(var(--header-h,60px) + 
   .wall-filter{width:100%;flex-wrap:nowrap;}
   .wall-filter button{flex:1 1 0;min-width:0;padding-left:6px;padding-right:6px;font-size:.82rem;white-space:nowrap;}
 }
+
+/* 網誌分類篩選（2026-10-03）：按 Shopify 文章標籤顯示；未加標籤時不顯示篩選列 */
+.blog-filter{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 0 24px;}
+.blog-filter button{min-height:40px;padding:6px 15px;border:1px solid var(--line);border-radius:999px;background:var(--white,#fff);color:var(--ink-soft);font-family:var(--sans);font-size:.86rem;cursor:pointer;transition:background .15s,color .15s,border-color .15s;}
+.blog-filter button:hover,.blog-filter button:focus{border-color:var(--gold);color:var(--gold-deep);}
+.blog-filter button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#fff;}
+@media(max-width:639px){.blog-filter{justify-content:flex-start;}.blog-filter button{font-size:.8rem;padding:5px 12px;min-height:36px;}}
