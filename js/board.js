@@ -31,12 +31,27 @@
   var filterKind = "all";
   function applyFilters() {
     var query = boardSearch ? boardSearch.value.trim().toLocaleLowerCase() : "";
+    var shown = 0;
     list.querySelectorAll(".mstory").forEach(function (card) {
       var isReview = card.classList.contains("mreview");
       var kindOk = filterKind === "all" || (filterKind === "review" ? isReview : !isReview);
       var textOk = !query || card.textContent.toLocaleLowerCase().indexOf(query) !== -1;
       card.hidden = !(kindOk && textOk);
+      if (!card.hidden) shown++;
     });
+    var empty = document.getElementById("boardEmpty");
+    var cards = list.querySelectorAll(".mstory").length;
+    if (!empty) {
+      empty = document.createElement("div");
+      empty.id = "boardEmpty";
+      empty.className = "board-note";
+      empty.style.cssText = "text-align:center;padding:20px 0;";
+      list.parentNode.insertBefore(empty, list.nextSibling);
+    }
+    empty.textContent = filterKind === "story" && !query
+      ? L("還沒有公開的故事。願意的話，成為第一個分享的人。", "No stories in English yet. If you'd like, be the first to share.")
+      : L("找不到相符的內容。", "No matching results.");
+    empty.hidden = !cards || shown > 0;
   }
   if (boardSearch) boardSearch.addEventListener("input", applyFilters);
   document.querySelectorAll(".wall-filter [data-filter]").forEach(function (btn) {
@@ -57,6 +72,8 @@
   function crisis(t) {
     return /想死|唔想活|自殺|傷害自己|撐唔住|頂唔住|想跟(佢|牠|你)去|活唔落去|結束生命|唔想生存|冇晒意思/.test(t || "");
   }
+  // 主人以單一語言撰寫故事，英文頁不顯示含中文字的故事（中文頁顯示全部）
+  function hasChinese(t) { return /[\u3400-\u9fff\uf900-\ufaff]/.test(t || ""); }
   function pubUrl(path) { return SB_URL + "/storage/v1/object/public/board-images/" + path; }
   function heartedKey(id) { return "resoul-heart-" + id; }
 
@@ -179,6 +196,7 @@
     var storiesP = fetch(SB_URL + "/rest/v1/posts?select=id,pet_name,years,one_line,body,name,image_path,hearts&context=eq.memorial&status=eq.visible&visibility=eq.public&order=created_at.desc&limit=100", { headers: H })
       .then(function (r) { return r.json(); })
       .then(function (rows) { return Array.isArray(rows) ? rows : []; })
+      .then(function (rows) { return EN ? rows.filter(function (p) { return !hasChinese((p.one_line || "") + " " + (p.body || "")); }) : rows; })
       .catch(function () { return []; });
     // 主人評價（後台「查看服務評價」管理的 Google 評價）
     var reviewsP = fetch("/api/google-reviews", { headers: { accept: "application/json" }, cache: "no-store" })
