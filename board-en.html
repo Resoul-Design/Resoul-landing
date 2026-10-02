@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/resoul.css?v=20261003-board-masonry">
+<link rel="stylesheet" href="css/resoul.css?v=20261003-board-filter">
 <link rel="canonical" href="https://resoul-landing-beta.vercel.app/board-en">
 <link rel="alternate" hreflang="zh-Hant" href="https://resoul-landing-beta.vercel.app/board">
 <link rel="alternate" hreflang="en" href="https://resoul-landing-beta.vercel.app/board-en">
@@ -87,7 +87,7 @@
 
       <!-- Family stories and Google reviews are now two separate pages; this page is Family Stories -->
 
-      <div class="wall-tools reveal"><div class="wall-actions"><button class="cta" id="storyFormToggle" type="button">Create a story <span class="arw">＋</span></button></div><label class="wall-search"><span class="sr-only">Search pet stories</span><input id="boardSearch" type="search" placeholder="Search a pet or story"><span aria-hidden="true">⌕</span></label></div>
+      <div class="wall-tools reveal"><div class="wall-actions"><button class="cta" id="storyFormToggle" type="button">Create a story <span class="arw">＋</span></button><div class="wall-filter" role="group" aria-label="Filter reviews or stories"><button type="button" data-filter="all" aria-pressed="true">All</button><button type="button" data-filter="review" aria-pressed="false">Owner reviews</button><button type="button" data-filter="story" aria-pressed="false">Stories</button></div></div><label class="wall-search"><span class="sr-only">Search pet stories</span><input id="boardSearch" type="search" placeholder="Search a pet or story"><span aria-hidden="true">⌕</span></label></div>
       <div class="mform reveal" id="storyForm" hidden>
         <div class="mf-row">
           <div class="bf-field"><label for="mPet">Pet's name</label><input id="mPet" maxlength="40" placeholder="Nicknames welcome"></div>
@@ -178,6 +178,6 @@
 </div>
 
 <script src="js/resoul.js" defer></script>
-<script src="js/board.js?v=20261003-board-masonry" defer></script>
+<script src="js/board.js?v=20261003-board-filter" defer></script>
 </body>
 </html>

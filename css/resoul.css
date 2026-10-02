@@ -1630,3 +1630,14 @@ main:has(.jump-nav-4) section[id]{scroll-margin-top:calc(var(--header-h,60px) + 
 #boardList .ms-foot{margin-top:16px;padding-top:12px;border-top:1px solid var(--line);}
 #boardList .ms-heart{padding:4px 12px;font-size:.85rem;}
 #boardList .mreview .ms-story{font-family:var(--serif);color:var(--ink-soft);}
+
+/* 分享頁篩選（2026-10-03）：全部／主人評價／故事分享，與搜尋同時使用 */
+.wall-filter{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.wall-filter button{min-height:40px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--white,#fff);color:var(--ink-soft);font-family:var(--sans);font-size:.86rem;cursor:pointer;transition:background .15s,color .15s,border-color .15s;}
+.wall-filter button:hover,.wall-filter button:focus{border-color:var(--gold);color:var(--gold-deep);}
+.wall-filter button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#fff;}
+@media(max-width:639px){
+  .wall-actions{flex-wrap:wrap;}
+  .wall-filter{width:100%;flex-wrap:nowrap;}
+  .wall-filter button{flex:1 1 0;min-width:0;padding-left:6px;padding-right:6px;font-size:.82rem;white-space:nowrap;}
+}

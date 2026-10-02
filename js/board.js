@@ -26,15 +26,28 @@
     });
   }
 
+  // 篩選（全部／主人評價／故事分享）＋搜尋，兩者可同時使用
   var boardSearch = document.getElementById("boardSearch");
-  if (boardSearch) {
-    boardSearch.addEventListener("input", function () {
-      var query = boardSearch.value.trim().toLocaleLowerCase();
-      list.querySelectorAll(".mstory").forEach(function (story) {
-        story.hidden = !!query && story.textContent.toLocaleLowerCase().indexOf(query) === -1;
-      });
+  var filterKind = "all";
+  function applyFilters() {
+    var query = boardSearch ? boardSearch.value.trim().toLocaleLowerCase() : "";
+    list.querySelectorAll(".mstory").forEach(function (card) {
+      var isReview = card.classList.contains("mreview");
+      var kindOk = filterKind === "all" || (filterKind === "review" ? isReview : !isReview);
+      var textOk = !query || card.textContent.toLocaleLowerCase().indexOf(query) !== -1;
+      card.hidden = !(kindOk && textOk);
     });
   }
+  if (boardSearch) boardSearch.addEventListener("input", applyFilters);
+  document.querySelectorAll(".wall-filter [data-filter]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      filterKind = btn.getAttribute("data-filter");
+      document.querySelectorAll(".wall-filter [data-filter]").forEach(function (b) {
+        b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+      });
+      applyFilters();
+    });
+  });
 
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
@@ -146,6 +159,7 @@
     }
     bindMore();
     bindHearts();
+    applyFilters();
   }
 
   function load() {
