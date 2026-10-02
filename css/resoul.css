@@ -1593,3 +1593,28 @@ main:has(.jump-nav-4) section[id]{scroll-margin-top:calc(var(--header-h,60px) + 
   .nav .nav-lang{display:none !important;}
   .hdr-lang{display:inline-flex;position:absolute;right:70px;top:15px;z-index:50;height:30px;padding:0 11px;border-color:var(--gold);background:var(--bg);font-size:.78rem;}
 }
+
+/* 電腦版導覽次序（2026-10-03）：「關於我們」放最左、「陪伴支持」移到語言掣之前；下拉選單靠右對齊免超出畫面。手機抽屜次序不變。 */
+@media(min-width:820px){
+  .nav .nav-single:not(.nav-lang){order:-2;}
+  .nav .nav-group:nth-of-type(2){order:-1;}
+  .nav .nav-lang{order:2;}
+  .nav .nav-group:first-of-type{order:1;}
+  .nav .nav-group:first-of-type .nav-menu{left:auto;right:0;}
+}
+
+/* 海景紀念室（2026-10-03）：與上方告別佈置相同的相框，文字放在相片下方 */
+.seaview.seaview-stack{display:block;max-width:640px;margin:28px auto 0;border-radius:var(--radius,18px);overflow:hidden;box-shadow:var(--shadow);background:var(--card);}
+.seaview.seaview-stack .seaview-img{border-radius:0;box-shadow:none;aspect-ratio:16/10;}
+.seaview.seaview-stack .seaview-img img{aspect-ratio:16/10;}
+.seaview.seaview-stack .seaview-txt{padding:16px 22px 18px;text-align:center;}
+.seaview.seaview-stack .seaview-txt p{font-size:.92rem;margin-bottom:8px;}
+.seaview.seaview-stack .seaview-txt p:last-child{margin-bottom:0;}
+
+/* 主人評價及故事分享（2026-10-03）：同一列表顯示，卡片左下角標明「主人評價」或「故事分享」 */
+.ms-foot-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0;}
+.ms-tag{display:inline-block;padding:3px 10px;border:1px solid var(--line);border-radius:999px;background:var(--cream);color:var(--gold-deep);font-family:var(--sans);font-size:.74rem;font-weight:600;letter-spacing:.04em;font-style:normal;white-space:nowrap;}
+.ms-tag-review{background:#eef4ea;border-color:#cfe0c6;color:#4f7a43;}
+.ms-stars{color:#d9a13a;font-size:.88rem;letter-spacing:.06em;}
+.ms-src{font-size:.8rem;color:var(--ink-faint,#9a8b78);text-decoration:none;}
+.ms-src:hover{text-decoration:underline;}

@@ -63,7 +63,7 @@
       (p.image_path ? '<img class="ms-photo" src="' + esc(pubUrl(p.image_path)) + '" alt="' + name + '" loading="lazy">' : "") +
       '<div class="ms-head"><span class="ms-name">' + name + "</span>" + years + "</div>" +
       one + story +
-      '<div class="ms-foot">' + by +
+      '<div class="ms-foot"><div class="ms-foot-left"><span class="ms-tag">' + L("故事分享", "Story sharing") + "</span>" + by + "</div>" +
       '<button class="ms-heart' + (hearted ? " on" : "") + '" type="button" data-id="' + esc(p.id) + '"' + (hearted ? " disabled" : "") + '>🤍 <span>' + (p.hearts || 0) + "</span></button></div>";
     return el;
   }
@@ -79,6 +79,26 @@
         btn.textContent = open ? L("收起", "Show less") : L("閱讀全文", "Read more");
       });
     });
+  }
+
+  function reviewCard(r) {
+    var el = document.createElement("div");
+    el.className = "mstory mreview";
+    var quote = L(r.zh || r.en, r.en || r.zh) || "";
+    var name = esc(r.name || L("一位主人", "A pet parent"));
+    var rating = Math.max(1, Math.min(5, parseInt(r.rating, 10) || 5));
+    var starText = new Array(rating + 1).join("★") + new Array(6 - rating).join("☆");
+    var photo = /^(https?:|images|\/)/i.test(String(r.photo || "")) ? r.photo : "";
+    var source = /^https?:/i.test(String(r.sourceUrl || "")) ? r.sourceUrl : "";
+    el.innerHTML =
+      (photo ? '<img class="ms-photo" src="' + esc(photo) + '" alt="' + name + '" loading="lazy">' : "") +
+      '<div class="ms-head"><span class="ms-name">' + name + '</span><span class="ms-stars" aria-label="' + rating + L(" 星評價", " star review") + '">' + starText + "</span></div>" +
+      '<div class="ms-story clamped">「' + esc(quote) + "」</div>" +
+      '<button class="ms-more" type="button" aria-expanded="false">' + L("閱讀全文", "Read more") + "</button>" +
+      '<div class="ms-foot"><div class="ms-foot-left"><span class="ms-tag ms-tag-review">' + L("主人評價", "Owner review") + "</span>" +
+      (source ? '<a class="ms-src" href="' + esc(source) + '" target="_blank" rel="noopener noreferrer">Google ↗</a>' : '<span class="ms-src">Google</span>') +
+      "</div></div>";
+    return el;
   }
 
   function bindHearts() {
@@ -102,7 +122,8 @@
   }
 
   /* ---------- 載入列表 / 單一連結故事 ---------- */
-  function render(rows, focused) {
+  function render(rows, focused, reviews) {
+    reviews = focused ? [] : (reviews || []);
     list.innerHTML = "";
     if (focused && rows.length) {
       var back = document.createElement("div");
@@ -112,13 +133,17 @@
       back.innerHTML = '<a href="' + location.pathname + '">' + L("← 查看全部故事", "← See all stories") + "</a>";
       list.appendChild(back);
     }
-    if (!rows.length) {
+    if (!rows.length && !reviews.length) {
       list.innerHTML = '<div class="board-note" style="text-align:center;padding:20px 0;">' +
         (focused ? L("找不到這個故事，或仍在審核中。", "This story can't be found, or is still under review.")
                  : L("還沒有公開的故事。願意的話，成為第一個分享的人。", "No public stories yet. If you'd like, be the first to share.")) + "</div>";
       return;
     }
-    rows.forEach(function (p) { list.appendChild(card(p, focused)); });
+    var n = Math.max(rows.length, reviews.length);
+    for (var i = 0; i < n; i++) {
+      if (rows[i]) list.appendChild(card(rows[i], focused));
+      if (reviews[i]) list.appendChild(reviewCard(reviews[i]));
+    }
     bindMore();
     bindHearts();
   }
@@ -137,10 +162,16 @@
         .catch(function () { render([], true); });
       return;
     }
-    fetch(SB_URL + "/rest/v1/posts?select=id,pet_name,years,one_line,body,name,image_path,hearts&context=eq.memorial&status=eq.visible&visibility=eq.public&order=created_at.desc&limit=100", { headers: H })
+    var storiesP = fetch(SB_URL + "/rest/v1/posts?select=id,pet_name,years,one_line,body,name,image_path,hearts&context=eq.memorial&status=eq.visible&visibility=eq.public&order=created_at.desc&limit=100", { headers: H })
       .then(function (r) { return r.json(); })
-      .then(function (rows) { render(Array.isArray(rows) ? rows : [], false); })
-      .catch(function () { render([], false); });
+      .then(function (rows) { return Array.isArray(rows) ? rows : []; })
+      .catch(function () { return []; });
+    // 主人評價（後台「查看服務評價」管理的 Google 評價）
+    var reviewsP = fetch("/api/google-reviews", { headers: { accept: "application/json" }, cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("reviews"); return r.json(); })
+      .then(function (rows) { return Array.isArray(rows) ? rows : []; })
+      .catch(function () { return []; });
+    Promise.all([storiesP, reviewsP]).then(function (res) { render(res[0], false, res[1]); });
   }
 
   /* ---------- 相片：壓縮 + 預覽 ---------- */
