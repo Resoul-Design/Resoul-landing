@@ -75,13 +75,24 @@
   }
   function matchesLang(a) { return EN ? isEnArticle(a) : !isEnArticle(a); }
 
-  // 分類：在 Shopify 文章加上與下列中文名稱相同的標籤（Tags），網誌頁即顯示對應篩選掣；中英文文章共用中文標籤
+  // 分類：由後台「文章記錄 → 文章分類」管理（Supabase blog_categories，只讀已啟用的分類）；
+  // Shopify 文章加上與中文名稱相同的標籤（Tags），網誌頁即顯示對應篩選掣；中英文文章共用中文標籤。
+  // 讀取失敗或未設定時，使用以下預設分類。
   var CATEGORIES = [
     { tag: "突發應急與善終指南", en: "Emergency & farewell guide" },
     { tag: "服務流程與方案選擇", en: "Process & plans" },
     { tag: "永恆紀念與骨灰飾物", en: "Keepsakes & ashes jewellery" },
     { tag: "心靈陪伴與哀傷輔導", en: "Grief support & counselling" }
   ];
+  function loadCategories() {
+    return fetch(SB_URL + "/rest/v1/blog_categories?select=tag,label_en&is_active=eq.true&order=sort_order.asc,created_at.asc", { headers: SBH })
+      .then(function (r) { if (!r.ok) throw new Error("categories"); return r.json(); })
+      .then(function (rows) {
+        if (!Array.isArray(rows) || !rows.length) return;
+        CATEGORIES = rows.filter(function (c) { return c && c.tag; }).map(function (c) { return { tag: String(c.tag).trim(), en: c.label_en || c.tag }; });
+      })
+      .catch(function () {});
+  }
   function hasTag(a, tag) {
     return (a.tags || []).some(function (t) { return String(t).trim() === tag; });
   }
@@ -179,7 +190,8 @@
   }
 
   function init() {
-    gql(ARTICLES_Q, { n: 50 }).then(function (data) {
+    Promise.all([gql(ARTICLES_Q, { n: 50 }), loadCategories()]).then(function (res) {
+      var data = res[0];
       state.articles = data.articles.edges.map(function (e) { return e.node; }).filter(matchesLang);
       renderFilter();
       renderList();
