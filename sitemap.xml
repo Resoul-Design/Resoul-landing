@@ -22,10 +22,8 @@
   <url><loc>https://resoul-landing-beta.vercel.app/referral</loc><lastmod>2026-09-19</lastmod><priority>0.7</priority></url>
   <url><loc>https://resoul-landing-beta.vercel.app/reviews-en</loc><lastmod>2026-09-21</lastmod><priority>0.6</priority></url>
   <url><loc>https://resoul-landing-beta.vercel.app/reviews</loc><lastmod>2026-09-21</lastmod><priority>0.6</priority></url>
-  <!-- 商店暫時隱藏：恢復開放時，取消下面兩行的註解
-  <url><loc>https://resoul-landing-beta.vercel.app/shop-en</loc><lastmod>2026-09-19</lastmod><priority>0.7</priority></url>
-  <url><loc>https://resoul-landing-beta.vercel.app/shop</loc><lastmod>2026-09-19</lastmod><priority>0.7</priority></url>
-  -->
+  <url><loc>https://resoul-landing-beta.vercel.app/shop-en</loc><lastmod>2026-10-06</lastmod><priority>0.7</priority></url>
+  <url><loc>https://resoul-landing-beta.vercel.app/shop</loc><lastmod>2026-10-06</lastmod><priority>0.7</priority></url>
   <url><loc>https://resoul-landing-beta.vercel.app/support-en</loc><lastmod>2026-09-19</lastmod><priority>0.7</priority></url>
   <url><loc>https://resoul-landing-beta.vercel.app/support</loc><lastmod>2026-09-19</lastmod><priority>0.7</priority></url>
   <url><loc>https://resoul-landing-beta.vercel.app/terms-en</loc><lastmod>2026-09-19</lastmod><priority>0.7</priority></url>

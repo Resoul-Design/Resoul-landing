@@ -2,8 +2,6 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    {"source": "/shop", "destination": "/", "permanent": false},
-    {"source": "/shop-en", "destination": "/index-en", "permanent": false},
     {"source": "/pricing", "destination": "/cremation#plans", "permanent": false},
     {"source": "/pricing-en", "destination": "/cremation-en#plans", "permanent": false}
   ],
