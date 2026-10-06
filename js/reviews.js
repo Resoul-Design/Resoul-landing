@@ -16,11 +16,21 @@
     n = Math.max(0, Math.min(5, parseInt(n, 10) || 5));
     return new Array(n + 1).join("★") + new Array(6 - n).join("☆");
   }
+  // 英文版不顯示中文字：優先用英文顯示名稱；「Jacky 的主人」→「Jacky's owner」；仍含中文則回傳空字串
+  var CJK = /[\u3400-\u9fff\uf900-\ufaff]/;
+  function enName(name, nameEn) {
+    if (nameEn && !CJK.test(nameEn)) return String(nameEn).trim();
+    var n = String(name || "").trim();
+    if (!CJK.test(n)) return n;
+    var m = n.match(/^(.+?)\s*的\s*(主人|家人|媽媽|爸爸)$/);
+    if (m && !CJK.test(m[1])) return m[1].trim() + (m[2] === "家人" ? "'s family" : "'s owner");
+    return "";
+  }
   function srcLabel() { return EN ? "Google review" : "Google 評價"; }
 
   function card(r) {
-    var quote = EN ? (r.en || r.zh || "") : (r.zh || r.en || "");
-    var name = esc(r.name || (EN ? "A pet parent" : "一位主人"));
+    var quote = EN ? (r.en || "") : (r.zh || r.en || "");
+    var name = esc(EN ? (enName(r.name, r.nameEn) || "A pet parent") : (r.name || "一位主人"));
     var photoUrl = /^(https?:\/\/|\/|images\/)/i.test(String(r.photo || "")) ? r.photo : "";
     var photo = photoUrl
       ? '<img class="rc-img" src="' + esc(photoUrl) + '" alt="' + name + '" loading="lazy" onerror="this.remove()">'
@@ -43,6 +53,8 @@
 
   function render(host, reviews) {
     var data = Array.isArray(reviews) ? reviews.slice() : [];
+    // 英文版只顯示有英文內容的評價
+    if (EN) data = data.filter(function (r) { return r && String(r.en || "").trim() && !CJK.test(r.en); });
     var lim = parseInt(host.getAttribute("data-limit"), 10);
     if (lim > 0) data = data.slice(0, lim);
     if (!data.length) {

@@ -81,13 +81,14 @@
   function card(p, full) {
     var el = document.createElement("div");
     el.className = "mstory";
-    var name = p.pet_name ? esc(p.pet_name) : L("牠", "Them");
+    var name = p.pet_name && !(EN && hasChinese(p.pet_name)) ? esc(p.pet_name) : L("牠", "Them");
     var years = p.years ? '<span class="ms-years">' + esc(p.years) + "</span>" : "";
     var one = p.one_line ? '<blockquote class="ms-one">「' + esc(p.one_line) + "」</blockquote>" : "";
     // 長故事預設只顯示數行（按「閱讀全文」展開）；以專屬連結開啟單一故事時顯示全文
     var story = p.body ? '<div class="ms-story' + (full ? "" : " clamped") + '">' + esc(p.body).replace(/\n/g, "<br>") + "</div>" +
       (full ? "" : '<button class="ms-more" type="button" aria-expanded="false">' + L("閱讀全文", "Read more") + "</button>") : "";
-    var by = '<span class="ms-by">— ' + (p.name ? esc(p.name) : L("一位主人", "A pet parent")) + "</span>";
+    var author = EN ? enName(p.name) : p.name;
+    var by = '<span class="ms-by">— ' + (author ? esc(author) : L("一位主人", "A pet parent")) + "</span>";
     var hearted = false; try { hearted = !!localStorage.getItem(heartedKey(p.id)); } catch (e) {}
     el.innerHTML =
       (p.image_path ? '<img class="ms-photo" src="' + esc(pubUrl(p.image_path)) + '" alt="' + name + '" loading="lazy">' : "") +
@@ -111,11 +112,21 @@
     });
   }
 
+  // 英文版不顯示中文字：優先用英文顯示名稱；「Jacky 的主人」→「Jacky's owner」；仍含中文則回傳空字串
+  var CJK = /[\u3400-\u9fff\uf900-\ufaff]/;
+  function enName(name, nameEn) {
+    if (nameEn && !CJK.test(nameEn)) return String(nameEn).trim();
+    var n = String(name || "").trim();
+    if (!CJK.test(n)) return n;
+    var m = n.match(/^(.+?)\s*的\s*(主人|家人|媽媽|爸爸)$/);
+    if (m && !CJK.test(m[1])) return m[1].trim() + (m[2] === "家人" ? "'s family" : "'s owner");
+    return "";
+  }
   function reviewCard(r) {
     var el = document.createElement("div");
     el.className = "mstory mreview";
-    var quote = L(r.zh || r.en, r.en || r.zh) || "";
-    var name = esc(r.name || L("一位主人", "A pet parent"));
+    var quote = L(r.zh || r.en, r.en) || "";
+    var name = esc(EN ? (enName(r.name, r.nameEn) || "A pet parent") : (r.name || "一位主人"));
     var rating = Math.max(1, Math.min(5, parseInt(r.rating, 10) || 5));
     var starText = new Array(rating + 1).join("★") + new Array(6 - rating).join("☆");
     var photo = /^(https?:|images|\/)/i.test(String(r.photo || "")) ? r.photo : "";
@@ -202,6 +213,8 @@
     var reviewsP = fetch("/api/google-reviews", { headers: { accept: "application/json" }, cache: "no-store" })
       .then(function (r) { if (!r.ok) throw new Error("reviews"); return r.json(); })
       .then(function (rows) { return Array.isArray(rows) ? rows : []; })
+      // 英文版只顯示有英文內容的評價
+      .then(function (rows) { return EN ? rows.filter(function (r) { return r && String(r.en || "").trim() && !hasChinese(r.en); }) : rows; })
       .catch(function () { return []; });
     Promise.all([storiesP, reviewsP]).then(function (res) { render(res[0], false, res[1]); });
   }
