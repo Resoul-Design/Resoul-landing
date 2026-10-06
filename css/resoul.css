@@ -1648,3 +1648,6 @@ main:has(.jump-nav-4) section[id]{scroll-margin-top:calc(var(--header-h,60px) + 
 .blog-filter button:hover,.blog-filter button:focus{border-color:var(--gold);color:var(--gold-deep);}
 .blog-filter button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#fff;}
 @media(max-width:639px){.blog-filter{justify-content:flex-start;}.blog-filter button{font-size:.8rem;padding:5px 12px;min-height:36px;}}
+
+/* 卡片內容貼頂（2026-10-06）：同一列卡片拉高至相同高度時，多出的空間留在底部，標題與內文不再被平均推下 */
+.scard{align-content:start;}
