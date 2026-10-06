@@ -1651,3 +1651,9 @@ main:has(.jump-nav-4) section[id]{scroll-margin-top:calc(var(--header-h,60px) + 
 
 /* 卡片內容貼頂（2026-10-06）：同一列卡片拉高至相同高度時，多出的空間留在底部，標題與內文不再被平均推下 */
 .scard{align-content:start;}
+
+/* 火化頁快捷列五個錨點（2026-10-06）：加「紀念精品」，手機排成一行五格 */
+@media(max-width:819px){
+  .jump-nav.jump-nav-5{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;padding-left:8px;padding-right:8px;}
+  .jump-nav.jump-nav-5 a{padding-left:3px;padding-right:3px;font-size:.68rem;}
+}
