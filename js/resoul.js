@@ -285,14 +285,17 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
   });
 
   // Mood accordion
-  document.querySelectorAll('.faq2-q').forEach(function(q){
-    q.addEventListener('click', function(){
+  // 事件委派：後台「網站內容」重新繪製常見問題後仍可展開
+  document.addEventListener('click', function(e){
+    var q = e.target.closest ? e.target.closest('.faq2-q') : null;
+    if(!q) return;
+    (function(){
       var item = q.parentElement;
       var open = item.classList.toggle('open');
       q.setAttribute('aria-expanded', open ? 'true' : 'false');
       var ic = q.querySelector('.faq2-ic');
       if(ic) ic.textContent = open ? '×' : '＋';
-    });
+    })();
   });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeWidget(); } });
 

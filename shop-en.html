@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/resoul.css?v=20261006-keepsakes">
+<link rel="stylesheet" href="css/resoul.css?v=20261006-cms">
 <style>
 /* ===== Shop-specific (reuses resoul.css tokens, dark-mode aware) ===== */
 .shop-hero{background:var(--cream);text-align:center;padding:44px 0 8px;}
@@ -206,7 +206,7 @@ body.cart-open .fab,body.cart-open .to-top{display:none!important;}
     <div class="wrap">
       <p class="eyebrow reveal">Memorial collections</p>
       <h2 class="reveal">Choose the way that feels most like you two.</h2>
-      <div class="cat-grid reveal">
+      <div class="cat-grid reveal" data-cms="shop.categories">
         <a class="cat-card" href="#shopList" data-cat="urn"><img decoding="async" class="cat-bg" src="images/cat-urn.jpg" alt="" loading="lazy" onerror="this.style.display='none'"><span class="cat-veil" aria-hidden="true"></span><span class="sc-ic" aria-hidden="true">🏺</span><h3>Urns</h3><p>A fine urn to hold a whole life.</p></a>
         <a class="cat-card" href="#shopList" data-cat="stone"><img decoding="async" class="cat-bg" src="images/cat-stone.jpg" alt="" loading="lazy" onerror="this.style.display='none'"><span class="cat-veil" aria-hidden="true"></span><span class="sc-ic" aria-hidden="true">💠</span><h3>Memory &amp; light stones</h3><p>Longing, held in a stone you can carry.</p></a>
         <a class="cat-card" href="#shopList" data-cat="bronze"><img decoding="async" class="cat-bg" src="images/cat-bronze.jpg" alt="" loading="lazy" onerror="this.style.display='none'"><span class="cat-veil" aria-hidden="true"></span><span class="sc-ic" aria-hidden="true">🪙</span><h3>Eternal bronze prints</h3><p>Their unique mark, kept in bronze.</p></a>
@@ -332,12 +332,13 @@ body.cart-open .fab,body.cart-open .to-top{display:none!important;}
   wrap.style.display='none';
   function openModal(cat){ if(window.ResoulShop)window.ResoulShop.setFilter(cat||'all'); wrap.classList.add('modal'); wrap.style.display=''; if(bd)bd.classList.add('open'); document.body.classList.add('shop-modal-lock'); if(back)back.style.display=''; wrap.scrollTop=0; }
   function closeModal(){ wrap.classList.remove('modal'); wrap.style.display='none'; if(bd)bd.classList.remove('open'); document.body.classList.remove('shop-modal-lock'); }
-  document.querySelectorAll('#categories [data-cat]').forEach(function(a){ a.addEventListener('click',function(e){ e.preventDefault(); openModal(a.getAttribute('data-cat')); }); });
+  var cats=document.getElementById('categories'); if(cats) cats.addEventListener('click',function(e){ var a=e.target.closest('[data-cat]'); if(!a) return; e.preventDefault(); openModal(a.getAttribute('data-cat')); });
   if(back) back.addEventListener('click',closeModal);
   if(bd) bd.addEventListener('click',closeModal);
   document.addEventListener('keydown',function(e){ if(e.key==='Escape' && wrap.classList.contains('modal')) closeModal(); });
 })();
 </script>
+<script src="js/site-content.js?v=20261006-cms" defer></script>
 <script src="js/resoul.js" defer></script>
 <script src="js/shop.js" defer></script>
 </body>

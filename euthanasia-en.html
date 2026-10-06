@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/resoul.css?v=20261006-keepsakes">
+<link rel="stylesheet" href="css/resoul.css?v=20261006-cms">
 <link rel="canonical" href="https://resoul-landing-beta.vercel.app/euthanasia-en">
 <link rel="alternate" hreflang="zh-Hant" href="https://resoul-landing-beta.vercel.app/euthanasia">
 <link rel="alternate" hreflang="en" href="https://resoul-landing-beta.vercel.app/euthanasia-en">
@@ -137,7 +137,7 @@
           <thead>
             <tr><th scope="col">Weight</th><th scope="col">Daytime (ref.)<br><small>12 noon – 8 pm</small></th><th scope="col">Evening (ref.)<br><small>8 pm – 12 midnight</small></th></tr>
           </thead>
-          <tbody>
+          <tbody data-cms="prices.vet">
             <tr><td>0 – 10 kg</td><td>HK$3,490 – 4,340</td><td>HK$3,800 – 4,650</td></tr>
             <tr><td>10 – 20 kg</td><td>HK$3,690 – 4,590</td><td>HK$4,000 – 4,900</td></tr>
             <tr><td>20 – 30 kg</td><td>HK$3,990 – 4,990</td><td>HK$4,300 – 5,300</td></tr>
@@ -174,6 +174,7 @@
     <div class="wrap">
       <p class="eyebrow reveal">Home euthanasia · FAQ</p>
       <h2 class="reveal">About At-Home Farewell,<br>things you may want to know.</h2>
+      <div data-cms="faq.euthanasia">
       <div class="faq-group reveal">
         <h3 class="faq-group-title">RESOUL's role</h3>
         <div class="faq2">
@@ -195,6 +196,7 @@
         <div class="faq2-item"><button class="faq2-q" type="button" aria-expanded="false"><span class="faq2-ic" aria-hidden="true">＋</span><span class="faq2-qt">When should I arrange pick-up?</span></button><div class="faq2-a"><p>If you already know the vet appointment time, reserving pick-up at the same time reduces last-minute searching and waiting afterwards.</p></div></div>
         <div class="faq2-item"><button class="faq2-q" type="button" aria-expanded="false"><span class="faq2-ic" aria-hidden="true">＋</span><span class="faq2-qt">Can family and other pets be present?</span></button><div class="faq2-a"><p>Usually this can be discussed with the vet beforehand; the pet's safety, a quiet environment and the vet's work come first.</p></div></div>
         </div>
+      </div>
       </div>
     </div>
   </section>
@@ -403,6 +405,7 @@
   });
 })();
 </script>
+<script src="js/site-content.js?v=20261006-cms" defer></script>
 <script src="js/resoul.js" defer></script>
 </body>
 </html>

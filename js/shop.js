@@ -267,6 +267,16 @@
   // 非商店分類標籤（升級加購等）→ 只喺「全部」出現，唔落任何獨立分類。
   var NON_SHOP_TAGS = ["升級加購", "add-on", "upsell"];
 
+  // 後台「網站內容 → 商店分類」設定的標籤／關鍵字（由 js/site-content.js 寫入）優先於上面的預設
+  function catDefs() {
+    var c = window.ResoulShopCats;
+    if (c && typeof c === "object") return c;
+    var d = {};
+    Object.keys(CAT_TAGS).forEach(function (k) { d[k] = { tags: CAT_TAGS[k], keywords: CAT_KEYS[k] }; });
+    return d;
+  }
+  function isCatKey(key) { return key !== "all" && Object.prototype.hasOwnProperty.call(catDefs(), key); }
+
   function tagHit(p, needles) {
     var tags = p.tags || [];
     return (needles || []).some(function (n) {
@@ -275,17 +285,21 @@
     });
   }
   function hasAnyCatTag(p) {
-    return Object.keys(CAT_TAGS).some(function (k) { return tagHit(p, CAT_TAGS[k]); });
+    var defs = catDefs();
+    return Object.keys(defs).some(function (k) { return tagHit(p, defs[k].tags); });
   }
   function matchCat(p, key) {
     // 升級加購等唔落任何分類（只喺「全部」見到）
     if (tagHit(p, NON_SHOP_TAGS)) return false;
+    var def = catDefs()[key] || { tags: [], keywords: [] };
+    // 標籤及關鍵字都留空的分類＝顯示全部
+    if (!(def.tags || []).length && !(def.keywords || []).length) return true;
     // 1) 標籤優先且權威：命中就歸入
-    if (tagHit(p, CAT_TAGS[key])) return true;
+    if (tagHit(p, def.tags)) return true;
     // 2) 產品一旦有任何分類標籤，就只信標籤，唔再用關鍵字猜（避免例如「琉璃飾物」被塞入晶石）
     if (hasAnyCatTag(p)) return false;
     // 3) 完全冇分類標籤，先用關鍵字後備（標題／類型／標籤）
-    var kws = CAT_KEYS[key]; if (!kws) return false;
+    var kws = def.keywords || []; if (!kws.length) return false;
     var hay = ((p.productType || "") + " " + (p.tags || []).join(" ") + " " + (p.title || "")).toLowerCase();
     return kws.some(function (k) { return hay.indexOf(k.toLowerCase()) >= 0; });
   }
@@ -341,7 +355,7 @@
     if (!state.products.length) { empty.style.display = "block"; return; }
     var list = state.filter === "all"
       ? state.products
-      : (CAT_KEYS[state.filter]
+      : (isCatKey(state.filter)
           ? state.products.filter(function (p) { return matchCat(p, state.filter); })
           : state.products.filter(function (p) { return (p.productType || "").trim() === state.filter; }));
     if (!list.length) {

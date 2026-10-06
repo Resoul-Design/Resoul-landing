@@ -1657,3 +1657,7 @@ main:has(.jump-nav-4) section[id]{scroll-margin-top:calc(var(--header-h,60px) + 
   .jump-nav.jump-nav-5{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;padding-left:8px;padding-right:8px;}
   .jump-nav.jump-nav-5 a{padding-left:3px;padding-right:3px;font-size:.68rem;}
 }
+
+/* 頁頂公告（2026-10-06）：後台「網站內容 → 頁頂公告」開啟時顯示於最頂 */
+.site-notice{background:#7a5f3a;color:#fff;font-size:.86rem;line-height:1.45;text-align:center;padding:8px 16px;}
+.site-notice a{color:#fff;text-decoration:underline;text-underline-offset:3px;}

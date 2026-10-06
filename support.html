@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/resoul.css?v=20261006-keepsakes">
+<link rel="stylesheet" href="css/resoul.css?v=20261006-cms">
 <link rel="canonical" href="https://resoul-landing-beta.vercel.app/support">
 <link rel="alternate" hreflang="zh-Hant" href="https://resoul-landing-beta.vercel.app/support">
 <link rel="alternate" hreflang="en" href="https://resoul-landing-beta.vercel.app/support-en">
@@ -184,7 +184,7 @@
         <button class="mf-chip" type="button" data-g="3">想念與紀念</button>
         <button class="mf-chip" type="button" data-g="4">慢慢向前</button>
       </div>
-      <div class="mood-groups reveal">
+      <div class="mood-groups reveal" data-cms="faq.support">
         <div class="mood-group" data-g="1">
           <h3 class="mg-title"><span class="mg-ic" aria-hidden="true">🌫️</span> 剛面對失去，不知所措</h3>
           <div class="faq2">
@@ -490,6 +490,7 @@
   document.addEventListener('keydown',function(e){ if(e.key==='Escape' && modal.classList.contains('open')) closeM(); });
 })();
 </script>
+<script src="js/site-content.js?v=20261006-cms" defer></script>
 <script src="js/resoul.js" defer></script>
 </body>
 </html>

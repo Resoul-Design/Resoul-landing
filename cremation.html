@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/resoul.css?v=20261006-keepsakes">
+<link rel="stylesheet" href="css/resoul.css?v=20261006-cms">
 <link rel="canonical" href="https://resoul-landing-beta.vercel.app/cremation">
 <link rel="alternate" hreflang="zh-Hant" href="https://resoul-landing-beta.vercel.app/cremation">
 <link rel="alternate" hreflang="en" href="https://resoul-landing-beta.vercel.app/cremation-en">
@@ -199,7 +199,7 @@
             <tr><td>寵毛髮紀念品</td><td><span class="paw-ic"></span></td><td><span class="paw-ic"></span></td><td><span class="paw-ic"></span></td></tr>
           </tbody>
           <tfoot>
-            <tr class="price-row"><td>參考價格</td><td>HK$1,800 起</td><td>HK$2,800 起</td><td>HK$3,800 起</td></tr>
+            <tr class="price-row" data-cms="prices.cremation.from"><td>參考價格</td><td>HK$1,800 起</td><td>HK$2,800 起</td><td>HK$3,800 起</td></tr>
           </tfoot>
         </table>
       </div>
@@ -210,7 +210,7 @@
           <thead>
             <tr><th scope="col">寵物體重</th><th scope="col">風之旅</th><th scope="col">雲之旅</th><th scope="col">星之旅</th></tr>
           </thead>
-          <tbody>
+          <tbody data-cms="prices.cremation">
             <tr><td>1 kg 以下</td><td>HK$1,800</td><td>HK$2,800</td><td>HK$3,800</td></tr>
             <tr><td>1.1–5 kg</td><td>HK$2,600</td><td>HK$3,600</td><td>HK$4,600</td></tr>
             <tr><td>5.1–10 kg</td><td>HK$2,800</td><td>HK$3,800</td><td>HK$4,800</td></tr>
@@ -264,7 +264,7 @@
       <p class="eyebrow reveal">RESOUL 獨立火化 · 紀念精品</p>
       <h2 class="reveal">把思念，<br>好好留在身邊。</h2>
       <p class="lead reveal notes-lead">火化後，可以為毛孩選一份紀念精品，把骨灰、毛髮或腳印化成日常陪伴。以下分類供參考，款式及價錢以網上商店為準。</p>
-      <div class="services-grid reveal notes-grid">
+      <div class="services-grid reveal notes-grid" data-cms="keepsakes">
         <div class="scard"><span class="sc-ic" aria-hidden="true">🏺</span><h3>骨灰龕及木製骨灰盒</h3><p>多款造型骨灰龕，亦可訂製專屬木雕骨灰盒及音樂盒。</p></div>
         <div class="scard"><span class="sc-ic" aria-hidden="true">💎</span><h3>骨灰裸石及晶石</h3><p>以骨灰製成的永恆裸石、伴光晶石、晶塔及平安伴扣。</p></div>
         <div class="scard"><span class="sc-ic" aria-hidden="true">✨</span><h3>毛髮寶石飾物</h3><p>以毛孩毛髮製成的寶石手鍊、頸鍊、戒指及耳環。</p></div>
@@ -282,6 +282,7 @@
     <div class="wrap">
       <p class="eyebrow reveal">RESOUL 獨立火化 · 常見問題</p>
       <h2 class="reveal">關於善終旅程，<br>你可能想知道的。</h2>
+      <div data-cms="faq.cremation">
       <div class="faq-group reveal">
         <h3 class="faq-group-title">剛離世後</h3>
         <div class="faq2">
@@ -312,6 +313,7 @@
         <div class="faq2-item"><button class="faq2-q" type="button" aria-expanded="false"><span class="faq2-ic" aria-hidden="true">＋</span><span class="faq2-qt">Resoul 是否能提供即日火化服務？</span></button><div class="faq2-a"><p>如當日有空缺位置，我們會儘量為您安排；實際情況需按當天預約時間而定。</p></div></div>
         <div class="faq2-item"><button class="faq2-q" type="button" aria-expanded="false"><span class="faq2-ic" aria-hidden="true">＋</span><span class="faq2-qt">訂金與支付方式？</span></button><div class="faq2-a"><p>需預先繳付 HK$1800 訂金，餘額於紀念儀式當天繳付。接受現金、易辦事、Payme、FPS 及信用卡。</p></div></div>
         </div>
+      </div>
       </div>
     </div>
   </section>
@@ -376,6 +378,7 @@
   </div>
 </div>
 
+<script src="js/site-content.js?v=20261006-cms" defer></script>
 <script src="js/resoul.js" defer></script>
 </body>
 </html>
