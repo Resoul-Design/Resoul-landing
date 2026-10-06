@@ -3,7 +3,9 @@
   "trailingSlash": false,
   "redirects": [
     {"source": "/pricing", "destination": "/cremation#plans", "permanent": false},
-    {"source": "/pricing-en", "destination": "/cremation-en#plans", "permanent": false}
+    {"source": "/pricing-en", "destination": "/cremation-en#plans", "permanent": false},
+    {"source": "/service-info", "destination": "/cremation", "permanent": false},
+    {"source": "/service-info-en", "destination": "/cremation-en", "permanent": false}
   ],
   "functions": {
     "api/grief-chat.js": {
