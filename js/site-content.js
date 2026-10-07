@@ -84,16 +84,14 @@
       });
     },
 
-    // 商店分類卡（連篩選標籤，交 js/shop.js 使用）
+    // 商店分類卡（data-types／data-tags／data-keywords 交 js/shop.js 篩選）
     "shop.categories": function (data) {
       var items = arr(data.items).filter(function (it) { return it && it.key; });
       if (!items.length) return;
-      var defs = {};
-      items.forEach(function (it) { defs[it.key] = { tags: arr(it.tags), keywords: arr(it.keywords) }; });
-      window.ResoulShopCats = defs;
       document.querySelectorAll('[data-cms="shop.categories"]').forEach(function (grid) {
         grid.innerHTML = items.map(function (it) {
-          return '<a class="cat-card" href="#shopList" data-cat="' + esc(it.key) + '">' +
+          var list = function (v) { return esc(arr(v).join("|")); };
+          return '<a class="cat-card" href="#shopList" data-cat="' + esc(it.key) + '" data-types="' + list(it.types) + '" data-tags="' + list(it.tags) + '" data-keywords="' + list(it.keywords) + '">' +
             (it.img ? '<img decoding="async" class="cat-bg" src="' + esc(it.img) + '" alt="" loading="lazy">' : "") +
             '<span class="cat-veil" aria-hidden="true"></span><span class="sc-ic" aria-hidden="true">' + esc(it.icon) + "</span><h3>" +
             esc(L(it.zh, it.en)) + "</h3><p>" + esc(L(it.descZh, it.descEn)) + "</p></a>";

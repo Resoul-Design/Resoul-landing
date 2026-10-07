@@ -243,39 +243,36 @@
   var state = { products: [], cart: null, current: null, qty: 1, sel: {}, filter: "all", req: "", photo: null };
 
   /* ===== 分類入口 ===== */
-  // 分類標籤（權威）：產品標籤含以下任一字串即歸入該分類。
-  // 對應客戶喺 Shopify 實際用嘅標籤名，例如「骨灰龕 URN」「掌印、鼻印及毛髮紀念 Paw, nose & fur keepsakes」。
-  var CAT_TAGS = {
-    urn:    ["骨灰龕", "urn"],
-    stone:  ["晶石"],
-    bronze: ["銅印"],
-    print:  ["掌印", "鼻印", "毛髮"],
-    jewel:  ["飾物"],
-    gift:   ["關懷"],
-    home:   ["家居安放"]
-  };
-  // 關鍵字後備：只用於「完全未打任何分類標籤」嘅產品，令舊資料仍會歸類。
-  var CAT_KEYS = {
-    urn:    ["骨灰", "甕", "盅", "龕", "urn"],
-    stone:  ["晶石", "stone", "crystal"],
-    bronze: ["銅印", "bronze"],
-    print:  ["掌印", "鼻印", "毛髮", "paw", "nose", "fur"],
-    jewel:  ["飾物", "琉璃", "頸鏈", "手鏈", "吊墜", "jewel", "necklace", "pendant", "bracelet"],
-    gift:   ["禮物", "關懷", "gift", "care", "comfort"],
-    home:   ["家居安放", "擺放", "相框", "home resting"]
-  };
+  // 分類以 Shopify「產品類型」為準：分類卡（shop.html，或後台「網站內容 → 商店分類」）以 data-types 指定類型，
+  // 亦可用 data-tags（產品標籤）或 data-keywords（標題／類型／標籤關鍵字）；三者都留空＝顯示全部產品。
+  // 服務類產品（接送訂金、火化方案）於各自頁面付款，不在商店顯示。
+  var HIDDEN_TYPES = ["預約服務", "火化服務"];
   // 非商店分類標籤（升級加購等）→ 只喺「全部」出現，唔落任何獨立分類。
   var NON_SHOP_TAGS = ["升級加購", "add-on", "upsell"];
 
-  // 後台「網站內容 → 商店分類」設定的標籤／關鍵字（由 js/site-content.js 寫入）優先於上面的預設
+  // NFKC：Shopify 部分類型用了相似字（例如「寶⽯」的部首字），統一後再比對
+  function norm(t) { t = String(t || "").trim(); return t.normalize ? t.normalize("NFKC") : t; }
+  function typeZh(p) { return norm(splitLang(p.productType || "").zh); }
+  function attrList(a, name) {
+    return String(a.getAttribute(name) || "").split("|").map(norm).filter(Boolean);
+  }
   function catDefs() {
-    var c = window.ResoulShopCats;
-    if (c && typeof c === "object") return c;
     var d = {};
-    Object.keys(CAT_TAGS).forEach(function (k) { d[k] = { tags: CAT_TAGS[k], keywords: CAT_KEYS[k] }; });
+    document.querySelectorAll("#categories .cat-card[data-cat]").forEach(function (a) {
+      var k = a.getAttribute("data-cat");
+      if (!k || d[k]) return;
+      var h = a.querySelector("h3");
+      d[k] = { types: attrList(a, "data-types"), tags: attrList(a, "data-tags"), keywords: attrList(a, "data-keywords"), label: h ? h.textContent.trim() : "" };
+    });
     return d;
   }
   function isCatKey(key) { return key !== "all" && Object.prototype.hasOwnProperty.call(catDefs(), key); }
+  // 篩選掣名稱：若某分類卡只對應這一個類型，用卡上的名稱（中英與分類卡一致）
+  function typeLabel(t) {
+    var zh = norm(splitLang(t).zh), defs = catDefs(), k;
+    for (k in defs) { if (defs[k].types.length === 1 && defs[k].types[0] === zh && defs[k].label) return defs[k].label; }
+    return lbl(t);
+  }
 
   function tagHit(p, needles) {
     var tags = p.tags || [];
@@ -284,24 +281,16 @@
       return tags.some(function (t) { return String(t).toLowerCase().indexOf(nn) >= 0; });
     });
   }
-  function hasAnyCatTag(p) {
-    var defs = catDefs();
-    return Object.keys(defs).some(function (k) { return tagHit(p, defs[k].tags); });
-  }
   function matchCat(p, key) {
     // 升級加購等唔落任何分類（只喺「全部」見到）
     if (tagHit(p, NON_SHOP_TAGS)) return false;
-    var def = catDefs()[key] || { tags: [], keywords: [] };
-    // 標籤及關鍵字都留空的分類＝顯示全部
-    if (!(def.tags || []).length && !(def.keywords || []).length) return true;
-    // 1) 標籤優先且權威：命中就歸入
+    var def = catDefs()[key] || { types: [], tags: [], keywords: [] };
+    if (!def.types.length && !def.tags.length && !def.keywords.length) return true;
+    if (def.types.length && (def.types.indexOf(typeZh(p)) >= 0 || def.types.indexOf(norm(p.productType)) >= 0)) return true;
     if (tagHit(p, def.tags)) return true;
-    // 2) 產品一旦有任何分類標籤，就只信標籤，唔再用關鍵字猜（避免例如「琉璃飾物」被塞入晶石）
-    if (hasAnyCatTag(p)) return false;
-    // 3) 完全冇分類標籤，先用關鍵字後備（標題／類型／標籤）
-    var kws = def.keywords || []; if (!kws.length) return false;
+    if (!def.keywords.length) return false;
     var hay = ((p.productType || "") + " " + (p.tags || []).join(" ") + " " + (p.title || "")).toLowerCase();
-    return kws.some(function (k) { return hay.indexOf(k.toLowerCase()) >= 0; });
+    return def.keywords.some(function (k) { return hay.indexOf(k.toLowerCase()) >= 0; });
   }
 
   /* ===== 購物車：確保存在 ===== */
@@ -324,17 +313,22 @@
   function renderFilters() {
     var bar = $("#shopFilters");
     if (!bar) return;
-    // 抽出實際存在嘅類別（去重、保留原有次序）
+    // 抽出實際存在嘅類別（去重），按分類卡次序排列，其餘排後
     var cats = [];
     state.products.forEach(function (p) {
       var t = (p.productType || "").trim();
       if (t && cats.indexOf(t) === -1) cats.push(t);
     });
+    var order = [];
+    var defs0 = catDefs();
+    Object.keys(defs0).forEach(function (k) { order = order.concat(defs0[k].types); });
+    var rank = function (t) { var i = order.indexOf(norm(splitLang(t).zh)); return i < 0 ? 999 : i; };
+    cats.sort(function (a, b) { return rank(a) - rank(b); });
     // 少於兩個類別就唔使顯示篩選（得一種，篩咗都無意義）
     if (cats.length < 2) { bar.style.display = "none"; return; }
     bar.style.display = "flex";
     bar.innerHTML = "";
-    var defs = [{ key: "all", label: L("全部", "All") }].concat(cats.map(function (c) { return { key: c, label: lbl(c) }; }));
+    var defs = [{ key: "all", label: L("全部", "All") }].concat(cats.map(function (c) { return { key: c, label: typeLabel(c) }; }));
     defs.forEach(function (d) {
       var b = el("button", "shop-chip" + (state.filter === d.key ? " sel" : ""), esc(d.label));
       b.type = "button";
@@ -653,6 +647,12 @@
         // 若正在看產品詳情，先返回列表
         if (state.current) closeDetail();
         state.filter = t || "all";
+        // 分類卡只對應一個類型時，直接選取該類型的篩選掣
+        var def = catDefs()[state.filter];
+        if (def && def.types.length === 1 && !def.tags.length && !def.keywords.length) {
+          var hit = state.products.filter(function (p) { return typeZh(p) === def.types[0]; })[0];
+          if (hit) state.filter = (hit.productType || "").trim();
+        }
         renderFilters();
         renderGrid();
       }
@@ -665,7 +665,7 @@
         n.images = n.images.edges.map(function (x) { return x.node; });
         n.variants = n.variants.edges.map(function (x) { return x.node; });
         return n;
-      });
+      }).filter(function (p) { return HIDDEN_TYPES.indexOf(typeZh(p)) < 0; });
       renderFilters();
       renderGrid();
       $("#shopLoading").style.display = "none";
