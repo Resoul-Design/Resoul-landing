@@ -19,7 +19,8 @@ module.exports = async function siteContent(req, res) {
     return res.status(405).json({ error: "method_not_allowed" });
   }
 
-  const keys = String((req.query && req.query.keys) || "")
+  // 用標準 URL 解析查詢字串（避免 Node url.parse 棄用警告）
+  const keys = String(new URL(req.url || "/", "http://localhost").searchParams.get("keys") || "")
     .split(",")
     .map((k) => k.trim())
     .filter((k) => KEYS.has(k));
