@@ -32,22 +32,27 @@ module.exports = async (req, res) => {
     select: "case_no,contact,notes",
     or: "(case_no.eq." + projectNo + ",notes.ilike.*" + projectNo + "*)",
   });
+  // 紀念品訂單（網上商店直接購買時自動產生的編號）；未執行 migration_product_order_project_no.sql 時略過
+  const orderParams = new URLSearchParams({ select: "project_no,phone", project_no: "eq." + projectNo });
 
   try {
-    const [depositsResponse, bookingsResponse] = await Promise.all([
+    const [depositsResponse, bookingsResponse, ordersResponse] = await Promise.all([
       fetch(base + "deposit_bookings?" + depositParams, { headers }),
       fetch(base + "cremation_bookings?" + bookingParams, { headers }),
+      fetch(base + "product_orders?" + orderParams, { headers }),
     ]);
     if (!depositsResponse.ok || !bookingsResponse.ok) {
       console.error("[Resoul] project lookup database query failed");
       return res.status(503).json({ error: "lookup_unavailable" });
     }
     const [deposits, bookings] = await Promise.all([depositsResponse.json(), bookingsResponse.json()]);
+    const orders = ordersResponse.ok ? await ordersResponse.json() : [];
     const found = deposits.some((row) => row.project_no === projectNo && phoneKey(row.contact) === phone) ||
       bookings.some((row) => (
         (String(row.case_no || "").toUpperCase() === projectNo || notesContainProject(row.notes, projectNo)) &&
         phoneKey(row.contact) === phone
-      ));
+      )) ||
+      orders.some((row) => String(row.project_no || "").toUpperCase() === projectNo && phoneKey(row.phone) === phone);
     return res.status(200).json({ exists: found });
   } catch (error) {
     console.error("[Resoul] project lookup request failed");
