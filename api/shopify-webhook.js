@@ -84,6 +84,17 @@ module.exports = async (req, res) => {
       shopify_order_name: order.name || (order.order_number ? "#" + order.order_number : undefined),
       paid_at: new Date().toISOString(),
     };
+    // Shopify 測試付款：付款標記成功後另行標記為測試記錄（best-effort；欄位未建立時略過）
+    const markTest = async (tbl) => {
+      if (order.test !== true) return;
+      try {
+        await fetch(SB_URL + "/rest/v1/" + tbl + "?payment_ref=eq." + encodeURIComponent(ref), {
+          method: "PATCH",
+          headers: { apikey: SR, Authorization: "Bearer " + SR, "Content-Type": "application/json" },
+          body: JSON.stringify({ is_test: true }),
+        });
+      } catch (e) {}
+    };
     // 同一 payment_ref 只會屬於其中一張表；只有確認找到並更新記錄才回報成功。
     const tables = ["cremation_bookings", "deposit_bookings"];
     let updated = false;
@@ -111,7 +122,7 @@ module.exports = async (req, res) => {
           failed = true;
           continue;
         }
-        if (rows.length) updated = true;
+        if (rows.length) { updated = true; await markTest(tbl); }
       } catch (error) {
         console.error("[Resoul] webhook request failed for " + tbl);
         failed = true;

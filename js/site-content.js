@@ -106,6 +106,10 @@
     "notice": function (data) {
       var text = String(L(data.zh, data.en) || "").trim();
       if (!data.enabled || !text) return;
+      // 香港日期在開始／結束日期範圍內才顯示
+      var today = new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10);
+      if (data.startDate && today < data.startDate) return;
+      if (data.endDate && today > data.endDate) return;
       var link = safeLink(data.link);
       var bar = document.createElement("div");
       bar.className = "site-notice";
