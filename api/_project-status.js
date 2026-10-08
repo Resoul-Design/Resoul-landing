@@ -1,6 +1,5 @@
 // 客人自助查詢進度：輸入專案編號＋電話（尾 8 位須相符），回傳服務階段及日期。
 // 只回傳毛孩名、階段、日期及紀念品出貨狀態；不回傳地址、電話、金額等個人資料。
-const { guardPublicPost, clean } = require("./_security");
 
 const RSL = /^RSL-[A-Z0-9]+-[A-Z0-9]+$/;
 
@@ -26,13 +25,9 @@ function hkDate(value) {
 
 const LATER = ["scheduled", "pickup", "cremating", "ready", "completed"];
 
-module.exports = async (req, res) => {
-  if (!(await guardPublicPost(req, res, { endpoint: "project-status", limit: 20, windowSeconds: 3600, maxBytes: 4096 }))) return;
-  const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
-  const projectNo = clean(body.project_no, 40).toUpperCase();
-  const phone = phoneKey(clean(body.contact, 40));
-  if (!RSL.test(projectNo) || !phone) return res.status(400).json({ error: "invalid_lookup" });
 
+// 查詢進度（由 api/project-lookup.js 以 detail: true 呼叫；Hobby 計劃限 12 個函數，故不另設端點）
+async function projectStatus(projectNo, phone, res) {
   const sbUrl = process.env.SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!sbUrl || !serviceKey) return res.status(503).json({ error: "lookup_unavailable" });
@@ -104,4 +99,6 @@ module.exports = async (req, res) => {
     console.error("[Resoul] project status request failed");
     return res.status(503).json({ error: "lookup_unavailable" });
   }
-};
+}
+
+module.exports = { projectStatus, phoneKey, RSL };

@@ -93,10 +93,10 @@
     var old = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = esc(L("查詢中…", "Checking…"));
-    fetch("/api/project-status", {
+    fetch("/api/project-lookup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ project_no: no, contact: phone.value })
+      body: JSON.stringify({ project_no: no, contact: phone.value, detail: true })
     }).then(function (r) {
       if (r.status === 429) throw new Error("rate");
       if (!r.ok) throw new Error("server");

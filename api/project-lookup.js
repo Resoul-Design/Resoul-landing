@@ -1,4 +1,5 @@
 const { guardPublicPost, clean } = require("./_security");
+const { projectStatus } = require("./_project-status");
 
 function phoneKey(value) {
   const digits = String(value || "").replace(/\D/g, "");
@@ -20,6 +21,8 @@ module.exports = async (req, res) => {
   if (!/^RSL-[A-Z0-9]+-[A-Z0-9]+$/.test(projectNo) || !phone) {
     return res.status(400).json({ error: "invalid_lookup" });
   }
+  // 查詢進度頁（/track）：回傳服務階段
+  if (body.detail === true) return projectStatus(projectNo, phone, res);
 
   const sbUrl = process.env.SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
