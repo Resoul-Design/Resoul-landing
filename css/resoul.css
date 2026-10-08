@@ -1661,3 +1661,26 @@ main:has(.jump-nav-4) section[id]{scroll-margin-top:calc(var(--header-h,60px) + 
 /* 頁頂公告（2026-10-06）：後台「網站內容 → 頁頂公告」開啟時顯示於最頂 */
 .site-notice{background:#7a5f3a;color:#fff;font-size:.86rem;line-height:1.45;text-align:center;padding:8px 16px;}
 .site-notice a{color:#fff;text-decoration:underline;text-underline-offset:3px;}
+
+/* 查詢進度（2026-10-08） */
+.track-wrap{max-width:560px;margin:0 auto;text-align:center;}
+.track-wrap .lead{text-align:center;}
+.track-title{font-family:var(--serif);font-size:clamp(1.9rem,5vw,3rem);font-weight:500;line-height:1.2;color:var(--ink);margin:0;}
+.track-card{margin:22px auto 0;max-width:460px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;}
+.track-pet{margin:0 0 12px;color:var(--ink-soft);}
+.track-pet b{color:var(--ink);}
+.track-cancel{margin:0 0 12px;color:#9b4a38;}
+.track-steps{list-style:none;margin:0;padding:0;}
+.track-steps li{position:relative;display:flex;gap:12px;padding:0 0 16px;}
+.track-steps li:last-child{padding-bottom:0;}
+.track-steps li:not(:last-child)::before{content:"";position:absolute;left:6px;top:16px;bottom:0;width:2px;background:var(--line);}
+.track-steps li.done:not(:last-child)::before{background:var(--gold);}
+.track-dot{flex:none;width:14px;height:14px;margin-top:4px;border-radius:50%;border:2px solid var(--line);background:var(--card);}
+.track-steps li.done .track-dot{background:var(--gold);border-color:var(--gold);}
+.track-steps li.current .track-dot{border-color:var(--gold);box-shadow:0 0 0 4px rgba(184,154,110,.18);}
+.track-steps li.todo{color:var(--ink-faint);}
+.track-step{font-weight:500;}
+.track-date{margin-left:8px;font-size:.82rem;font-weight:400;color:var(--ink-soft);}
+.track-desc{font-size:.86rem;color:var(--ink-soft);line-height:1.6;}
+.track-keep{margin-top:16px;padding-top:14px;border-top:1px solid var(--line);}
+.track-keep ul{margin:6px 0 0;padding-left:18px;font-size:.9rem;line-height:1.8;}

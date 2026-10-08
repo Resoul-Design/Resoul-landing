@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#faf6ef">
+<style id="flash-fix">html,body{background:#faf6ef;}html[data-theme="dark"],html[data-theme="dark"] body{background:#1f1914;}</style>
+<script>/* 首次繪製前套用深色／安靜模式，避免轉頁時先閃淺色 */try{var d=document.documentElement,t=localStorage.getItem('resoul-theme');if(t)d.setAttribute('data-theme',t);if(localStorage.getItem('resoul-quiet')==='on')d.setAttribute('data-quiet','on');}catch(e){}</script>
+<meta name="description" content="輸入專案編號及電話，查看毛孩善終旅程的最新進度：接送、火化及骨灰交還。">
+<title>查詢進度｜Resoul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/resoul.css?v=20261008-track">
+<link rel="canonical" href="https://resoul-landing-beta.vercel.app/track">
+<link rel="alternate" hreflang="zh-Hant" href="https://resoul-landing-beta.vercel.app/track">
+<link rel="alternate" hreflang="en" href="https://resoul-landing-beta.vercel.app/track-en">
+<link rel="alternate" hreflang="x-default" href="https://resoul-landing-beta.vercel.app/track">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:site_name" content="RESOUL">
+<meta property="og:title" content="查詢進度｜Resoul">
+<meta property="og:description" content="輸入專案編號及電話，查看毛孩善終旅程的最新進度：接送、火化及骨灰交還。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://resoul-landing-beta.vercel.app/track">
+<meta property="og:locale" content="zh_HK">
+<meta property="og:image" content="https://resoul-landing-beta.vercel.app/images/og-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="查詢進度｜Resoul">
+<meta name="twitter:description" content="輸入專案編號及電話，查看毛孩善終旅程的最新進度：接送、火化及骨灰交還。">
+<meta name="twitter:image" content="https://resoul-landing-beta.vercel.app/images/og-cover.jpg">
+</head>
+<body>
+<a class="skip-link" href="#top">跳至主要內容</a>
+<div class="topbar"><span>有問題？隨時聯絡我們的關懷團隊</span><a href="tel:+85264762951">☎ +852 6476 2951</a><a href="https://wa.me/85264762951" target="_blank" rel="noopener">WhatsApp 我們</a></div>
+
+<main id="top">
+  <section class="cremation" id="track">
+    <div class="wrap track-wrap">
+      <p class="eyebrow">查詢進度</p>
+      <h1 class="track-title">毛孩善終旅程<br>目前進度</h1>
+      <p class="lead" style="margin-top:14px;">輸入專案編號及預約時登記的電話，即可查看最新進度。專案編號可在預約確認訊息或發票上找到。</p>
+      <form id="trackForm" class="book-form" novalidate>
+        <div class="bf-field"><label for="tkProject">專案編號</label><input id="tkProject" autocomplete="off" placeholder="RSL-260922-Y0IR" spellcheck="false"></div>
+        <div class="bf-field"><label for="tkPhone">聯絡電話（預約時登記）</label><input id="tkPhone" inputmode="tel" autocomplete="tel" placeholder="9123 4567"></div>
+        <button class="cta book-submit" type="submit">查詢進度 <span class="arw">→</span></button>
+        <p class="book-note">只會顯示服務階段及日期，不會顯示地址、電話或付款資料。</p>
+      </form>
+      <div id="trackMsg" class="book-msg" role="status" hidden></div>
+      <div id="trackResult" hidden></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:28px;">
+        <a class="cta light" href="https://wa.me/85264762951" target="_blank" rel="noopener">WhatsApp 我們</a>
+        <a class="cta light" href="/">返回首頁</a>
+        <a class="cta light" href="/track-en">English</a>
+      </div>
+    </div>
+  </section>
+</main>
+<script src="js/site-content.js?v=20261007-notice" defer></script>
+<script src="js/resoul.js" defer></script>
+<script src="js/track.js?v=20261008" defer></script>
+</body>
+</html>
