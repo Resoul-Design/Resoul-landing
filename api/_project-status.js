@@ -23,6 +23,16 @@ function hkDate(value) {
   return Number.isFinite(t) ? new Date(t + 8 * 3600 * 1000).toISOString().slice(0, 10) : null;
 }
 
+// 只接受 Shopify 付款頁（https）
+function safePayLink(url) {
+  try {
+    const u = new URL(String(url || ""));
+    return u.protocol === "https:" && /(^|\.)(myshopify\.com|shopify\.com)$/.test(u.hostname) ? u.href : "";
+  } catch (e) {
+    return "";
+  }
+}
+
 const LATER = ["scheduled", "pickup", "cremating", "ready", "completed"];
 
 
@@ -37,9 +47,9 @@ async function projectStatus(projectNo, phone, res) {
 
   try {
     const [dRes, bRes, oRes] = await Promise.all([
-      get("deposit_bookings", { select: "created_at,status,service_date,payment_status,paid_at,pet_name,contact", project_no: "eq." + projectNo }),
+      get("deposit_bookings", { select: "created_at,status,source,service_date,payment_status,paid_at,pet_name,contact,payment_link", project_no: "eq." + projectNo }),
       get("cremation_bookings", {
-        select: "created_at,status,source,service_date,payment_status,paid_at,pet_name,contact,case_no,notes,picked_up_at,cremation_started_at,ready_at,returned_at",
+        select: "id,created_at,status,source,service_date,payment_status,paid_at,pet_name,contact,case_no,notes,picked_up_at,cremation_started_at,ready_at,returned_at",
         or: "(case_no.eq." + projectNo + ",notes.ilike.*" + projectNo + "*)",
       }),
       get("product_orders", { select: "phone,financial_status,fulfillment_status,cancelled_at,line_items,shopify_created_at", project_no: "eq." + projectNo }),
@@ -55,46 +65,79 @@ async function projectStatus(projectNo, phone, res) {
     res.setHeader("Cache-Control", "no-store");
     if (!deposits.length && !bookings.length && !orders.length) return res.status(200).json({ found: false });
 
+    // 未付款預約的付款連結（後台產生的 Shopify 付款頁）：訂金記錄自身欄位，火化預約於 follow_up_marks
+    const unpaidBookings = bookings.filter((b) => b.status !== "cancelled" && b.payment_status !== "paid" && !String(b.source || "").includes("euthanasia") && b.id);
+    const marks = {};
+    if (unpaidBookings.length) {
+      const mRes = await get("follow_up_marks", { select: "ref,payment_link", entity: "eq.cremation", ref: "in.(" + unpaidBookings.map((b) => b.id).join(",") + ")" });
+      if (mRes.ok) (await mRes.json()).forEach((m) => { marks[m.ref] = m.payment_link; });
+    }
+
+    // 分三類：上門安樂死（source 含 euthanasia）、接送及火化、紀念品訂單；同一專案可同時有多類
+    const isVet = (r) => String(r.source || "").includes("euthanasia");
     const service = [...deposits, ...bookings];
-    const cremation = bookings.filter((b) => !String(b.source || "").includes("euthanasia"));
-    const vetOnly = bookings.length > 0 && !cremation.length && !deposits.length;
-    const active = service.filter((r) => r.status !== "cancelled");
+    const vetRows = service.filter(isVet);
+    const cremRows = service.filter((r) => !isVet(r));
+    const live = (rows) => rows.filter((r) => r.status !== "cancelled");
     const earliest = (rows, field) => rows.map((r) => r[field]).filter(Boolean).sort()[0] || null;
     const pet = (service.find((r) => r.pet_name) || {}).pet_name || "";
+    const sections = [];
 
-    let steps = [];
-    if (service.length) {
+    if (vetRows.length) {
+      const active = live(vetRows);
+      const scheduled = active.filter((r) => LATER.includes(r.status));
+      sections.push({
+        type: "vet",
+        cancelled: !active.length,
+        steps: [
+          { key: "received_vet", date: hkDate(earliest(vetRows, "created_at")) },
+          { key: "vet_scheduled", date: scheduled.length ? hkDate(earliest(scheduled, "service_date")) || "" : null },
+          { key: "vet_done", date: active.some((r) => r.status === "completed") ? hkDate(earliest(active.filter((r) => r.status === "completed"), "service_date")) || "" : null },
+        ],
+      });
+    }
+    if (cremRows.length) {
+      const active = live(cremRows);
       const paid = active.filter((r) => r.payment_status === "paid");
       const scheduled = active.filter((r) => LATER.includes(r.status));
-      const c = cremation.filter((b) => b.status !== "cancelled");
-      steps = vetOnly
-        ? [
-            { key: "received_vet", date: hkDate(earliest(service, "created_at")) },
-            { key: "vet_scheduled", date: scheduled.length ? hkDate(earliest(scheduled, "service_date")) || "" : null },
-            { key: "vet_done", date: active.some((r) => r.status === "completed") ? "" : null },
-          ]
-        : [
-            { key: "received", date: hkDate(earliest(service, "created_at")) },
-            { key: "paid", date: paid.length ? hkDate(earliest(paid, "paid_at") || earliest(paid, "created_at")) : null },
-            { key: "scheduled", date: scheduled.length ? hkDate(earliest(scheduled, "service_date")) || "" : null },
-            { key: "picked_up", date: hkDate(earliest(c, "picked_up_at")) },
-            { key: "cremating", date: hkDate(earliest(c, "cremation_started_at")) },
-            { key: "ready", date: hkDate(earliest(c, "ready_at")) },
-            { key: "returned", date: hkDate(earliest(c, "returned_at")) },
-          ];
+      const unpaid = active.filter((r) => r.payment_status !== "paid");
+      const payLink = paid.length ? "" : unpaid.map((r) => safePayLink(r.payment_link || marks[r.id])).find(Boolean) || "";
+      const c = active.filter((r) => r.picked_up_at || r.cremation_started_at || r.ready_at || r.returned_at);
+      sections.push({
+        type: "cremation",
+        cancelled: !active.length,
+        unpaid: active.length > 0 && !paid.length,
+        payLink,
+        steps: [
+          { key: "received", date: hkDate(earliest(cremRows, "created_at")) },
+          { key: "paid", date: paid.length ? hkDate(earliest(paid, "paid_at") || earliest(paid, "created_at")) : null },
+          { key: "scheduled", date: scheduled.length ? hkDate(earliest(scheduled, "service_date")) || "" : null },
+          { key: "picked_up", date: hkDate(earliest(c, "picked_up_at")) },
+          { key: "cremating", date: hkDate(earliest(c, "cremation_started_at")) },
+          { key: "ready", date: hkDate(earliest(c, "ready_at")) },
+          { key: "returned", date: hkDate(earliest(c, "returned_at")) },
+        ],
+      });
     }
-    const keepsakes = orders.map((o) => ({
-      date: hkDate(o.shopify_created_at),
-      items: (o.line_items || []).map((it) => String(it.title || "") + "×" + (it.quantity || 1)).join("、"),
-      status: o.cancelled_at ? "cancelled" : o.fulfillment_status === "FULFILLED" ? "shipped" : ["PAID", "PARTIALLY_REFUNDED"].includes(o.financial_status) ? "preparing" : "pending",
-    }));
-    return res.status(200).json({
-      found: true,
-      pet,
-      cancelled: service.length > 0 && !active.length,
-      steps,
-      keepsakes,
-    });
+    orders
+      .sort((x, y) => String(x.shopify_created_at || "").localeCompare(String(y.shopify_created_at || "")))
+      .forEach((o) => {
+        const paid = ["PAID", "PARTIALLY_REFUNDED"].includes(o.financial_status);
+        const shipped = o.fulfillment_status === "FULFILLED";
+        sections.push({
+          type: "keepsake",
+          cancelled: !!o.cancelled_at,
+          items: (o.line_items || []).map((it) => String(it.title || "") + "×" + (it.quantity || 1)).join("、"),
+          steps: [
+            { key: "k_ordered", date: hkDate(o.shopify_created_at) },
+            { key: "k_paid", date: paid || shipped ? "" : null },
+            { key: "k_preparing", date: paid || shipped ? "" : null },
+            { key: "k_shipped", date: shipped ? "" : null },
+          ],
+        });
+      });
+
+    return res.status(200).json({ found: true, pet, sections });
   } catch (error) {
     console.error("[Resoul] project status request failed");
     return res.status(503).json({ error: "lookup_unavailable" });

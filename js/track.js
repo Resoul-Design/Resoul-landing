@@ -18,13 +18,21 @@
     returned: [L("已交還", "Returned home"), L("毛孩已回到你身邊。", "Your companion is home with you.")],
     received_vet: [L("已收到查詢", "Enquiry received"), L("我們已收到你的上門安樂死查詢。", "We have your home euthanasia enquiry.")],
     vet_scheduled: [L("已安排上門", "Home visit arranged"), L("已與你確認獸醫上門安排。", "The vet's home visit has been confirmed with you.")],
-    vet_done: [L("已完成", "Completed"), L("上門服務已完成。", "The home visit is complete.")]
+    vet_done: [L("已完成", "Completed"), L("上門服務已完成。", "The home visit is complete.")],
+    k_ordered: [L("已下單", "Order placed"), L("我們已收到你的紀念品訂單。", "We have your keepsake order.")],
+    k_paid: [L("已付款", "Paid"), L("付款已確認。", "Payment confirmed.")],
+    k_preparing: [L("製作／準備中", "Being prepared"), L("匠人正為你製作或準備紀念品。", "Your keepsake is being crafted or prepared.")],
+    k_shipped: [L("已出貨", "Shipped"), L("紀念品已寄出或可取件。", "Your keepsake has been sent or is ready for collection.")]
   };
-  var KEEPSAKE = {
-    pending: L("待付款", "Awaiting payment"),
-    preparing: L("製作／準備中", "Being prepared"),
-    shipped: L("已出貨", "Shipped"),
-    cancelled: L("已取消", "Cancelled")
+  var TITLES = {
+    vet: L("🩺 上門安樂死", "🩺 Home euthanasia"),
+    cremation: L("🕊️ 接送及火化", "🕊️ Pick-up & cremation"),
+    keepsake: L("🎁 紀念品", "🎁 Keepsakes")
+  };
+  var CANCELLED = {
+    vet: L("此查詢已取消。如有疑問，請聯絡我們。", "This enquiry has been cancelled. Please contact us if you have any questions."),
+    cremation: L("此預約已取消。如有疑問，請聯絡我們。", "This booking has been cancelled. Please contact us if you have any questions."),
+    keepsake: L("此訂單已取消。如有疑問，請聯絡我們。", "This order has been cancelled. Please contact us if you have any questions.")
   };
   function fmt(d) {
     if (!d) return "";
@@ -52,31 +60,38 @@
     msg.hidden = false;
   }
 
-  function render(data) {
-    var steps = data.steps || [];
+  function stepsHtml(steps) {
     var reached = steps.filter(function (s) { return s.date !== null; }).length;
-    var html = '<div class="track-card">';
-    if (data.pet) html += '<p class="track-pet">' + esc(L("毛孩：", "Companion: ")) + "<b>" + esc(data.pet) + "</b></p>";
-    if (data.cancelled) html += '<p class="track-cancel">' + esc(L("此預約已取消。如有疑問，請聯絡我們。", "This booking has been cancelled. Please contact us if you have any questions.")) + "</p>";
-    if (steps.length) {
-      html += '<ol class="track-steps">';
-      steps.forEach(function (s, i) {
-        var state = s.date !== null ? "done" : i === reached ? "current" : "todo";
-        var label = LABELS[s.key] || [s.key, ""];
-        html += '<li class="' + state + '"><span class="track-dot" aria-hidden="true"></span><div><div class="track-step">' + esc(label[0]) +
-          (s.date ? '<span class="track-date">' + esc(fmt(s.date)) + "</span>" : "") + "</div>" +
-          (state !== "todo" ? '<div class="track-desc">' + esc(state === "current" ? L("下一步", "Next step") : label[1]) + "</div>" : "") + "</div></li>";
-      });
-      html += "</ol>";
-    }
-    if (data.keepsakes && data.keepsakes.length) {
-      html += '<div class="track-keep"><div class="track-step">' + esc(L("紀念品", "Keepsakes")) + "</div><ul>";
-      data.keepsakes.forEach(function (k) {
-        html += "<li>" + esc(k.items || "—") + ' <span class="track-date">' + esc(KEEPSAKE[k.status] || "") + "</span></li>";
-      });
-      html += "</ul></div>";
-    }
-    html += "</div>";
+    var html = '<ol class="track-steps">';
+    steps.forEach(function (s, i) {
+      var state = s.date !== null ? "done" : i === reached ? "current" : "todo";
+      var label = LABELS[s.key] || [s.key, ""];
+      html += '<li class="' + state + '"><span class="track-dot" aria-hidden="true"></span><div><div class="track-step">' + esc(label[0]) +
+        (s.date ? '<span class="track-date">' + esc(fmt(s.date)) + "</span>" : "") + "</div>" +
+        (state !== "todo" ? '<div class="track-desc">' + esc(state === "current" ? L("下一步", "Next step") : label[1]) + "</div>" : "") + "</div></li>";
+    });
+    return html + "</ol>";
+  }
+
+  // 每類服務一張卡：上門安樂死、接送及火化、每張紀念品訂單
+  function render(data) {
+    var html = "";
+    if (data.pet) html += '<p class="track-pet" style="text-align:center;margin-top:22px;">' + esc(L("毛孩：", "Companion: ")) + "<b>" + esc(data.pet) + "</b></p>";
+    (data.sections || []).forEach(function (sec) {
+      html += '<div class="track-card"><p class="track-pet"><b>' + esc(TITLES[sec.type] || "") + "</b>" +
+        (sec.items ? '<br><span class="track-date" style="margin-left:0;">' + esc(sec.items) + "</span>" : "") + "</p>";
+      if (sec.cancelled) html += '<p class="track-cancel">' + esc(CANCELLED[sec.type] || "") + "</p>";
+      else html += stepsHtml(sec.steps || []);
+      // 訂金未付：有付款連結顯示付款掣，否則以 WhatsApp 索取
+      if (!sec.cancelled && sec.unpaid) {
+        html += '<div class="track-keep" style="text-align:center;"><p class="track-desc" style="margin:0 0 12px;">' + esc(L("訂金尚未付款。", "The deposit has not been paid yet.")) + "</p>" +
+          (sec.payLink
+            ? '<a class="cta" href="' + esc(sec.payLink) + '" target="_blank" rel="noopener">' + esc(L("前往付款", "Pay now")) + ' <span class="arw">→</span></a>'
+            : '<a class="cta light" href="https://wa.me/85264762951?text=' + encodeURIComponent(L("你好，想索取付款連結，專案編號：", "Hi, I'd like a payment link. Project number: ") + (data.projectNo || "")) + '" target="_blank" rel="noopener">' + esc(L("WhatsApp 索取付款連結", "WhatsApp us for a payment link")) + "</a>") +
+          "</div>";
+      }
+      html += "</div>";
+    });
     result.innerHTML = html;
     result.hidden = false;
   }
@@ -107,6 +122,7 @@
         return;
       }
       try { localStorage.setItem("resoul:projectNo", no); } catch (err) {}
+      data.projectNo = no;
       render(data);
     }).catch(function (err) {
       show("err", esc(err && err.message === "rate"
