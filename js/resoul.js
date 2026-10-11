@@ -299,6 +299,18 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
   });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeWidget(); } });
 
+  // 英文頁日期欄：瀏覽器內建日期格式跟系統語言（中文系統會顯示「月」），未選日期時改為顯示英文提示，點選後才轉為日期選擇器
+  document.querySelectorAll('input[data-date-field]').forEach(function(inp){
+    function toDate(){
+      if(inp.type === 'date') return;
+      inp.type = 'date';
+      try{ if(inp.showPicker) inp.showPicker(); }catch(e){}
+    }
+    inp.addEventListener('focus', toDate);
+    inp.addEventListener('click', toDate);
+    inp.addEventListener('blur', function(){ if(!inp.value) inp.type = 'text'; });
+  });
+
   // Reveal on scroll：首屏內容即時顯示（唔淡入，避免過場閃動）；只有捲入視窗嘅先做動畫
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
