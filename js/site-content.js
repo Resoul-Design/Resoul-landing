@@ -47,18 +47,17 @@
       });
     },
 
-    // 上門安樂死收費（日間／晚間範圍；留空＝個別報價）
+    // 上門安樂死收費（劃一基本收費＋附加費用；舊格式略過）
     "prices.vet": function (data) {
-      var rows = arr(data.rows);
-      if (!rows.length) return;
-      function range(a, b) {
-        if (!isNum(a)) return esc(L("個別報價", "Quoted individually"));
-        return "HK$" + money(a) + (isNum(b) && b !== a ? " – " + money(b) : "");
-      }
+      if (!isNum(data.base)) return;
+      var base = ' style="font-family:var(--serif);font-size:1.15rem;color:var(--ink);"';
+      var sur = arr(data.surcharges).filter(function (r) { return r && isNum(r.price); });
       document.querySelectorAll('[data-cms="prices.vet"]').forEach(function (tb) {
-        tb.innerHTML = rows.map(function (r) {
-          return "<tr><td>" + esc(L(r.zh, r.en)) + "</td><td>" + range(r.dayFrom, r.dayTo) + "</td><td>" + range(r.nightFrom, r.nightTo) + "</td></tr>";
-        }).join("");
+        tb.innerHTML = "<tr><td" + base + ">" + esc(L("劃一基本收費", "Flat base fee")) + "</td><td" + base + ">HK$" + money(data.base) + "</td></tr>" +
+          (sur.length ? '<tr><td colspan="2" style="color:var(--ink);font-weight:600;">' + esc(L("附加費用", "Additional charges")) + "</td></tr>" +
+            sur.map(function (r) {
+              return "<tr><td>" + esc(L(r.zh, r.en || r.zh)) + "</td><td>" + L("另加 HK$", "+ HK$") + money(r.price) + "</td></tr>";
+            }).join("") : "");
       });
     },
 
