@@ -55,6 +55,11 @@ module.exports = async (req, res) => {
   let order;
   try { order = JSON.parse(raw); } catch (e) { res.status(400).json({ error: "bad_json" }); return; }
 
+  // 只處理「已付款」：其他 webhook 主題或未付款狀態一律略過
+  const topic = String(req.headers["x-shopify-topic"] || "");
+  if (topic && topic !== "orders/paid") { res.status(200).json({ ok: true, note: "ignored_topic" }); return; }
+  if (order.financial_status && order.financial_status !== "paid") { res.status(200).json({ ok: true, note: "not_paid" }); return; }
+
   // 3) 找 payment_ref（先看 note_attributes，再看 line item properties）
   let ref = null;
   (order.note_attributes || []).forEach((a) => {

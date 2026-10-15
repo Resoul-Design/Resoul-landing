@@ -1,9 +1,10 @@
 const crypto = require("crypto");
-const { guardPublicPost, clean } = require("./_security");
+const { guardPublicPost, clean, readBody } = require("./_security");
 
 module.exports = async (req, res) => {
   if (!(await guardPublicPost(req, res, { endpoint: "memorial", limit: 5, windowSeconds: 3600, maxBytes: 2500000 }))) return;
-  const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
+  const body = readBody(req);
+  if (!body) return res.status(400).json({ error: "invalid_json" });
   const story = clean(body.story, 4000);
   const pet = clean(body.pet, 100);
   if (!pet && !story && !body.image) return res.status(400).json({ error: "missing_content" });

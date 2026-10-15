@@ -1,4 +1,4 @@
-const { guardPublicPost, clean } = require("./_security");
+const { guardPublicPost, clean, readBody } = require("./_security");
 const { projectStatus } = require("./_project-status");
 
 function phoneKey(value) {
@@ -15,7 +15,8 @@ function notesContainProject(notes, projectNo) {
 
 module.exports = async (req, res) => {
   if (!(await guardPublicPost(req, res, { endpoint: "project-lookup", limit: 20, windowSeconds: 3600, maxBytes: 4096 }))) return;
-  const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
+  const body = readBody(req);
+  if (!body) return res.status(400).json({ error: "invalid_json" });
   const projectNo = clean(body.project_no, 40).toUpperCase();
   const phone = phoneKey(clean(body.contact, 40));
   if (!/^RSL-[A-Z0-9]+-[A-Z0-9]+$/.test(projectNo) || !phone) {

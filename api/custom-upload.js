@@ -1,9 +1,10 @@
 const crypto = require("crypto");
-const { guardPublicPost } = require("./_security");
+const { guardPublicPost, readBody } = require("./_security");
 
 module.exports = async (req, res) => {
   if (!(await guardPublicPost(req, res, { endpoint: "custom-upload", limit: 8, windowSeconds: 3600, maxBytes: 2500000 }))) return;
-  const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
+  const body = readBody(req);
+  if (!body) return res.status(400).json({ error: "invalid_json" });
   const match = String(body.image || "").match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/);
   if (!match) return res.status(400).json({ error: "invalid_image" });
   const bytes = Buffer.from(match[2], "base64");

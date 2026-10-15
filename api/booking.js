@@ -1,5 +1,5 @@
 const crypto = require("crypto");
-const { guardPublicPost, clean } = require("./_security");
+const { guardPublicPost, clean, readBody } = require("./_security");
 
 function b64url(input) { return Buffer.from(input).toString("base64url"); }
 function ymd(date) { return date.toISOString().slice(0, 10); }
@@ -54,7 +54,8 @@ async function addCalendarEvent(booking) {
 
 module.exports = async (req, res) => {
   if (!(await guardPublicPost(req, res, { endpoint: "booking", limit: 5, windowSeconds: 3600, maxBytes: 32768 }))) return;
-  const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
+  const body = readBody(req);
+  if (!body) return res.status(400).json({ error: "invalid_json" });
   const ownerName = clean(body.name, 100);
   const contact = clean(body.phone, 40);
   if (!ownerName || !contact) return res.status(400).json({ error: "missing_contact" });

@@ -76,8 +76,25 @@ async function guardPublicPost(req, res, options) {
   return true;
 }
 
+// 讀取 JSON 請求內容；Vercel 對格式錯誤的 JSON 讀取 req.body 時會拋出錯誤
+function readBody(req) {
+  try {
+    const body = req.body;
+    if (typeof body === "string") return body ? JSON.parse(body) : {};
+    return body && typeof body === "object" ? body : {};
+  } catch (error) {
+    return null;
+  }
+}
+
+// 只接受網站自身的來源標記（例如 web:pickup-deposit）
+function safeSource(value, fallback) {
+  const v = String(value == null ? "" : value).trim();
+  return /^web:[a-z0-9-]{1,40}$/.test(v) ? v : fallback;
+}
+
 function clean(value, max) {
   return String(value == null ? "" : value).trim().slice(0, max);
 }
 
-module.exports = { guardPublicPost, requireAllowedOrigin, clean };
+module.exports = { guardPublicPost, requireAllowedOrigin, clean, readBody, safeSource };
