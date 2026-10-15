@@ -2,10 +2,171 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    {"source": "/pricing", "destination": "/cremation#plans", "permanent": false},
-    {"source": "/pricing-en", "destination": "/cremation-en#plans", "permanent": false},
-    {"source": "/service-info", "destination": "/cremation", "permanent": false},
-    {"source": "/service-info-en", "destination": "/cremation-en", "permanent": false}
+    {
+      "source": "/pricing",
+      "destination": "/cremation#plans",
+      "permanent": false
+    },
+    {
+      "source": "/pricing-en",
+      "destination": "/cremation-en#plans",
+      "permanent": false
+    },
+    {
+      "source": "/service-info",
+      "destination": "/cremation",
+      "permanent": false
+    },
+    {
+      "source": "/service-info-en",
+      "destination": "/cremation-en",
+      "permanent": false
+    },
+    {
+      "source": "/serviceandpricing",
+      "destination": "/cremation-en#plans",
+      "permanent": true
+    },
+    {
+      "source": "/zh/serviceandpricing",
+      "destination": "/cremation#plans",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/index-en",
+      "permanent": true
+    },
+    {
+      "source": "/zh/contact",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/blog-index",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/zh/blog-index",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/zh/about",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/zh/products",
+      "destination": "/shop",
+      "permanent": true
+    },
+    {
+      "source": "/zh",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/what-to-do-when-your-pet-dies-at-home",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/5-ways-to-heal-and-cope-with-pet-loss",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/4-meaningful-ways-to-keep-their-memory-alive",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/how-resoul-escorts-pets-on-their-final-journey-with-the-highest-dignity",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/2026-comprehensive-guide-to-pet-aftercare-and-cremation-in-hong-kong",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/aturning-love-into-eternity-6-popular-pet-cremation-jewelry-and-memorial-recommendations",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/the-final-gentle-goodbye-understanding-the-pros-and-cons-of-aquamation-vs\\.-traditional-cremation",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/comprehensive-guide-to-compassionate-pet-aftercare-and-cremation-in-hong-kong",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/comprehensive-analysis-of-pet-cremation-laws-in-hk-essential-legal-knowledge-and-rights-for-pet-owners",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/common-misconceptions-in-pet-aftercare-planning-the-details-owners-most-easily-overlook",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/5-essential-questions-to-ask-before-choosing-a-pet-cremation-provider",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/pet-aftercare-is-more-than-cremation-a-dignified-goodbye-with-love",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/do-other-pets-know-when-their-companion-has-passed-away",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/pet-cremation-process-explained-from-body-pickup-to-ash-retrieval",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/is-pet-cremation-covered-by-insurance",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/deciding-on-pet-euthanasia",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/coping-with-pet-loss%EF%BC%9A5-healing-approaches",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/how-to-send-your-fur-baby-off-with-the-highest-dignity",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/if-your-pet-receives-hospice-care-what-should-you-prepare-and-look-out-for",
+      "destination": "/blog-en",
+      "permanent": true
+    },
+    {
+      "source": "/zh/:path*",
+      "destination": "/blog",
+      "permanent": true
+    }
   ],
   "functions": {
     "api/grief-chat.js": {
@@ -16,41 +177,71 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=()" },
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; frame-src 'self'; img-src 'self' data: blob: https://*.supabase.co https://cdn.shopify.com; media-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co https://*.myshopify.com; form-action 'self'; upgrade-insecure-requests" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "geolocation=(), microphone=(), camera=()"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; frame-src 'self'; img-src 'self' data: blob: https://*.supabase.co https://cdn.shopify.com; media-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co https://*.myshopify.com; form-action 'self'; upgrade-insecure-requests"
+        }
       ]
     },
     {
       "source": "/((?!images/|videos/|css/|js/|api/).*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, s-maxage=600, stale-while-revalidate=86400" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=600, stale-while-revalidate=86400"
+        }
       ]
     },
     {
       "source": "/images/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=2592000" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000"
+        }
       ]
     },
     {
       "source": "/videos/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=2592000" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000"
+        }
       ]
     },
     {
       "source": "/css/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
       ]
     },
     {
       "source": "/js/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
       ]
     }
   ]
