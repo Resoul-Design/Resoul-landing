@@ -77,12 +77,25 @@ module.exports = async (req, res) => {
   const sbUrl = process.env.SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!sbUrl || !serviceKey) return res.status(503).json({ error: "server_not_configured" });
-  const response = await fetch(sbUrl + "/rest/v1/cremation_bookings", {
+  const insert = (payload) => fetch(sbUrl + "/rest/v1/cremation_bookings", {
     method: "POST",
     headers: { apikey: serviceKey, Authorization: "Bearer " + serviceKey, "Content-Type": "application/json", Prefer: "return=representation" },
-    body: JSON.stringify(booking),
+    body: JSON.stringify(payload),
   });
-  if (!response.ok) return res.status(502).json({ error: "booking_store_failed" });
+  let response = await insert(booking);
+  if (!response.ok) {
+    let detail = null;
+    try { detail = await response.json(); } catch (error) {}
+    // 同一專案編號已用於另一張火化預約／獸醫評估（case_no 唯一）：只把編號保留在備註，照常建立
+    if (detail && detail.code === "23505" && booking.case_no) {
+      const notes = booking.notes && booking.notes.includes(booking.case_no) ? booking.notes : ["專案編號：" + booking.case_no, booking.notes].filter(Boolean).join("｜");
+      response = await insert(Object.assign({}, booking, { case_no: null, notes: notes.slice(0, 1600) }));
+    }
+    if (!response.ok) {
+      console.error("[Resoul] booking store failed", response.status, detail && detail.code);
+      return res.status(502).json({ error: "booking_store_failed" });
+    }
+  }
   const rows = await response.json();
   addCalendarEvent(rows[0] || booking).catch((error) => console.error("[Resoul] calendar sync failed:", error.message));
   return res.status(201).json({ ok: true });
