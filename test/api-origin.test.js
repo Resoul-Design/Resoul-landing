@@ -35,7 +35,7 @@ const browserHandlers = [
   ["deposit", loadApi("api/deposit.js"), "POST"],
   ["grief-chat", loadApi("api/grief-chat.js"), "POST"],
   ["memorial", loadApi("api/memorial.js"), "POST"],
-  ["order", loadApi("api/order.js"), "POST"],
+  ["project-lookup", loadApi("api/project-lookup.js"), "POST"],
   ["site-config", loadApi("api/site-config.js"), "POST"],
   ["write-letter", loadApi("api/write-letter.js"), "POST"],
 ];
