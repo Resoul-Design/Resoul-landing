@@ -17,6 +17,22 @@
 const crypto = require("crypto");
 const { requireAllowedOrigin } = require("./_security");
 
+// 應付金額：接送訂金以固定訂金（DEPOSIT_AMOUNT，預設 1800）為準，不信任客人提交的金額；火化以預約收費金額為準
+const DEPOSIT_AMOUNT = Number(process.env.DEPOSIT_AMOUNT || 1800);
+function hk(n) { return "HK$" + Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 }); }
+function amountProblem(expected, paid, currency, orderName) {
+  const order = orderName || "Shopify 訂單";
+  if (!(Number(expected) > 0)) return "⚠️ 未設定收費金額，未能核對 " + order + " 實付 " + (Number.isFinite(paid) ? hk(paid) : "—") + "；請人手確認收款";
+  if (!Number.isFinite(paid)) return "⚠️ " + order + " 未有付款金額，未能核對；請人手確認收款";
+  if (currency && String(currency).toUpperCase() !== "HKD") return "⚠️ " + order + " 貨幣為 " + currency + "，未能核對；請人手確認收款";
+  if (paid + 0.5 < Number(expected)) return "⚠️ 付款金額不符：應付 " + hk(expected) + "，" + order + " 實付 " + hk(paid) + "，未標記已付款";
+  return null;
+}
+function appendNote(notes, line) {
+  const base = String(notes || "").trim();
+  return (base ? base + " | " + line : line).slice(0, 4000);
+}
+
 function readRaw(req) {
   return new Promise((resolve, reject) => {
     let data = "";
@@ -104,9 +120,33 @@ module.exports = async (req, res) => {
     const tables = ["cremation_bookings", "deposit_bookings"];
     let updated = false;
     let failed = false;
+    const orderName = order.name || (order.order_number ? "#" + order.order_number : null);
+    const paidAmount = order.total_price != null ? Number(order.total_price) : NaN;
+    let mismatch = false;
     for (const tbl of tables) {
       const url = SB_URL + "/rest/v1/" + tbl + "?payment_ref=eq." + encodeURIComponent(ref);
       try {
+        // 先讀取記錄核對金額；已付款則不重複處理
+        const cur = await fetch(url + "&select=id,payment_amount,payment_status,notes", { headers: { apikey: SR, Authorization: "Bearer " + SR } });
+        if (!cur.ok) { failed = true; continue; }
+        const curRows = await cur.json();
+        if (!Array.isArray(curRows) || !curRows.length) continue;
+        const pending = curRows.filter((x) => x.payment_status !== "paid");
+        if (!pending.length) { updated = true; continue; }
+        const expected = tbl === "deposit_bookings" ? DEPOSIT_AMOUNT : Number(pending[0].payment_amount);
+        const problem = amountProblem(expected, paidAmount, order.currency, orderName);
+        if (problem) {
+          for (const x of pending) {
+            await fetch(SB_URL + "/rest/v1/" + tbl + "?id=eq." + encodeURIComponent(x.id), {
+              method: "PATCH",
+              headers: { apikey: SR, Authorization: "Bearer " + SR, "Content-Type": "application/json" },
+              body: JSON.stringify({ payment_status: "failed", notes: appendNote(x.notes, problem) }),
+            });
+          }
+          console.error("[Resoul] webhook amount mismatch for " + tbl);
+          mismatch = true;
+          continue;
+        }
         const r = await fetch(url, {
           method: "PATCH",
           headers: {
@@ -133,6 +173,7 @@ module.exports = async (req, res) => {
         failed = true;
       }
     }
+    if (mismatch) { res.status(200).json({ ok: true, payment_ref: ref, note: "amount_mismatch" }); return; }
     if (updated) { res.status(200).json({ ok: true, payment_ref: ref }); return; }
     if (failed) { res.status(503).json({ error: "payment_update_failed" }); return; }
     res.status(200).json({ ok: true, payment_ref: ref, note: "payment_ref_not_found" });
