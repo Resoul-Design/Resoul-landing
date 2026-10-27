@@ -10,6 +10,8 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
   var sendBtn = document.getElementById('widgetSend');
   var widget = document.getElementById('widget');
   var fab = document.getElementById('fab');
+  // 冇情緒傾聽對話框嘅頁面（查詢進度、預約已收到、價目表）直接跳過，避免出錯令之後所有功能停止
+  if(!body || !text || !sendBtn || !widget || !fab) return;
 
   // ★ 情緒傾聽 Gemini 後端。部署到 Vercel 後，/api/grief-chat 會自動生效（同網域）。
   //   本機或未部署時會 404 → 自動回落內置規則引擎。設定見 VERCEL_SETUP.md
@@ -284,6 +286,12 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
     a.addEventListener('click', function(e){ e.preventDefault(); openWidget(); });
   });
 
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeWidget(); } });
+})();
+
+/* ---- 所有頁面通用：常見問題展開、英文日期欄、捲動揭示（毋須對話框） ---- */
+(function(){
+  "use strict";
   // Mood accordion
   // 事件委派：後台「網站內容」重新繪製常見問題後仍可展開
   document.addEventListener('click', function(e){
@@ -297,7 +305,6 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
       if(ic) ic.textContent = open ? '×' : '＋';
     })();
   });
-  document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeWidget(); } });
 
   // 英文頁日期欄：瀏覽器內建日期格式跟系統語言（中文系統會顯示「月」），未選日期時改為顯示英文提示，點選後才轉為日期選擇器
   document.querySelectorAll('input[data-date-field]').forEach(function(inp){
@@ -330,9 +337,10 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
   /* ---- Theme toggle ---- */
   var themeBtn=document.getElementById('themeBtn');
   try{var st=localStorage.getItem('resoul-theme'); if(st) root.setAttribute('data-theme',st);}catch(e){}
-  function updTheme(){var d=root.getAttribute('data-theme')==='dark'; themeBtn.textContent=d?'☀':'☾'; themeBtn.classList.toggle('active',d);}
+  // 查詢進度、預約已收到、價目表等頁冇工具列掣：已儲存的主題照用，只跳過掣的設定
+  function updTheme(){if(!themeBtn) return; var d=root.getAttribute('data-theme')==='dark'; themeBtn.textContent=d?'☀':'☾'; themeBtn.classList.toggle('active',d);}
   updTheme();
-  themeBtn.addEventListener('click',function(){
+  if(themeBtn) themeBtn.addEventListener('click',function(){
     var d=root.getAttribute('data-theme')==='dark';
     root.setAttribute('data-theme', d?'light':'dark');
     try{localStorage.setItem('resoul-theme', d?'light':'dark');}catch(e){}
@@ -342,9 +350,9 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
   /* ---- Quiet mode (reduce motion) ---- */
   var quietBtn=document.getElementById('quietBtn');
   try{ if(localStorage.getItem('resoul-quiet')==='on') root.setAttribute('data-quiet','on'); }catch(e){}
-  function updQuiet(){ quietBtn.classList.toggle('active', root.getAttribute('data-quiet')==='on'); }
+  function updQuiet(){ if(quietBtn) quietBtn.classList.toggle('active', root.getAttribute('data-quiet')==='on'); }
   updQuiet();
-  quietBtn.addEventListener('click',function(){
+  if(quietBtn) quietBtn.addEventListener('click',function(){
     var q=root.getAttribute('data-quiet')==='on';
     if(q) root.removeAttribute('data-quiet'); else root.setAttribute('data-quiet','on');
     try{localStorage.setItem('resoul-quiet', q?'off':'on');}catch(e){}
@@ -365,9 +373,9 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
   /* ---- Crisis support popup ---- */
   var supportModal=document.getElementById('supportModal');
   var supportBtn=document.getElementById('supportBtn');
-  function closeSupport(){ supportModal.classList.remove('open'); supportModal.setAttribute('aria-hidden','true'); }
-  if(supportBtn) supportBtn.addEventListener('click',function(){ supportModal.classList.add('open'); supportModal.setAttribute('aria-hidden','false'); });
-  supportModal.querySelectorAll('[data-sclose]').forEach(function(x){ x.addEventListener('click', closeSupport); });
+  function closeSupport(){ if(!supportModal) return; supportModal.classList.remove('open'); supportModal.setAttribute('aria-hidden','true'); }
+  if(supportBtn && supportModal) supportBtn.addEventListener('click',function(){ supportModal.classList.add('open'); supportModal.setAttribute('aria-hidden','false'); });
+  if(supportModal) supportModal.querySelectorAll('[data-sclose]').forEach(function(x){ x.addEventListener('click', closeSupport); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeSupport(); });
 
   /* ---- 快捷列緊貼 header：按 header 實際高度設定 --header-h（隨闊度／字型載入變化自動更新） ---- */
@@ -397,7 +405,7 @@ function RL(zh, en){ return RESOUL_EN ? en : zh; }
   }
   window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
   if(navMq.addEventListener) navMq.addEventListener('change', function(){ if(!navMq.matches && header) header.classList.remove('nav-hidden'); });
-  toTop.addEventListener('click', function(){
+  if(toTop) toTop.addEventListener('click', function(){
     window.scrollTo({top:0, behavior: root.getAttribute('data-quiet')==='on'?'auto':'smooth'});
   });
 
