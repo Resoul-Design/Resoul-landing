@@ -20,12 +20,15 @@ const { requireAllowedOrigin } = require("./_security");
 // 應付金額：接送訂金以固定訂金（DEPOSIT_AMOUNT，預設 1800）為準，不信任客人提交的金額；火化以預約收費金額為準
 const DEPOSIT_AMOUNT = Number(process.env.DEPOSIT_AMOUNT || 1800);
 function hk(n) { return "HK$" + Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 }); }
-function amountProblem(expected, paid, currency, orderName) {
+// credit：火化預約已套用的接送訂金抵扣額，應付＝收費金額－抵扣
+function amountProblem(expected, paid, currency, orderName, credit) {
   const order = orderName || "Shopify 訂單";
   if (!(Number(expected) > 0)) return "⚠️ 未設定收費金額，未能核對 " + order + " 實付 " + (Number.isFinite(paid) ? hk(paid) : "—") + "；請人手確認收款";
   if (!Number.isFinite(paid)) return "⚠️ " + order + " 未有付款金額，未能核對；請人手確認收款";
   if (currency && String(currency).toUpperCase() !== "HKD") return "⚠️ " + order + " 貨幣為 " + currency + "，未能核對；請人手確認收款";
-  if (paid + 0.5 < Number(expected)) return "⚠️ 付款金額不符：應付 " + hk(expected) + "，" + order + " 實付 " + hk(paid) + "，未標記已付款";
+  const due = Math.max(0, Number(expected) - (Number(credit) > 0 ? Number(credit) : 0));
+  const dueText = due < Number(expected) ? hk(due) + "（已扣接送訂金 " + hk(Number(expected) - due) + "）" : hk(due);
+  if (paid + 0.5 < due) return "⚠️ 付款金額不符：應付 " + dueText + "，" + order + " 實付 " + hk(paid) + "，未標記已付款";
   return null;
 }
 function appendNote(notes, line) {
@@ -126,15 +129,16 @@ module.exports = async (req, res) => {
     for (const tbl of tables) {
       const url = SB_URL + "/rest/v1/" + tbl + "?payment_ref=eq." + encodeURIComponent(ref);
       try {
-        // 先讀取記錄核對金額；已付款則不重複處理
-        const cur = await fetch(url + "&select=id,payment_amount,payment_status,notes", { headers: { apikey: SR, Authorization: "Bearer " + SR } });
+        // 先讀取記錄核對金額；已付款則不重複處理（用 * 以兼容未執行訂金抵扣 migration 的資料庫）
+        const cur = await fetch(url + "&select=*", { headers: { apikey: SR, Authorization: "Bearer " + SR } });
         if (!cur.ok) { failed = true; continue; }
         const curRows = await cur.json();
         if (!Array.isArray(curRows) || !curRows.length) continue;
         const pending = curRows.filter((x) => x.payment_status !== "paid");
         if (!pending.length) { updated = true; continue; }
         const expected = tbl === "deposit_bookings" ? DEPOSIT_AMOUNT : Number(pending[0].payment_amount);
-        const problem = amountProblem(expected, paidAmount, order.currency, orderName);
+        const credit = tbl === "cremation_bookings" ? Number(pending[0].deposit_credit || 0) : 0;
+        const problem = amountProblem(expected, paidAmount, order.currency, orderName, credit);
         if (problem) {
           for (const x of pending) {
             await fetch(SB_URL + "/rest/v1/" + tbl + "?id=eq." + encodeURIComponent(x.id), {
