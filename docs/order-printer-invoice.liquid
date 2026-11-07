@@ -14,16 +14,17 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
   • footer_contact  底部聯絡資料
 
 欄位對應（自動由訂單帶入）：
-  • Invoice No. → 訂單編號 order.order_number
+  • Invoice No. → 訂單備註一行「單據編號：xxx」或附加資料 Invoice No／單據編號；
+                  沒有時用訂單編號 order.order_number
   • Date        → 落單日期 order.created_at
   • Issued to   → 客戶姓名
   • Owner of    → 寵物名稱：依次讀訂單附加資料（Owner of／毛孩名／Pet／pet）、
-                  產品自訂內容（Pet name／Pet／毛孩名／寵物）、訂單備註「寵物：…」；
+                  產品自訂內容（Pet name／Pet／毛孩名／寵物）、訂單備註一行「寵物：xxx」；
                   全部沒有時不顯示此行
   • Phone       → 客戶電話
   • ITEM CODE   → 貨品 SKU
   • DESCRIPTION → 貨品名稱（+ 款式 / 刻字等自訂內容）
-  • REMARKS     → 訂單備註 order.note + note attributes
+  • REMARKS     → 訂單備註 order.note（不含「寵物：」「單據編號：」兩行）+ note attributes
   • DEPOSITS    → 訂金：於訂單附加資料加一項名為「Deposit」（或「訂金」），
                   填數字即可（例：2730）。若未填而訂單已付款，當作全數已付。
   • BALANCE     → 應付餘額 = 小計 − 折扣 − 訂金
@@ -40,11 +41,13 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
 {%- comment -%} ===== 讀取訂單附加資料（毛孩名 / 訂金）===== {%- endcomment -%}
 {%- assign owner_of = "" -%}
 {%- assign deposit_attr = "" -%}
+{%- assign invoice_no = "" -%}
 {%- for a in order.note_attributes -%}
   {%- assign attr_name = a.name | default: a.first -%}
   {%- assign attr_value = a.value | default: a.last -%}
   {%- if attr_name == "Owner of" or attr_name == "毛孩名" or attr_name == "Pet" or attr_name == "pet" -%}{%- assign owner_of = attr_value -%}{%- endif -%}
   {%- if attr_name == "Deposit" or attr_name == "訂金" or attr_name == "deposit" -%}{%- assign deposit_attr = attr_value -%}{%- endif -%}
+  {%- if attr_name == "Invoice No" or attr_name == "Invoice No." or attr_name == "單據編號" -%}{%- assign invoice_no = attr_value -%}{%- endif -%}
 {%- endfor -%}
 {%- if owner_of == blank -%}
   {%- for line_item in order.line_items -%}
@@ -55,11 +58,24 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
     {%- endfor -%}
   {%- endfor -%}
 {%- endif -%}
-{%- if owner_of == blank and order.note contains "寵物：" -%}
-  {%- capture note_newline %}
+{%- comment -%} 訂單備註：逐行讀取「寵物：」及「單據編號：」（全形或半形冒號），其餘放入 Remarks {%- endcomment -%}
+{%- capture note_newline %}
 {% endcapture -%}
-  {%- assign owner_of = order.note | split: "寵物：" | last | split: note_newline | first | strip -%}
-{%- endif -%}
+{%- assign note_lines = order.note | split: note_newline -%}
+{%- assign remarks_note = "" -%}
+{%- for raw_line in note_lines -%}
+  {%- assign note_line = raw_line | strip -%}
+  {%- assign head2 = note_line | slice: 0, 3 -%}
+  {%- assign head4 = note_line | slice: 0, 5 -%}
+  {%- if head2 == "寵物：" or head2 == "寵物:" -%}
+    {%- if owner_of == blank -%}{%- assign owner_of = note_line | slice: 3, 200 | strip -%}{%- endif -%}
+  {%- elsif head4 == "單據編號：" or head4 == "單據編號:" -%}
+    {%- if invoice_no == blank -%}{%- assign invoice_no = note_line | slice: 5, 200 | strip -%}{%- endif -%}
+  {%- elsif note_line != blank -%}
+    {%- assign remarks_note = remarks_note | append: note_line | append: note_newline -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if invoice_no == blank -%}{%- assign invoice_no = order.order_number -%}{%- endif -%}
 
 {%- comment -%} ===== 計算金額（單位：仙 / cents）===== {%- endcomment -%}
 {%- assign items_total = 0 -%}
@@ -185,7 +201,7 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
           <div class="row"><span class="k">Phone number:</span><span class="v">{{ order.customer.phone | default: order.shipping_address.phone | default: order.billing_address.phone }}</span></div>
         </div>
         <div class="inv-no">
-          <div class="row"><span class="k">Invoice No.:</span><span class="v">{{ order.order_number }}</span></div>
+          <div class="row"><span class="k">Invoice No.:</span><span class="v">{{ invoice_no }}</span></div>
           <div class="row"><span class="k">Date:</span><span class="v">{{ order.created_at | date: "%-d %B %Y" }}</span></div>
         </div>
       </div>
@@ -225,15 +241,15 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
       <div class="foot">
         <div class="remarks">
           <div class="h">Remarks</div>
-          {%- if order.note != blank -%}
-            <div class="body">{{ order.note }}</div>
+          {%- if remarks_note != blank -%}
+            <div class="body">{{ remarks_note | strip }}</div>
           {%- else -%}
             <div class="body empty">—</div>
           {%- endif -%}
           {%- for a in order.note_attributes -%}
             {%- assign attr_name = a.name | default: a.first -%}
             {%- assign attr_value = a.value | default: a.last -%}
-            {%- unless attr_value == blank or attr_name == "Deposit" or attr_name == "訂金" or attr_name == "deposit" or attr_name == "Owner of" or attr_name == "毛孩名" or attr_name == "Pet" or attr_name == "pet" -%}
+            {%- unless attr_value == blank or attr_name == "Deposit" or attr_name == "訂金" or attr_name == "deposit" or attr_name == "Owner of" or attr_name == "毛孩名" or attr_name == "Pet" or attr_name == "pet" or attr_name == "Invoice No" or attr_name == "Invoice No." or attr_name == "單據編號" -%}
               <div class="body">{{ attr_name }}: {{ attr_value }}</div>
             {%- endunless -%}
           {%- endfor -%}
