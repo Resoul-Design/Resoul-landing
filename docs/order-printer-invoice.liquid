@@ -15,8 +15,8 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
 
 欄位對應（自動由訂單帶入）：
   • Invoice No. → 訂單備註一行「Invoice No.：xxx」或「單據編號：xxx」，或附加資料
-                  Invoice No／單據編號；沒有時用訂單編號 order.order_number。
-                  有指定編號時，Shopify 訂單號改在 Remarks 顯示
+                  Invoice No／單據編號（後台開新單會自動寫入公司單號）；
+                  沒有時才用 Shopify 訂單編號 order.order_number
   • Date        → 落單日期 order.created_at
   • Issued to   → 客戶姓名
   • Owner of    → 寵物名稱：依次讀訂單附加資料（Owner of／毛孩名／Pet／pet）、
@@ -82,11 +82,7 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
     {%- assign remarks_note = remarks_note | append: note_line | append: note_newline -%}
   {%- endif -%}
 {%- endfor -%}
-{%- assign custom_invoice_no = true -%}
-{%- if invoice_no == blank -%}
-  {%- assign invoice_no = order.order_number -%}
-  {%- assign custom_invoice_no = false -%}
-{%- endif -%}
+{%- if invoice_no == blank -%}{%- assign invoice_no = order.order_number -%}{%- endif -%}
 
 {%- comment -%} ===== 計算金額（單位：仙 / cents）===== {%- endcomment -%}
 {%- assign items_total = 0 -%}
@@ -252,18 +248,16 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
       <div class="foot">
         <div class="remarks">
           <div class="h">Remarks</div>
-          {%- if custom_invoice_no -%}
-            <div class="body">Order No.: {{ order.name | default: order.order_number }}</div>
-          {%- endif -%}
+          {%- comment -%} Shopify 訂單號只作內部參考，不在發票顯示 {%- endcomment -%}
           {%- if remarks_note != blank -%}
             <div class="body">{{ remarks_note | strip }}</div>
-          {%- elsif custom_invoice_no == false -%}
+          {%- else -%}
             <div class="body empty">—</div>
           {%- endif -%}
           {%- for a in order.note_attributes -%}
             {%- assign attr_name = a.name | default: a.first -%}
             {%- assign attr_value = a.value | default: a.last -%}
-            {%- unless attr_value == blank or attr_name == "Deposit" or attr_name == "訂金" or attr_name == "deposit" or attr_name == "Owner of" or attr_name == "毛孩名" or attr_name == "Pet" or attr_name == "pet" or attr_name == "Invoice No" or attr_name == "Invoice No." or attr_name == "單據編號" -%}
+            {%- unless attr_value == blank or attr_name == "Deposit" or attr_name == "訂金" or attr_name == "deposit" or attr_name == "Owner of" or attr_name == "毛孩名" or attr_name == "Pet" or attr_name == "pet" or attr_name == "Invoice No" or attr_name == "Invoice No." or attr_name == "單據編號" or attr_name == "payment_ref" or attr_name == "booking_ref" or attr_name == "Owner" or attr_name == "Phone" or attr_name == "Order Type" or attr_name == "referrer_phone" or attr_name == "Original Project No" or attr_name == "Booking source" or attr_name == "project_no" -%}
               <div class="body">{{ attr_name }}: {{ attr_value }}</div>
             {%- endunless -%}
           {%- endfor -%}
