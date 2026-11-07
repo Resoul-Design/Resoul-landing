@@ -101,8 +101,8 @@
     msg.hidden = true;
     result.hidden = true;
     var no = project.value.trim().toUpperCase();
-    if (!/^RSL-[A-Z0-9]+-[A-Z0-9]+$/.test(no) || phone.value.replace(/\D/g, "").length < 8) {
-      show("err", esc(L("請輸入以 RSL- 開頭的專案編號及 8 位電話號碼。", "Please enter a project number starting with RSL- and an 8-digit phone number.")));
+    if (!/^[\p{L}\p{N}][\p{L}\p{N} _-]{1,39}$/u.test(no) || phone.value.replace(/\D/g, "").length < 8) {
+      show("err", esc(L("請輸入專案編號及 8 位電話號碼。", "Please enter your project number and an 8-digit phone number.")));
       return;
     }
     var old = btn.innerHTML;

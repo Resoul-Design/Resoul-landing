@@ -1,4 +1,4 @@
-const { guardPublicPost, clean, readBody } = require("./_security");
+const { guardPublicPost, clean, readBody, isProjectNo } = require("./_security");
 const { projectStatus } = require("./_project-status");
 
 function phoneKey(value) {
@@ -8,8 +8,8 @@ function phoneKey(value) {
 
 function notesContainProject(notes, projectNo) {
   return String(notes || "").split(/[|｜]/).some((part) => {
-    const match = part.match(/(?:專案編號|project\s*(?:no\.|number))\s*[：:]\s*(RSL-[A-Z0-9]+-[A-Z0-9]+)/i);
-    return match && match[1].toUpperCase() === projectNo;
+    const match = part.match(/(?:專案編號|project\s*(?:no\.|number))\s*[：:]\s*(.+)/i);
+    return match && match[1].trim().toUpperCase() === projectNo;
   });
 }
 
@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
   if (!body) return res.status(400).json({ error: "invalid_json" });
   const projectNo = clean(body.project_no, 40).toUpperCase();
   const phone = phoneKey(clean(body.contact, 40));
-  if (!/^RSL-[A-Z0-9]+-[A-Z0-9]+$/.test(projectNo) || !phone) {
+  if (!isProjectNo(projectNo) || !phone) {
     return res.status(400).json({ error: "invalid_lookup" });
   }
   // 查詢進度頁（/track）：回傳服務階段

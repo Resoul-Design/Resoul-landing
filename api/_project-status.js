@@ -1,8 +1,6 @@
 // 客人自助查詢進度：輸入專案編號＋電話（尾 8 位須相符），回傳服務階段及日期。
 // 只回傳毛孩名、階段、日期及紀念品出貨狀態；不回傳地址、電話、金額等個人資料。
 
-const RSL = /^RSL-[A-Z0-9]+-[A-Z0-9]+$/;
-
 function phoneKey(value) {
   const digits = String(value || "").replace(/\D/g, "");
   return digits.length >= 8 ? digits.slice(-8) : "";
@@ -10,8 +8,8 @@ function phoneKey(value) {
 
 function notesContainProject(notes, projectNo) {
   return String(notes || "").split(/[|｜]/).some((part) => {
-    const match = part.match(/(?:專案編號|project\s*(?:no\.|number))\s*[：:]\s*(RSL-[A-Z0-9]+-[A-Z0-9]+)/i);
-    return match && match[1].toUpperCase() === projectNo;
+    const match = part.match(/(?:專案編號|project\s*(?:no\.|number))\s*[：:]\s*(.+)/i);
+    return match && match[1].trim().toUpperCase() === projectNo;
   });
 }
 
@@ -144,4 +142,4 @@ async function projectStatus(projectNo, phone, res) {
   }
 }
 
-module.exports = { projectStatus, phoneKey, RSL };
+module.exports = { projectStatus, phoneKey };

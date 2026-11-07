@@ -1,4 +1,4 @@
-const { guardPublicPost, clean, readBody, safeSource } = require("./_security");
+const { guardPublicPost, clean, readBody, safeSource, isProjectNo } = require("./_security");
 
 // 「安排預約接送」訂金下單：以 service_role 寫入 deposit_bookings（繞過 RLS），
 // 保留前端產生的 payment_ref，讓 Shopify orders/paid webhook 事後配對標記已付款。
@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
   const contact = clean(body.contact, 40);
   const paymentRef = clean(body.payment_ref, 60);
   const projectNo = clean(body.project_no, 40).toUpperCase();
-  if (!ownerName || !contact || !paymentRef || !/^RSL-[A-Z0-9]+-[A-Z0-9]+$/.test(projectNo)) return res.status(400).json({ error: "missing_or_invalid_fields" });
+  if (!ownerName || !contact || !paymentRef || !isProjectNo(projectNo)) return res.status(400).json({ error: "missing_or_invalid_fields" });
 
   const date = clean(body.service_date, 10);
   const amount = Number(body.payment_amount);

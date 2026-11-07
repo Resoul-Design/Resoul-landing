@@ -19,7 +19,7 @@
     edit: "Edit details",
     pay: "Confirm and pay",
     submit: "Proceed to payment",
-    invalidProject: "Enter a valid project number starting with RSL-, or leave it blank for a new project.",
+    invalidProject: "Project numbers can only contain letters, numbers, spaces, hyphens or underscores. Leave it blank for a new project.",
     required: "Please enter your name and phone / WhatsApp.",
     loading: "Processing...",
     success: "Details received. Redirecting to secure payment...",
@@ -55,7 +55,7 @@
     edit: "返回修改",
     pay: "確認並前往付款",
     submit: "前往付款",
-    invalidProject: "請輸入以 RSL- 開頭的專案編號；如為新專案，請留空。",
+    invalidProject: "專案編號只可包含文字、數字、空格、連字號或底線；如為新專案，請留空。",
     required: "請填寫主人稱呼及聯絡電話。",
     loading: "處理中…",
     success: "已收到資料，正在前往安全付款頁…",
@@ -232,7 +232,7 @@
   form.addEventListener("submit", function (event) {
     event.preventDefault();
     var enteredProject = value("ofProject").toUpperCase();
-    if (enteredProject && !/^RSL-[A-Z0-9]+-[A-Z0-9]+$/.test(enteredProject)) {
+    if (enteredProject && !/^[\p{L}\p{N}][\p{L}\p{N} _-]{1,39}$/u.test(enteredProject)) {
       show("err", copy.invalidProject);
       return;
     }

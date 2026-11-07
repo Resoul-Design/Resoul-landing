@@ -97,4 +97,11 @@ function clean(value, max) {
   return String(value == null ? "" : value).trim().slice(0, max);
 }
 
-module.exports = { guardPublicPost, requireAllowedOrigin, clean, readBody, safeSource };
+// 專案編號不限格式：只限文字、數字、空格、連字號及底線（會用於資料庫篩選），排除付款參考
+const PROJECT_NO_RE = /^[\p{L}\p{N}][\p{L}\p{N} _-]{1,39}$/u;
+function isProjectNo(value) {
+  const text = String(value == null ? "" : value).trim();
+  return PROJECT_NO_RE.test(text) && !/^PAY-/i.test(text);
+}
+
+module.exports = { guardPublicPost, requireAllowedOrigin, clean, readBody, safeSource, isProjectNo };

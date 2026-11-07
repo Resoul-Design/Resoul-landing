@@ -1,5 +1,5 @@
 const crypto = require("crypto");
-const { guardPublicPost, clean, readBody } = require("./_security");
+const { guardPublicPost, clean, readBody, isProjectNo } = require("./_security");
 
 function b64url(input) { return Buffer.from(input).toString("base64url"); }
 function ymd(date) { return date.toISOString().slice(0, 10); }
@@ -61,7 +61,7 @@ module.exports = async (req, res) => {
   if (!ownerName || !contact) return res.status(400).json({ error: "missing_contact" });
   const date = clean(body.date, 10);
   const submittedProjectNo = clean(body.projectNo, 40).toUpperCase();
-  const projectNo = /^RSL-[A-Z0-9]+-[A-Z0-9]+$/.test(submittedProjectNo) ? submittedProjectNo : null;
+  const projectNo = isProjectNo(submittedProjectNo) ? submittedProjectNo : null;
   const booking = {
     case_no: projectNo,
     owner_name: ownerName,
