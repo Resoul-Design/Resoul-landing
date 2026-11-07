@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const { guardPublicPost, clean, readBody, isProjectNo } = require("./_security");
+const { newProjectNo, withProjectNo } = require("./_project-no");
 
 function b64url(input) { return Buffer.from(input).toString("base64url"); }
 function ymd(date) { return date.toISOString().slice(0, 10); }
@@ -61,7 +62,8 @@ module.exports = async (req, res) => {
   if (!ownerName || !contact) return res.status(400).json({ error: "missing_contact" });
   const date = clean(body.date, 10);
   const submittedProjectNo = clean(body.projectNo, 40).toUpperCase();
-  const projectNo = isProjectNo(submittedProjectNo) ? submittedProjectNo : null;
+  // 新專案（客人未填專案編號）：專案編號＝公司單號（例如 290）；編配失敗亦照常收預約，由後台按記錄配單號
+  const projectNo = isProjectNo(submittedProjectNo) ? submittedProjectNo : await newProjectNo();
   const booking = {
     case_no: projectNo,
     owner_name: ownerName,
@@ -70,7 +72,7 @@ module.exports = async (req, res) => {
     pet_type: clean(body.pet, 80) || null,
     service_date: /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null,
     pickup_address: clean(body.place, 300) || null,
-    notes: clean(body.notes, 1500) || null,
+    notes: (projectNo && !isProjectNo(submittedProjectNo) ? withProjectNo(clean(body.notes, 1500), projectNo) : clean(body.notes, 1500)) || null,
     source: body.type === "euthanasia" ? "web:euthanasia" : "web:cremation",
     payment_ref: crypto.randomUUID(),
   };
@@ -98,5 +100,5 @@ module.exports = async (req, res) => {
   }
   const rows = await response.json();
   addCalendarEvent(rows[0] || booking).catch((error) => console.error("[Resoul] calendar sync failed:", error.message));
-  return res.status(201).json({ ok: true });
+  return res.status(201).json({ ok: true, project_no: projectNo });
 };

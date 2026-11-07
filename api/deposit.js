@@ -1,7 +1,9 @@
 const { guardPublicPost, clean, readBody, safeSource, isProjectNo } = require("./_security");
+const { newProjectNo, withProjectNo } = require("./_project-no");
 
 // 「安排預約接送」訂金下單：以 service_role 寫入 deposit_bookings（繞過 RLS），
 // 保留前端產生的 payment_ref，讓 Shopify orders/paid webhook 事後配對標記已付款。
+// 新專案（客人未填專案編號）由伺服器編配：專案編號＝公司單號（例如 290），並回傳給網站放入 Shopify 結帳。
 // 需先於 Supabase 執行 supabase/deposit_bookings.sql 建立資料表。
 module.exports = async (req, res) => {
   if (!(await guardPublicPost(req, res, { endpoint: "deposit", limit: 8, windowSeconds: 3600, maxBytes: 32768 }))) return;
@@ -10,12 +12,13 @@ module.exports = async (req, res) => {
   const ownerName = clean(body.owner_name, 100);
   const contact = clean(body.contact, 40);
   const paymentRef = clean(body.payment_ref, 60);
-  const projectNo = clean(body.project_no, 40).toUpperCase();
-  if (!ownerName || !contact || !paymentRef || !isProjectNo(projectNo)) return res.status(400).json({ error: "missing_or_invalid_fields" });
+  const submittedProjectNo = clean(body.project_no, 40).toUpperCase();
+  if (!ownerName || !contact || !paymentRef || (submittedProjectNo && !isProjectNo(submittedProjectNo))) return res.status(400).json({ error: "missing_or_invalid_fields" });
+  let projectNo = submittedProjectNo;
 
   const date = clean(body.service_date, 10);
   const amount = Number(body.payment_amount);
-  const full = {
+  let full = {
     owner_name: ownerName,
     contact,
     project_no: projectNo,
@@ -51,13 +54,14 @@ module.exports = async (req, res) => {
   }
   function sameAttempt(existing) {
     const digits = (value) => String(value || "").replace(/\D/g, "").slice(-8);
+    // 新專案重試（未有編號）只核對電話；沿用專案則同時核對專案編號
     return existing &&
-      String(existing.project_no || "").toUpperCase() === projectNo &&
+      (!submittedProjectNo || String(existing.project_no || "").toUpperCase() === submittedProjectNo) &&
       digits(existing.contact) && digits(existing.contact) === digits(contact);
   }
   function duplicateResponse(existing) {
     if (!sameAttempt(existing)) return res.status(409).json({ error: "payment_ref_conflict" });
-    return res.status(200).json({ ok: true, reused: true, already_paid: existing.payment_status === "paid" });
+    return res.status(200).json({ ok: true, reused: true, project_no: existing.project_no, already_paid: existing.payment_status === "paid" });
   }
 
   try {
@@ -66,6 +70,12 @@ module.exports = async (req, res) => {
   } catch (error) {
     console.error("[Resoul] deposit retry lookup failed");
     return res.status(503).json({ error: "deposit_lookup_failed" });
+  }
+
+  if (!projectNo) {
+    projectNo = await newProjectNo();
+    if (!projectNo) return res.status(503).json({ error: "project_no_unavailable" });
+    full = { ...full, project_no: projectNo, notes: withProjectNo(full.notes, projectNo) };
   }
 
   const response = await fetch(base, {
@@ -88,5 +98,5 @@ module.exports = async (req, res) => {
     console.error("[Resoul] deposit store failed");
     return res.status(502).json({ error: "deposit_store_failed" });
   }
-  return res.status(201).json({ ok: true });
+  return res.status(201).json({ ok: true, project_no: projectNo });
 };

@@ -26,6 +26,7 @@
     failed: "We could not create the secure payment session. Please try again or contact us and quote your payment reference: ",
     serverFailed: "We could not save your booking. Please try again or contact us and quote your payment reference: ",
     projectRow: "Project number",
+    projectPending: "Assigned after confirmation (same as your invoice number)",
     paymentRow: "Payment reference",
     item: "Item",
     amount: "Deposit",
@@ -62,6 +63,7 @@
     failed: "暫時未能建立安全付款頁，請重試或聯絡我們，並提供付款參考：",
     serverFailed: "暫時未能儲存預約資料，請重試或聯絡我們，並提供付款參考：",
     projectRow: "專案編號",
+    projectPending: "確認後編配（與單號相同）",
     paymentRow: "付款參考",
     item: "項目",
     amount: "訂金",
@@ -103,16 +105,6 @@
     message.hidden = false;
   }
 
-  function makeProjectNumber() {
-    var now = new Date();
-    var date = String(now.getFullYear()).slice(-2) + String(now.getMonth() + 1).padStart(2, "0") + String(now.getDate()).padStart(2, "0");
-    var bytes = new Uint8Array(5);
-    crypto.getRandomValues(bytes);
-    return "RSL-" + date + "-" + Array.from(bytes, function (byte) {
-      return byte.toString(36).padStart(2, "0");
-    }).join("").slice(0, 8).toUpperCase();
-  }
-
   function paymentReference() {
     return "PAY-" + Date.now().toString(36).toUpperCase() + "-" + crypto.randomUUID().slice(0, 8).toUpperCase();
   }
@@ -132,7 +124,7 @@
     pending = data;
     confirmList.replaceChildren(
       safeRow(copy.item, copy.deposit + " · HK$1,800"),
-      safeRow(copy.projectRow, data.projectNumber),
+      safeRow(copy.projectRow, data.projectNumber || copy.projectPending),
       safeRow(copy.paymentRow, data.paymentRef),
       safeRow(copy.pet, value("ofPet")),
       safeRow(copy.owner, value("ofName")),
@@ -240,14 +232,9 @@
       show("err", copy.required);
       return;
     }
-    var projectField = document.getElementById("ofProject");
     var isExistingProject = Boolean(enteredProject && enteredProject !== generatedProjectNo);
+    // 新專案留空：確認後由伺服器編配，專案編號＝單號（例如 290）
     var projectNumber = enteredProject;
-    if (!projectNumber) {
-      projectNumber = makeProjectNumber();
-      generatedProjectNo = projectNumber;
-    }
-    projectField.value = projectNumber;
     var continueToConfirmation = function () {
       openConfirmation({ projectNumber: projectNumber, paymentRef: paymentReference() });
     };
@@ -287,14 +274,14 @@
     var payload = {
       owner_name: value("ofName"),
       contact: value("ofPhone"),
-      project_no: data.projectNumber,
+      project_no: data.projectNumber || null,
       plan: copy.deposit,
       pet_name: value("ofPet") || null,
       pet_type: null,
       service_date: value("ofDate") || null,
       service_time: value("ofTime") || null,
       pickup_address: value("ofAddr") || null,
-      notes: copy.projectNote + data.projectNumber + " | " + copy.payment + ": " + data.paymentRef + " | " + copy.pet + ": " + (value("ofPet") || "-") + " | " + copy.time + ": " + (value("ofTime") || "-") + " | " + copy.notes + ": " + (value("ofNote") || "-"),
+      notes: copy.projectNote + (data.projectNumber || "") + " | " + copy.payment + ": " + data.paymentRef + " | " + copy.pet + ": " + (value("ofPet") || "-") + " | " + copy.time + ": " + (value("ofTime") || "-") + " | " + copy.notes + ": " + (value("ofNote") || "-"),
       source: "web:pickup-deposit",
       payment_ref: data.paymentRef,
       payment_status: "pending",
@@ -310,6 +297,14 @@
       if (!response.ok) throw new Error("Booking save failed");
       return response.json();
     }).then(function (result) {
+      if (result.project_no) {
+        // 伺服器編配的專案編號（重試時沿用，不會再開新專案）
+        data.projectNumber = String(result.project_no);
+        generatedProjectNo = data.projectNumber;
+        document.getElementById("ofProject").value = data.projectNumber;
+        try { localStorage.setItem("resoul:projectNo", data.projectNumber); } catch (error) {}
+      }
+      if (!data.projectNumber) throw new Error("Booking save failed");
       if (result.already_paid) {
         show("ok", copy.alreadyPaid);
         submitButton.disabled = false;
