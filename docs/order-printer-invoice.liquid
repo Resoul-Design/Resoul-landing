@@ -277,7 +277,9 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
               {%- for p in line_item.properties -%}
                 {%- unless p.last == blank or p.first == blank -%}
                   {%- assign pf = p.first | slice: 0 -%}
-                  {%- unless pf == "_" -%}<div class="li-prop">{{ p.first }}: {{ p.last }}</div>{%- endunless -%}
+                  {%- assign pkey = p.first | downcase -%}
+                  {%- comment -%} 內部欄位（專案編號、付款參考）不在發票顯示 {%- endcomment -%}
+                  {%- unless pf == "_" or pkey == "project no" or pkey == "專案編號 project no." or pkey == "project_no" or pkey == "payment_ref" or pkey == "booking_ref" -%}<div class="li-prop">{{ p.first }}: {{ p.last }}</div>{%- endunless -%}
                 {%- endunless -%}
               {%- endfor -%}
             </td>
