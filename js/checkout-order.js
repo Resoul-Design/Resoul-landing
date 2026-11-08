@@ -302,7 +302,6 @@
         data.projectNumber = String(result.project_no);
         generatedProjectNo = data.projectNumber;
         document.getElementById("ofProject").value = data.projectNumber;
-        try { localStorage.setItem("resoul:projectNo", data.projectNumber); } catch (error) {}
       }
       if (!data.projectNumber) throw new Error("Booking save failed");
       if (result.already_paid) {

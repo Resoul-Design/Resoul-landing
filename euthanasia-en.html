@@ -394,7 +394,6 @@
       if (res.ok) {
         return res.json().catch(function () { return {}; }).then(function (r) {
           var pn = String((r && r.project_no) || projectNo || '').replace(/[^\w -]/g, '');
-          try { if (pn) localStorage.setItem('resoul:projectNo', pn); } catch (err) {}
           f.reset();
           showMsg('ok', '✅ <b>Enquiry received.</b>' + (pn ? ' Project number: <b>' + pn + '</b> (also your invoice number). Please keep it for future pick-up, cremation and memorial arrangements.' : '') + '<br>We\'ll be in touch soon to help organise and refer an independent registered vet.');
         });

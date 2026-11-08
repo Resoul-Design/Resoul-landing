@@ -398,7 +398,6 @@
       if (res.ok) {
         return res.json().catch(function () { return {}; }).then(function (r) {
           var pn = String((r && r.project_no) || projectNo || '').replace(/[^\w -]/g, '');
-          try { if (pn) localStorage.setItem('resoul:projectNo', pn); } catch (err) {}
           f.reset();
           showMsg('ok', '✅ <b>查詢已收到</b>' + (pn ? '，專案編號：<b>' + pn + '</b>（亦即單號）。請保留此編號，之後可用於接送、火化及紀念品安排。' : '。') + '<br>我們會盡快與你聯絡，協助整理並轉介獨立註冊獸醫。');
         });
