@@ -119,6 +119,18 @@ module.exports = async (req, res) => {
         });
       } catch (e) {}
     };
+    // 後台「開新單」記錄跟隨服務記錄標記已付款（best-effort；表未建立時略過）
+    const orderGid = order.admin_graphql_api_id || (order.id != null ? "gid://shopify/Order/" + order.id : null);
+    const syncCompanyOrders = async (ids) => {
+      if (!ids.length) return;
+      try {
+        await fetch(SB_URL + "/rest/v1/company_orders?linked_id=in.(" + ids.map(encodeURIComponent).join(",") + ")&status=eq.awaiting_payment", {
+          method: "PATCH",
+          headers: { apikey: SR, Authorization: "Bearer " + SR, "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "paid", shopify_order_id: orderGid, updated_at: new Date().toISOString() }),
+        });
+      } catch (e) {}
+    };
     // 同一 payment_ref 只會屬於其中一張表；只有確認找到並更新記錄才回報成功。
     const tables = ["cremation_bookings", "deposit_bookings"];
     let updated = false;
@@ -159,7 +171,8 @@ module.exports = async (req, res) => {
             "Content-Type": "application/json",
             Prefer: "return=representation",
           },
-          body: JSON.stringify(patch),
+          // 已扣接送訂金的火化單：payment_amount 保持「未扣訂金前」的收費（實付＋訂金），避免發票重複扣減
+          body: JSON.stringify(tbl === "cremation_bookings" && credit > 0 && Number.isFinite(paidAmount) ? Object.assign({}, patch, { payment_amount: paidAmount + credit }) : patch),
         });
         if (!r.ok) {
           console.error("[Resoul] webhook patch failed for " + tbl + " (" + r.status + ")");
@@ -171,7 +184,7 @@ module.exports = async (req, res) => {
           failed = true;
           continue;
         }
-        if (rows.length) { updated = true; await markTest(tbl); }
+        if (rows.length) { updated = true; await markTest(tbl); await syncCompanyOrders(rows.map((x) => x.id).filter(Boolean)); }
       } catch (error) {
         console.error("[Resoul] webhook request failed for " + tbl);
         failed = true;
