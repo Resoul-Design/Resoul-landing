@@ -257,7 +257,7 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
           {%- for a in order.note_attributes -%}
             {%- assign attr_name = a.name | default: a.first -%}
             {%- assign attr_value = a.value | default: a.last -%}
-            {%- unless attr_value == blank or attr_name == "Deposit" or attr_name == "訂金" or attr_name == "deposit" or attr_name == "Owner of" or attr_name == "毛孩名" or attr_name == "Pet" or attr_name == "pet" or attr_name == "Invoice No" or attr_name == "Invoice No." or attr_name == "單據編號" or attr_name == "payment_ref" or attr_name == "booking_ref" or attr_name == "Owner" or attr_name == "Phone" or attr_name == "Order Type" or attr_name == "referrer_phone" or attr_name == "Original Project No" or attr_name == "Booking source" or attr_name == "project_no" -%}
+            {%- unless attr_value == blank or attr_name == "Deposit" or attr_name == "訂金" or attr_name == "deposit" or attr_name == "Owner of" or attr_name == "毛孩名" or attr_name == "Pet" or attr_name == "pet" or attr_name == "Invoice No" or attr_name == "Invoice No." or attr_name == "單據編號" or attr_name == "payment_ref" or attr_name == "booking_ref" or attr_name == "Owner" or attr_name == "Phone" or attr_name == "Order Type" or attr_name == "referrer_phone" or attr_name == "Original Project No" or attr_name == "Booking source" or attr_name == "project_no" or attr_name == "Project No" or attr_name == "Deposit credit" -%}
               <div class="body">{{ attr_name }}: {{ attr_value }}</div>
             {%- endunless -%}
           {%- endfor -%}
