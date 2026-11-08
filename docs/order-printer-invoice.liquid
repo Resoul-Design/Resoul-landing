@@ -185,6 +185,50 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
   .resoul-invoice .closing { text-align: center; margin-top: 20px; color: #6f6a63; }
   .resoul-invoice .closing .msg { font-size: 14px; }
   .resoul-invoice .closing .contact { font-size: 11.5px; letter-spacing: .04em; margin-top: 4px; color: #8a8379; }
+
+  /* 平板（例如 iPad 的 Shopify App）：收窄邊距及字距，保留表格排版 */
+  @media screen and (min-width: 641px) and (max-width: 900px) {
+    .resoul-invoice .frame-inner { padding: 30px 26px 24px; }
+    .resoul-invoice .title-box { padding: 12px 26px; }
+    .resoul-invoice .title-box .t { font-size: 38px; }
+    .resoul-invoice .brand img { height: 60px; }
+    .resoul-invoice .issued { min-width: 280px; }
+    .resoul-invoice table.items thead th { font-size: 11.5px; letter-spacing: .08em; }
+    .resoul-invoice table.items tbody td { font-size: 14px; }
+    .resoul-invoice table.items .code { padding-right: 12px; }
+    .resoul-invoice table.items th.col-price, .resoul-invoice table.items td.col-price { padding-right: 14px; }
+    .resoul-invoice .foot { gap: 24px; }
+    .resoul-invoice .totals { min-width: 260px; }
+  }
+
+  /* 手機（Shopify App 預覽）：上下排列，貨品改為逐項卡片；列印 A4 不受影響 */
+  @media screen and (max-width: 640px) {
+    .resoul-invoice { font-size: 13px; }
+    .resoul-invoice .frame-inner { padding: 22px 16px 18px; }
+    .resoul-invoice .head { flex-direction: column-reverse; align-items: flex-start; gap: 14px; }
+    .resoul-invoice .brand { text-align: left; }
+    .resoul-invoice .brand img { height: 48px; }
+    .resoul-invoice .title-box { padding: 10px 20px; border-radius: 14px; }
+    .resoul-invoice .title-box .t { font-size: 30px; }
+    .resoul-invoice .meta { flex-direction: column; gap: 10px; margin-top: 18px; }
+    .resoul-invoice .issued { min-width: 0; width: 100%; padding: 12px 14px; }
+    .resoul-invoice .issued .k, .resoul-invoice .inv-no .k { min-width: 104px; }
+    .resoul-invoice .inv-no { padding-top: 0; }
+    .resoul-invoice table.items { margin-top: 22px; table-layout: auto; }
+    .resoul-invoice table.items thead { display: none; }
+    .resoul-invoice table.items, .resoul-invoice table.items tbody, .resoul-invoice table.items tr, .resoul-invoice table.items td { display: block; width: 100%; }
+    .resoul-invoice table.items tr { border-bottom: 1px solid #e4ded4; padding: 12px 0; }
+    .resoul-invoice table.items tbody td { padding: 2px 0; font-size: 14px; width: 100% !important; }
+    .resoul-invoice table.items .desc { padding-left: 0; order: -1; }
+    .resoul-invoice table.items .code { padding-right: 0; }
+    .resoul-invoice table.items td.code:empty { display: none; }
+    .resoul-invoice table.items td[data-label] { display: flex; justify-content: space-between; gap: 12px; text-align: right; padding-right: 0; }
+    .resoul-invoice table.items td[data-label]::before { content: attr(data-label); color: #8a8379; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; text-align: left; }
+    .resoul-invoice .foot { flex-direction: column; gap: 22px; margin-top: 26px; }
+    .resoul-invoice .remarks { max-width: 100%; }
+    .resoul-invoice .totals { min-width: 0; width: 100%; }
+    .resoul-invoice .sign .signature-img { width: 140px; max-width: 50%; }
+  }
 </style>
 
 <div class="resoul-invoice">
@@ -226,7 +270,7 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
         <tbody>
           {%- for line_item in order.line_items -%}
           <tr>
-            <td class="code">{{ line_item.sku }}</td>
+            <td class="code" data-label="Item Code">{{ line_item.sku }}</td>
             <td class="desc">
               {{ line_item.title }}
               {%- unless line_item.variant_title == blank or line_item.variant_title == "Default Title" %} <span class="muted">— {{ line_item.variant_title }}</span>{% endunless -%}
@@ -237,9 +281,9 @@ Resoul 發票模板 — Shopify「Order Printer」用（Liquid）
                 {%- endunless -%}
               {%- endfor -%}
             </td>
-            <td class="num col-price">HKD {{ line_item.price | money_without_currency }}</td>
-            <td class="ctr">{{ line_item.quantity }}</td>
-            <td class="num col-sub">HKD {{ line_item.line_price | money_without_currency }}</td>
+            <td class="num col-price" data-label="Unit Price">HKD {{ line_item.price | money_without_currency }}</td>
+            <td class="ctr" data-label="Qty">{{ line_item.quantity }}</td>
+            <td class="num col-sub" data-label="Subtotal">HKD {{ line_item.line_price | money_without_currency }}</td>
           </tr>
           {%- endfor -%}
         </tbody>
