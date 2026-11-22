@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const { guardPublicPost, clean, readBody, isProjectNo } = require("./_security");
 const { newProjectNo, withProjectNo } = require("./_project-no");
+const { createBookingTask } = require("./_notion");
 
 function b64url(input) { return Buffer.from(input).toString("base64url"); }
 function ymd(date) { return date.toISOString().slice(0, 10); }
@@ -100,5 +101,7 @@ module.exports = async (req, res) => {
   }
   const rows = await response.json();
   addCalendarEvent(rows[0] || booking).catch((error) => console.error("[Resoul] calendar sync failed:", error.message));
+  // Notion 任務（不含客人個人資料；最多等 3 秒，出錯不影響預約）
+  await createBookingTask({ projectNo, source: booking.source, plan: booking.plan, petType: booking.pet_type, serviceDate: booking.service_date });
   return res.status(201).json({ ok: true, project_no: projectNo });
 };

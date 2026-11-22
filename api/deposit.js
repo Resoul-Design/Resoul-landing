@@ -1,5 +1,6 @@
 const { guardPublicPost, clean, readBody, safeSource, isProjectNo } = require("./_security");
 const { newProjectNo, withProjectNo } = require("./_project-no");
+const { createBookingTask } = require("./_notion");
 
 // 「安排預約接送」訂金下單：以 service_role 寫入 deposit_bookings（繞過 RLS），
 // 保留前端產生的 payment_ref，讓 Shopify orders/paid webhook 事後配對標記已付款。
@@ -98,5 +99,7 @@ module.exports = async (req, res) => {
     console.error("[Resoul] deposit store failed");
     return res.status(502).json({ error: "deposit_store_failed" });
   }
+  // Notion 任務（不含客人個人資料；最多等 3 秒，出錯不影響下單）
+  await createBookingTask({ projectNo, source: full.source, deposit: true, petType: full.pet_type, serviceDate: full.service_date, serviceTime: full.service_time });
   return res.status(201).json({ ok: true, project_no: projectNo });
 };

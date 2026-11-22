@@ -16,6 +16,7 @@
 
 const crypto = require("crypto");
 const { requireAllowedOrigin } = require("./_security");
+const { markTaskPaid } = require("./_notion");
 
 // 應付金額：接送訂金以固定訂金（DEPOSIT_AMOUNT，預設 1800）為準，不信任客人提交的金額；火化以預約收費金額為準
 const DEPOSIT_AMOUNT = Number(process.env.DEPOSIT_AMOUNT || 1800);
@@ -184,7 +185,14 @@ module.exports = async (req, res) => {
           failed = true;
           continue;
         }
-        if (rows.length) { updated = true; await markTest(tbl); await syncCompanyOrders(rows.map((x) => x.id).filter(Boolean)); }
+        if (rows.length) {
+          updated = true;
+          await markTest(tbl);
+          await syncCompanyOrders(rows.map((x) => x.id).filter(Boolean));
+          // Notion 任務加收款記錄（只在首次標記已付款時執行；出錯不影響付款同步）
+          const projectNo = tbl === "deposit_bookings" ? rows[0].project_no : rows[0].case_no;
+          await markTaskPaid({ projectNo, orderName, amount: paidAmount, currency: order.currency, test: order.test === true });
+        }
       } catch (error) {
         console.error("[Resoul] webhook request failed for " + tbl);
         failed = true;
